@@ -412,10 +412,14 @@ public class PostServiceImpl extends BasePostServiceImpl<Post> implements PostSe
                                 tagName = StringUtils.strip(tagName, "\"");
                                 tagName = StringUtils.strip(tagName, "\'");
                                 tag = tagService.getByName(tagName);
+                                String slug = SlugUtils.slug(tagName);
+                                if (null == tag) {
+                                    tag = tagService.getBySlug(slug);
+                                }
                                 if (null == tag) {
                                     tag = new Tag();
                                     tag.setName(tagName);
-                                    tag.setSlug(SlugUtils.slug(tagName));
+                                    tag.setSlug(slug);
                                     tag = tagService.create(tag);
                                 }
                                 tagIds.add(tag.getId());
@@ -783,7 +787,8 @@ public class PostServiceImpl extends BasePostServiceImpl<Post> implements PostSe
         postDetailVO.setMetaIds(metaIds);
         postDetailVO.setMetas(postMetaService.convertTo(postMetaList));
 
-        postDetailVO.setCommentCount(postCommentService.countByPostId(post.getId()));
+        postDetailVO.setCommentCount(postCommentService.countByStatusAndPostId(
+            CommentStatus.PUBLISHED, post.getId()));
 
         postDetailVO.setFullPath(buildFullPath(post));
 
