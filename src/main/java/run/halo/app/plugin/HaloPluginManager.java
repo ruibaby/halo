@@ -14,6 +14,7 @@ import org.pf4j.ExtensionFinder;
 import org.pf4j.PluginDependency;
 import org.pf4j.PluginDescriptor;
 import org.pf4j.PluginDescriptorFinder;
+import org.pf4j.PluginRepository;
 import org.pf4j.PluginRuntimeException;
 import org.pf4j.PluginState;
 import org.pf4j.PluginStateEvent;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
+import run.halo.app.plugin.event.HaloPluginLoadedEvent;
 import run.halo.app.plugin.event.HaloPluginStartedEvent;
 import run.halo.app.plugin.event.HaloPluginStateChangedEvent;
 import run.halo.app.plugin.event.HaloPluginStoppedEvent;
@@ -60,11 +62,6 @@ public class HaloPluginManager extends DefaultPluginManager
     }
 
     @Override
-    public PluginDescriptorFinder getPluginDescriptorFinder() {
-        return super.getPluginDescriptorFinder();
-    }
-
-    @Override
     protected ExtensionFinder createExtensionFinder() {
         return new SpringComponentsFinder(this);
     }
@@ -85,8 +82,6 @@ public class HaloPluginManager extends DefaultPluginManager
 
     @Override
     public void afterPropertiesSet() {
-        // This method load, start plugins and inject extensions in Spring
-        loadPlugins();
         this.pluginApplicationInitializer = new PluginApplicationInitializer(this);
 
         this.requestMappingManager =
@@ -95,6 +90,15 @@ public class HaloPluginManager extends DefaultPluginManager
 
     public PluginStartingError getPluginStartingError(String pluginId) {
         return startingErrors.get(pluginId);
+    }
+
+    public PluginRepository getPluginRepository() {
+        return this.pluginRepository;
+    }
+
+    @Override
+    protected PluginDescriptorFinder createPluginDescriptorFinder() {
+        return new YamlPluginDescriptorFinder();
     }
 
     @Override
@@ -360,6 +364,13 @@ public class HaloPluginManager extends DefaultPluginManager
         } catch (Exception e) {
             log.trace("Plugin application context close failed. ", e);
         }
+    }
+
+    @Override
+    protected PluginWrapper loadPluginFromPath(Path pluginPath) {
+        PluginWrapper pluginWrapper = super.loadPluginFromPath(pluginPath);
+        rootApplicationContext.publishEvent(new HaloPluginLoadedEvent(this, pluginWrapper));
+        return pluginWrapper;
     }
 
     // end-region
