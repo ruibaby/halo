@@ -6,25 +6,37 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Locale;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import run.halo.app.extension.exception.ExtensionConvertException;
 import run.halo.app.extension.exception.SchemaViolationException;
 import run.halo.app.extension.store.ExtensionStore;
 
-class JSONExtensionConverterTest {
+class JsonExtensionConverterTest {
 
     JSONExtensionConverter converter;
 
     ObjectMapper objectMapper;
 
+    Locale localeDefault;
+
     @BeforeEach
     void setUp() {
+        localeDefault = Locale.getDefault();
+        Locale.setDefault(Locale.ENGLISH);
+
         DefaultSchemeManager schemeManager = new DefaultSchemeManager(null);
         converter = new JSONExtensionConverter(schemeManager);
         objectMapper = JSONExtensionConverter.OBJECT_MAPPER;
 
         schemeManager.register(FakeExtension.class);
+    }
+
+    @AfterEach
+    void cleanUp() {
+        Locale.setDefault(localeDefault);
     }
 
     @Test
@@ -71,7 +83,7 @@ class JSONExtensionConverterTest {
         fake.setKind("Fake");
         var error = assertThrows(SchemaViolationException.class, () -> converter.convertTo(fake));
         assertEquals(1, error.getErrors().size());
-        assertEquals("$.metadata.name: null found, string expected",
+        assertEquals("$.metadata.name: is missing but it is required",
             error.getErrors().iterator().next().getMessage());
     }
 

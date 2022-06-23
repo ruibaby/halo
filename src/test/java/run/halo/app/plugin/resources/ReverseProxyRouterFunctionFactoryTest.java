@@ -14,9 +14,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import run.halo.app.core.extension.ReverseProxy;
 import run.halo.app.extension.ExtensionClient;
 import run.halo.app.extension.Metadata;
 import run.halo.app.plugin.PluginApplicationContext;
+import run.halo.app.plugin.PluginConst;
 
 /**
  * Tests for {@link ReverseProxyRouterFunctionFactory}.
@@ -37,7 +39,9 @@ class ReverseProxyRouterFunctionFactoryTest {
 
     @BeforeEach
     void setUp() {
-        reverseProxyRouterFunctionFactory = new ReverseProxyRouterFunctionFactory(extensionClient);
+        JsBundleRuleProvider jsBundleRuleProvider = new JsBundleRuleProvider();
+        reverseProxyRouterFunctionFactory = new ReverseProxyRouterFunctionFactory(extensionClient,
+            jsBundleRuleProvider);
 
         ReverseProxy reverseProxy = mockReverseProxy();
 
@@ -61,7 +65,7 @@ class ReverseProxyRouterFunctionFactoryTest {
         ReverseProxy reverseProxy = new ReverseProxy();
         Metadata metadata = new Metadata();
         metadata.setLabels(
-            Map.of(ReverseProxyRouterFunctionFactory.REVERSE_PROXY_PLUGIN_LABEL_NAME, "fakeA"));
+            Map.of(PluginConst.PLUGIN_NAME_LABEL_NAME, "fakeA"));
         reverseProxy.setMetadata(metadata);
         reverseProxy.setRules(List.of(reverseProxyRule));
         return reverseProxy;

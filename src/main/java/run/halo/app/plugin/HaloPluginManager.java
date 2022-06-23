@@ -183,7 +183,7 @@ public class HaloPluginManager extends DefaultPluginManager
 
                     pluginWrapper.getPlugin().start();
 
-                    requestMappingManager.registerControllers(pluginWrapper);
+                    requestMappingManager.registerHandlerMappings(pluginWrapper);
 
                     pluginWrapper.setPluginState(PluginState.STARTED);
                     pluginWrapper.setFailedException(null);
@@ -259,7 +259,7 @@ public class HaloPluginManager extends DefaultPluginManager
             // create plugin instance and start it
             pluginWrapper.getPlugin().start();
 
-            requestMappingManager.registerControllers(pluginWrapper);
+            requestMappingManager.registerHandlerMappings(pluginWrapper);
 
             pluginWrapper.setPluginState(PluginState.STARTED);
             startedPlugins.add(pluginWrapper);
@@ -358,7 +358,7 @@ public class HaloPluginManager extends DefaultPluginManager
      */
     public void releaseAdditionalResources(String pluginId) {
         // release request mapping
-        requestMappingManager.removeControllerMapping(pluginId);
+        requestMappingManager.removeHandlerMappings(pluginId);
         try {
             pluginApplicationInitializer.contextDestroyed(pluginId);
         } catch (Exception e) {
@@ -368,9 +368,15 @@ public class HaloPluginManager extends DefaultPluginManager
 
     @Override
     protected PluginWrapper loadPluginFromPath(Path pluginPath) {
-        PluginWrapper pluginWrapper = super.loadPluginFromPath(pluginPath);
-        rootApplicationContext.publishEvent(new HaloPluginLoadedEvent(this, pluginWrapper));
-        return pluginWrapper;
+        try {
+            PluginWrapper pluginWrapper = super.loadPluginFromPath(pluginPath);
+            rootApplicationContext.publishEvent(new HaloPluginLoadedEvent(this, pluginWrapper));
+            return pluginWrapper;
+        } catch (PluginRuntimeException e) {
+            // ignore this
+            log.warn(e.getMessage(), e);
+        }
+        return null;
     }
 
     // end-region

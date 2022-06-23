@@ -7,16 +7,17 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -26,12 +27,17 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.SupplierReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import run.halo.app.core.extension.service.RoleService;
+import run.halo.app.core.extension.service.UserService;
 import run.halo.app.infra.properties.JwtProperties;
+import run.halo.app.security.DefaultUserDetailService;
 import run.halo.app.security.authentication.jwt.LoginAuthenticationFilter;
 import run.halo.app.security.authentication.jwt.LoginAuthenticationManager;
 import run.halo.app.security.authorization.RequestInfoAuthorizationManager;
-import run.halo.app.security.authorization.RoleGetter;
 
 /**
  * Security configuration for WebFlux.
@@ -52,15 +58,19 @@ public class WebServerSecurityConfig {
     SecurityWebFilterChain apiFilterChain(ServerHttpSecurity http,
         ServerCodecConfigurer codec,
         ServerResponse.Context context,
-        RoleGetter roleGetter) {
+        UserService userService,
+        RoleService roleService) {
         http.csrf().disable()
+            .cors(corsSpec -> corsSpec.configurationSource(apiCorsConfigurationSource()))
             .securityMatcher(pathMatchers("/api/**", "/apis/**"))
             .authorizeExchange(exchanges ->
-                exchanges.anyExchange().access(new RequestInfoAuthorizationManager(roleGetter)))
+                exchanges.anyExchange().access(new RequestInfoAuthorizationManager(roleService)))
             // for reuse the JWT authentication
             .oauth2ResourceServer().jwt();
 
-        var loginManager = new LoginAuthenticationManager(userDetailsService(), passwordEncoder());
+        var loginManager = new LoginAuthenticationManager(
+            userDetailsService(userService, roleService),
+            passwordEncoder());
         var loginFilter = new LoginAuthenticationFilter(loginManager,
             codec,
             jwtEncoder(),
@@ -76,11 +86,8 @@ public class WebServerSecurityConfig {
     @Order(0)
     SecurityWebFilterChain webFilterChain(ServerHttpSecurity http) {
         http.authorizeExchange(exchanges -> exchanges.pathMatchers(
-                "/v3/api-docs/**",
-                "/v3/api-docs.yaml",
-                "/swagger-ui/**",
-                "/swagger-ui.html",
-                "/webjars/**").permitAll())
+                "/actuator/**"
+            ).permitAll())
             .authorizeExchange(exchanges -> exchanges.anyExchange().authenticated())
             .cors(withDefaults())
             .httpBasic(withDefaults())
@@ -91,16 +98,22 @@ public class WebServerSecurityConfig {
         return http.build();
     }
 
+    CorsConfigurationSource apiCorsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedHeaders(
+            List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE, HttpHeaders.ACCEPT));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        source.registerCorsConfiguration("/apis/**", configuration);
+        return source;
+    }
+
     @Bean
-    ReactiveUserDetailsService userDetailsService() {
-        //TODO Implement details service when User Extension is ready.
-        return new MapReactiveUserDetailsService(
-            // for test
-            User.withDefaultPasswordEncoder().username("user").password("password").roles("USER")
-                .build(),
-            // for test
-            User.withDefaultPasswordEncoder().username("admin").password("password").roles("ADMIN")
-                .build());
+    ReactiveUserDetailsService userDetailsService(UserService userService,
+        RoleService roleService) {
+        return new DefaultUserDetailService(userService, roleService);
     }
 
     @Bean

@@ -27,6 +27,10 @@ public record GroupVersionKind(String group, String version, String kind) {
         return new GroupVersion(group, version);
     }
 
+    public GroupKind groupKind() {
+        return new GroupKind(group, kind);
+    }
+
     public boolean hasGroup() {
         return StringUtils.hasText(group);
     }
@@ -43,5 +47,13 @@ public record GroupVersionKind(String group, String version, String kind) {
 
         var gv = GroupVersion.parseAPIVersion(apiVersion);
         return new GroupVersionKind(gv.group(), gv.version(), kind);
+    }
+
+    @Override
+    public String toString() {
+        if (hasGroup()) {
+            return group + "/" + version + "/" + kind;
+        }
+        return version + "/" + kind;
     }
 }

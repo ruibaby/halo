@@ -2,11 +2,16 @@ package run.halo.app.extension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,8 +36,8 @@ class ExtensionCreateHandlerTest {
     @Test
     void shouldBuildPathPatternCorrectly() {
         var scheme = Scheme.buildFromType(FakeExtension.class);
-        var getHandler = new ExtensionCreateHandler(scheme, client);
-        var pathPattern = getHandler.pathPattern();
+        var createHandler = new ExtensionCreateHandler(scheme, client);
+        var pathPattern = createHandler.pathPattern();
         assertEquals("/apis/fake.halo.run/v1alpha1/fakes", pathPattern);
     }
 
@@ -58,7 +63,9 @@ class ExtensionCreateHandlerTest {
 
         StepVerifier.create(responseMono)
             .consumeNextWith(response -> {
-                assertEquals(HttpStatus.OK, response.statusCode());
+                assertEquals(HttpStatus.CREATED, response.statusCode());
+                assertEquals("/apis/fake.halo.run/v1alpha1/fakes/my-fake",
+                    response.headers().getLocation().toString());
                 assertEquals(MediaType.APPLICATION_JSON, response.headers().getContentType());
                 assertTrue(response instanceof EntityResponse<?>);
                 assertEquals(fake, ((EntityResponse<?>) response).entity());
@@ -90,13 +97,16 @@ class ExtensionCreateHandlerTest {
 
         var serverRequest = MockServerRequest.builder()
             .body(Mono.just(unstructured));
-        when(client.fetch(eq(FakeExtension.class), eq("my-fake"))).thenReturn(Optional.empty());
+        doThrow(ExtensionNotFoundException.class).when(client).create(any());
 
         var scheme = Scheme.buildFromType(FakeExtension.class);
-        var getHandler = new ExtensionCreateHandler(scheme, client);
-        var responseMono = getHandler.handle(serverRequest);
+        var createHandler = new ExtensionCreateHandler(scheme, client);
+        var responseMono = createHandler.handle(serverRequest);
 
         StepVerifier.create(responseMono)
             .verifyError(ExtensionNotFoundException.class);
+        verify(client, times(1)).create(
+            argThat(extension -> Objects.equals("my-fake", extension.getMetadata().getName())));
+        verify(client, times(0)).fetch(any(), anyString());
     }
 }
