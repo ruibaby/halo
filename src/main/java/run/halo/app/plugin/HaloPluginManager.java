@@ -374,7 +374,7 @@ public class HaloPluginManager extends DefaultPluginManager
             return pluginWrapper;
         } catch (PluginRuntimeException e) {
             // ignore this
-            log.warn(e.getMessage(), e);
+            log.warn(e.getMessage() + " from " + pluginPath);
         }
         return null;
     }
