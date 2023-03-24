@@ -70,8 +70,6 @@ const handleLogin = async () => {
 
     await userStore.fetchCurrentUser();
 
-    localStorage.setItem("logged_in", "true");
-
     emit("succeed");
   } catch (e: unknown) {
     console.error("Failed to login", e);
@@ -155,6 +153,7 @@ const { data: socialAuthProviders } = useQuery<SocialAuthProvider[]>({
       :placeholder="$t('core.login.fields.password.placeholder')"
       type="password"
       validation="required"
+      autocomplete="current-password"
     >
     </FormKit>
   </FormKit>
