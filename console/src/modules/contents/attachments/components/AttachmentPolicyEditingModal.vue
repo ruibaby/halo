@@ -3,7 +3,7 @@ import { Toast, VButton, VModal, VSpace } from "@halo-dev/components";
 import SubmitButton from "@/components/button/SubmitButton.vue";
 import type { Policy, PolicyTemplate } from "@halo-dev/api-client";
 import cloneDeep from "lodash.clonedeep";
-import { computed, ref, watch, watchEffect } from "vue";
+import { computed, ref, toRaw, watch, watchEffect } from "vue";
 import { useSettingForm } from "@/composables/use-setting-form";
 import { apiClient } from "@/utils/api-client";
 import {
@@ -207,32 +207,34 @@ const onVisibleChange = (visible: boolean) => {
     :width="600"
     @update:visible="onVisibleChange"
   >
-    <FormKit
-      v-if="formSchema && configMapFormData"
-      id="attachment-policy-form"
-      v-model="configMapFormData['default']"
-      name="attachment-policy-form"
-      :actions="false"
-      :preserve="true"
-      type="form"
-      :config="{ validationVisibility: 'submit' }"
-      @submit="handleSave"
-    >
+    <div>
       <FormKit
-        id="displayNameInput"
-        v-model="formState.spec.displayName"
-        :label="
-          $t('core.attachment.policy_editing_modal.fields.display_name.label')
-        "
-        type="text"
-        name="displayName"
-        validation="required|length:0,50"
-      ></FormKit>
-      <FormKitSchema
-        :schema="formSchema"
-        :data="configMapFormData['default']"
-      />
-    </FormKit>
+        v-if="formSchema && configMapFormData"
+        id="attachment-policy-form"
+        v-model="configMapFormData['default']"
+        name="attachment-policy-form"
+        :actions="false"
+        :preserve="true"
+        type="form"
+        :config="{ validationVisibility: 'submit' }"
+        @submit="handleSave"
+      >
+        <FormKit
+          id="displayNameInput"
+          v-model="formState.spec.displayName"
+          :label="
+            $t('core.attachment.policy_editing_modal.fields.display_name.label')
+          "
+          type="text"
+          name="displayName"
+          validation="required|length:0,50"
+        ></FormKit>
+        <FormKitSchema
+          :schema="toRaw(formSchema)"
+          :data="configMapFormData['default']"
+        />
+      </FormKit>
+    </div>
 
     <template #footer>
       <VSpace>
