@@ -1,1 +1,24 @@
-{}
+core:
+  login:
+    operations:
+      submit:
+        toast_csrf: CSRF トークンの有効期限が切れています。もう一度お試しください
+        toast_failed: ログインに失敗しました。ユーザー名またはパスワードが正しくありません
+        toast_success: ログイン成功
+      signup:
+        label: アカウントなし
+        button: サインアップ
+      return_login:
+        label: すでにアカウントをお持ちですか
+        button: ログイン
+    fields:
+      username:
+        placeholder: ユーザー名
+      password:
+        placeholder: パスワード
+    button: ログイン
+    modal:
+      title: 再ログイン
+    title: ログイン
+  signup:
+    title: サインアップ
