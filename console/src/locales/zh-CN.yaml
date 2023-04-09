@@ -63,11 +63,11 @@ core:
         single_pages: 页面
         comments: 评论
         attachments: 附件
-        themes: 主题
+        themes: 主题模板
         menus: 菜单
-        plugins: 插件
+        plugins: 外挂
         users: 用户
-        settings: 设置
+        settings: 设定
         actuator: 概览
     operations:
       logout:
