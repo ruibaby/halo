@@ -17,6 +17,7 @@ import {
   VDropdown,
   VDropdownItem,
   VDropdownDivider,
+  VLink,
 } from "@halo-dev/components";
 import ThemeUploadModal from "./components/ThemeUploadModal.vue";
 
@@ -152,13 +153,9 @@ const onUpgradeModalClose = () => {
               {{ $t("core.theme.detail.fields.website") }}
             </dt>
             <dd class="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
-              <a
-                :href="selectedTheme?.spec.website"
-                class="hover:text-gray-600"
-                target="_blank"
-              >
+              <VLink :href="selectedTheme?.spec.website" target="_blank">
                 {{ selectedTheme?.spec.website }}
-              </a>
+              </VLink>
             </dd>
           </div>
           <div
@@ -168,13 +165,9 @@ const onUpgradeModalClose = () => {
               {{ $t("core.theme.detail.fields.repo") }}
             </dt>
             <dd class="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
-              <a
-                :href="selectedTheme?.spec.repo"
-                class="hover:text-gray-600"
-                target="_blank"
-              >
+              <VLink :href="selectedTheme?.spec.repo" target="_blank">
                 {{ selectedTheme?.spec.repo }}
-              </a>
+              </VLink>
             </dd>
           </div>
           <div

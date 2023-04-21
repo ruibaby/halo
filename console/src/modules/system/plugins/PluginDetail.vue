@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { VSwitch, VTag } from "@halo-dev/components";
+import { VSwitch, VTag, VLink } from "@halo-dev/components";
 import type { Ref } from "vue";
 import { computed, inject } from "vue";
 import { apiClient } from "@/utils/api-client";
@@ -157,9 +157,9 @@ const pluginRoleTemplateGroups = computed<RoleTemplateGroup[]>(() => {
                   v-for="(license, index) in plugin.spec.license"
                   :key="index"
                 >
-                  <a v-if="license.url" :href="license.url" target="_blank">
+                  <VLink v-if="license.url" :href="license.url" target="_blank">
                     {{ license.name }}
-                  </a>
+                  </VLink>
                   <span>
                     {{ license.name }}
                   </span>

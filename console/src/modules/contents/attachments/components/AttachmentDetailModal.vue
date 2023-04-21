@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { VButton, VModal, VSpace } from "@halo-dev/components";
+import { VButton, VModal, VSpace, VLink } from "@halo-dev/components";
 import LazyImage from "@/components/image/LazyImage.vue";
 import type { Attachment } from "@halo-dev/api-client";
 import prettyBytes from "pretty-bytes";
@@ -217,9 +217,9 @@ const onVisibleChange = (visible: boolean) => {
           <dd
             class="mt-1 text-sm text-gray-900 hover:text-blue-600 sm:col-span-2 sm:mt-0"
           >
-            <a target="_blank" :href="attachment?.status?.permalink">
+            <VLink target="_blank" :href="attachment?.status?.permalink">
               {{ attachment?.status?.permalink }}
-            </a>
+            </VLink>
           </dd>
         </div>
       </dl>

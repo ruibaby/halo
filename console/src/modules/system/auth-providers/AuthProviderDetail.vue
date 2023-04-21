@@ -11,6 +11,7 @@ import {
   VCard,
   VPageHeader,
   VTabbar,
+  VLink,
 } from "@halo-dev/components";
 import { useSettingFormConvert } from "@/composables/use-setting-form";
 import { useI18n } from "vue-i18n";
@@ -199,13 +200,13 @@ const handleSaveConfigMap = async () => {
                 {{ $t("core.identity_authentication.detail.fields.website") }}
               </dt>
               <dd class="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
-                <a
+                <VLink
                   v-if="authProvider?.spec.website"
                   :href="authProvider?.spec.website"
                   target="_blank"
                 >
                   {{ authProvider.spec.website }}
-                </a>
+                </VLink>
                 <span v-else>
                   {{ $t("core.common.text.none") }}
                 </span>
@@ -218,13 +219,13 @@ const handleSaveConfigMap = async () => {
                 {{ $t("core.identity_authentication.detail.fields.help_page") }}
               </dt>
               <dd class="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
-                <a
+                <VLink
                   v-if="authProvider?.spec.helpPage"
                   :href="authProvider?.spec.helpPage"
                   target="_blank"
                 >
                   {{ authProvider.spec.helpPage }}
-                </a>
+                </VLink>
                 <span v-else>{{ $t("core.common.text.none") }}</span>
               </dd>
             </div>

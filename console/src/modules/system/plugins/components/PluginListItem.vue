@@ -11,6 +11,7 @@ import {
   Toast,
   VDropdownItem,
   VDropdown,
+  VLink,
 } from "@halo-dev/components";
 import PluginUploadModal from "./PluginUploadModal.vue";
 import { ref, toRefs } from "vue";
@@ -138,13 +139,13 @@ const getFailedMessage = (plugin: Plugin) => {
       </VEntityField>
       <VEntityField v-if="plugin?.spec.author">
         <template #description>
-          <a
+          <VLink
             :href="plugin?.spec.author.website"
-            class="hidden text-sm text-gray-500 hover:text-gray-900 sm:block"
             target="_blank"
+            class="text-xs"
           >
             @{{ plugin?.spec.author.name }}
-          </a>
+          </VLink>
         </template>
       </VEntityField>
       <VEntityField :description="plugin?.spec.version" />

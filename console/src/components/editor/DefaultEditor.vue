@@ -82,6 +82,7 @@ import {
   IconLink,
   IconUserFollow,
   Toast,
+  VLink,
   VTabItem,
   VTabs,
 } from "@halo-dev/components";
@@ -730,14 +731,9 @@ watch(
                     </div>
                   </div>
                   <div>
-                    <a
-                      :href="permalink"
-                      :title="permalink"
-                      target="_blank"
-                      class="text-sm text-gray-900 hover:text-blue-600"
-                    >
+                    <VLink :href="permalink" :title="permalink" target="_blank">
                       {{ permalink }}
-                    </a>
+                    </VLink>
                   </div>
                 </div>
               </div>
