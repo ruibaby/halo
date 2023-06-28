@@ -124,6 +124,11 @@ core:
               dialog_title: Do you want to refresh the search engine index?
               dialog_content: This operation will recreate search engine indexes for all published posts.
               success_message: Refresh search engine index successfully.
+            refresh_page_cache:
+              title: Refresh Page Cache
+              dialog_title: Do you want to refresh the page cache?
+              dialog_content: This operation will clear the cache for all pages.
+              success_message: Refresh page cache successfully.
         user_stats:
           title: Users
         comment_stats:
@@ -1163,13 +1168,10 @@ core:
       save_failed_and_retry: "Failed to save, please retry"
       publish_failed_and_retry: "Failed to publish, please retry"
       network_error: "Network error, please check your connection"
-      request_parameter_error: "Request parameter error: {title}"
       login_expired: "Login expired, please log in again"
       forbidden: Access denied
       not_found: Resource not found
-      server_internal_error_with_title: "Internal server error: {title}"
       server_internal_error: Internal server error
-      unknown_error_with_title: "Unknown error: {title}"
       unknown_error: Unknown error
     dialog:
       titles:

@@ -24,4 +24,7 @@ module.exports = {
     },
   ],
   ignorePatterns: ["!.storybook"],
+  parserOptions: {
+    ecmaVersion: "latest",
+  },
 };
