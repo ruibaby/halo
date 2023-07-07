@@ -748,7 +748,6 @@ core:
     filters:
       status:
         items:
-          all: 全部
           active: 已启用
           inactive: 未启用
       sort:
@@ -788,8 +787,6 @@ core:
         license: 协议
         role_templates: 权限模板
         last_starttime: 最近一次启动
-    settings:
-      title: 插件设置
     loader:
       toast:
         entry_load_failed: "{name}：加载插件入口文件失败"
@@ -1192,6 +1189,9 @@ core:
       labels:
         sort: 排序
         status: 状态
+      item_labels:
+        all: 全部
+        default: 默认
     status:
       deleting: 删除中
       loading: 加载中

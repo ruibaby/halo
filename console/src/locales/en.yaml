@@ -748,7 +748,6 @@ core:
     filters:
       status:
         items:
-          all: All
           active: Active
           inactive: Inactive
       sort:
@@ -788,8 +787,6 @@ core:
         license: License
         role_templates: Role Templates
         last_starttime: Last Start Time
-    settings:
-      title: Plugin settings
     loader:
       toast:
         entry_load_failed: "{name}: Failed to load plugin entry file"
@@ -1192,6 +1189,9 @@ core:
       labels:
         sort: Sort
         status: Status
+      item_labels:
+        all: All
+        default: Default
     status:
       deleting: Deleting
       loading: Loading
