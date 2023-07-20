@@ -124,7 +124,7 @@ core:
               dialog_title: 確定要刷新搜尋引擎索引嗎？
               dialog_content: 此操作會對所有已發布的文章重新創建搜尋引擎索引。
               success_message: 刷新成功
-            refresh_page_cache:
+            evict_page_cache:
               title: 重新整理頁面快取
               dialog_title: 確定要重新整理頁面快取嗎？
               dialog_content: 這個操作會清空所有頁面的快取。
@@ -154,14 +154,12 @@ core:
     filters:
       status:
         items:
-          all: 全部
           published: 已發布
           draft: 未發布
       visible:
         label: 可見性
         result: "可見性：{visible}"
         items:
-          all: 全部
           public: 公開
           private: 私有
       category:
@@ -324,14 +322,12 @@ core:
     filters:
       status:
         items:
-          all: 全部
           published: 已發布
           draft: 未發布
       visible:
         label: 可見性
         result: "可見性：{visible}"
         items:
-          all: 全部
           public: 公開
           private: 私有
       author:
@@ -428,7 +424,6 @@ core:
     filters:
       status:
         items:
-          all: 全部
           approved: 已審核
           pending_review: 待審核
       owner:
@@ -748,7 +743,6 @@ core:
     filters:
       status:
         items:
-          all: 全部
           active: 已啟用
           inactive: 未啟用
       sort:
@@ -788,8 +782,6 @@ core:
         license: 協議
         role_templates: 權限模板
         last_starttime: 最近一次啟動
-    settings:
-      title: 插件設置
     loader:
       toast:
         entry_load_failed: "{name}：讀取插件入口文件失敗"
@@ -1076,6 +1068,10 @@ core:
             placeholder: "輸入 / 以選擇輸入類型"
       toolbar:
         attachment: 插入附件
+        select_attachment: 從附件庫選擇
+        insert_image: 從外部連結插入圖片
+        insert_video: 從外部連結插入影片
+        insert_audio: 從外部連結插入音訊
       upload_attachment:
         toast:
           no_available_policy: 目前沒有可用的存儲策略
@@ -1109,6 +1105,8 @@ core:
       creation_label: 創建 {text} 分類
     tag_select:
       creation_label: 創建 {text} 標籤
+    validation:
+      trim: 不能以空格開頭或結尾
   common:
     buttons:
       save: 保存
@@ -1188,6 +1186,9 @@ core:
       labels:
         sort: 排序
         status: 狀態
+      item_labels:
+        all: 全部
+        default: 預設
     status:
       deleting: 刪除中
       loading: 加載中

@@ -124,7 +124,7 @@ core:
               dialog_title: Do you want to refresh the search engine index?
               dialog_content: This operation will recreate search engine indexes for all published posts.
               success_message: Refresh search engine index successfully.
-            refresh_page_cache:
+            evict_page_cache:
               title: Refresh Page Cache
               dialog_title: Do you want to refresh the page cache?
               dialog_content: This operation will clear the cache for all pages.
@@ -154,14 +154,12 @@ core:
     filters:
       status:
         items:
-          all: All
           published: Published
           draft: Draft
       visible:
         label: Visible
         result: "Visible: {visible}"
         items:
-          all: All
           public: Public
           private: Private
       category:
@@ -324,14 +322,12 @@ core:
     filters:
       status:
         items:
-          all: All
           published: Published
           draft: Draft
       visible:
         label: Visible
         result: "Visible: {visible}"
         items:
-          all: All
           public: Public
           private: Private
       author:
@@ -428,7 +424,6 @@ core:
     filters:
       status:
         items:
-          all: All
           approved: Approved
           pending_review: Pending Review
       owner:
@@ -748,7 +743,6 @@ core:
     filters:
       status:
         items:
-          all: All
           active: Active
           inactive: Inactive
       sort:
@@ -788,8 +782,6 @@ core:
         license: License
         role_templates: Role Templates
         last_starttime: Last Start Time
-    settings:
-      title: Plugin settings
     loader:
       toast:
         entry_load_failed: "{name}: Failed to load plugin entry file"
@@ -1076,6 +1068,10 @@ core:
             placeholder: "Enter / to select input type."
       toolbar:
         attachment: Insert attachment
+        select_attachment: Attachments library
+        insert_image: Insert image
+        insert_video: Insert video
+        insert_audio: Insert audio
       upload_attachment:
         toast:
           no_available_policy: There is currently no available storage policy
@@ -1109,6 +1105,8 @@ core:
       creation_label: "Create {text} category"
     tag_select:
       creation_label: "Create {text} tag"
+    validation:
+      trim: Please remove the leading and trailing spaces
   common:
     buttons:
       save: Save
@@ -1188,6 +1186,9 @@ core:
       labels:
         sort: Sort
         status: Status
+      item_labels:
+        all: All
+        default: Default
     status:
       deleting: Deleting
       loading: Loading
