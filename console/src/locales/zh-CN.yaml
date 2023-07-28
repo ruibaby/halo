@@ -17,6 +17,7 @@ core:
       return_login:
         label: 已有账号
         button: 立即登录
+      return_site: 返回到首页
     button: 登录
     modal:
       title: 重新登录
@@ -1150,6 +1151,11 @@ core:
       size_label: 条 / 页
     social_auth_providers:
       title: 三方登录
+    app_download_alert:
+      description: Halo 的主题和插件可以在以下地址下载：
+      sources:
+        app_store: "官方应用市场：{url}"
+        github: "GitHub：{url}"
   composables:
     content_cache:
       toast_recovered: 已从缓存中恢复未保存的内容
