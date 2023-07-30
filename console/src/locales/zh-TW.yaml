@@ -992,8 +992,6 @@ core:
     empty:
       title: 沒有備份
       message: 目前沒有已建立的備份，您可以點擊重新整理或建立新的備份。
-      actions:
-        create: 建立備份
     operations:
       create:
         button: 建立備份
@@ -1149,6 +1147,7 @@ core:
     pagination:
       page_label: 頁
       size_label: 條 / 頁
+      total_label: 共 {total} 項資料
     social_auth_providers:
       title: 三方登入
     app_download_alert:

@@ -992,8 +992,6 @@ core:
     empty:
       title: 没有备份
       message: 当前没有已创建的备份，你可以点击刷新或者创建新的备份
-      actions:
-        create: 创建备份
     operations:
       create:
         button: 创建备份
@@ -1149,6 +1147,7 @@ core:
     pagination:
       page_label: 页
       size_label: 条 / 页
+      total_label: 共 {total} 项数据
     social_auth_providers:
       title: 三方登录
     app_download_alert:
