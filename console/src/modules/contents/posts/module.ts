@@ -2,6 +2,7 @@ import { definePlugin } from "@halo-dev/console-shared";
 import BasicLayout from "@/layouts/BasicLayout.vue";
 import BlankLayout from "@/layouts/BlankLayout.vue";
 import { IconBookRead } from "@halo-dev/components";
+import UserPostList from "./UserPostList.vue";
 import PostList from "./PostList.vue";
 import DeletedPostList from "./DeletedPostList.vue";
 import PostEditor from "./PostEditor.vue";
@@ -10,6 +11,7 @@ import TagList from "./tags/TagList.vue";
 import PostStatsWidget from "./widgets/PostStatsWidget.vue";
 import RecentPublishedWidget from "./widgets/RecentPublishedWidget.vue";
 import { markRaw } from "vue";
+import UserCenterLayout from "@/layouts/UserCenterLayout.vue";
 
 export default definePlugin({
   components: {
@@ -18,7 +20,7 @@ export default definePlugin({
   },
   routes: [
     {
-      path: "/posts",
+      path: "posts",
       component: BasicLayout,
       children: [
         {
@@ -93,4 +95,31 @@ export default definePlugin({
       ],
     },
   ],
+  uc: {
+    routes: [
+      {
+        path: "posts",
+        component: UserCenterLayout,
+        children: [
+          {
+            path: "",
+            name: "UserPosts",
+            component: UserPostList,
+            meta: {
+              title: "core.post.title",
+              searchable: true,
+              permissions: ["system:posts:view"],
+              umenu: {
+                name: "core.sidebar.menu.items.posts",
+                group: "content",
+                icon: markRaw(IconBookRead),
+                priority: 0,
+                mobile: true,
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
 });

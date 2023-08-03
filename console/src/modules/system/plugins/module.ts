@@ -10,7 +10,7 @@ export default definePlugin({
   components: {},
   routes: [
     {
-      path: "/plugins",
+      path: "plugins",
       component: BlankLayout,
       children: [
         {

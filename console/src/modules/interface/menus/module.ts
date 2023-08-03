@@ -8,7 +8,7 @@ export default definePlugin({
   components: {},
   routes: [
     {
-      path: "/menus",
+      path: "menus",
       component: BasicLayout,
       children: [
         {

@@ -52,4 +52,8 @@ export interface PluginModule {
   routes?: RouteRecordRaw[] | RouteRecordAppend[];
 
   extensionPoints?: ExtensionPoint;
+
+  uc: {
+    routes?: RouteRecordRaw[] | RouteRecordAppend[];
+  };
 }

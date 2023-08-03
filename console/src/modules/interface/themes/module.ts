@@ -9,7 +9,7 @@ export default definePlugin({
   components: {},
   routes: [
     {
-      path: "/theme",
+      path: "theme",
       component: ThemeLayout,
       children: [
         {

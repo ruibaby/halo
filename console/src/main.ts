@@ -52,7 +52,23 @@ function registerModule(pluginModule: PluginModule, core: boolean) {
       if ("parentName" in route) {
         router.addRoute(route.parentName, route.route);
       } else {
-        router.addRoute(route);
+        router.addRoute("Admin", route);
+      }
+    }
+  }
+
+  if (pluginModule.uc?.routes) {
+    if (!Array.isArray(pluginModule.uc.routes)) {
+      return;
+    }
+
+    resetRouteMeta(pluginModule.uc.routes);
+
+    for (const route of pluginModule.uc.routes) {
+      if ("parentName" in route) {
+        router.addRoute(route.parentName, route.route);
+      } else {
+        router.addRoute("UserCenter", route);
       }
     }
   }

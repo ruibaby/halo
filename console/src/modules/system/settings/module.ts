@@ -8,7 +8,7 @@ export default definePlugin({
   components: {},
   routes: [
     {
-      path: "/settings",
+      path: "settings",
       component: BasicLayout,
       children: [
         {

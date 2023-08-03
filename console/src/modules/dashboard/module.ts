@@ -14,10 +14,10 @@ export default definePlugin({
   },
   routes: [
     {
-      path: "/",
+      path: "",
       component: BasicLayout,
       name: "Root",
-      redirect: "/dashboard",
+      redirect: "dashboard",
       children: [
         {
           path: "dashboard",

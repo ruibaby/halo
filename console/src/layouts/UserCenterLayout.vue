@@ -100,7 +100,7 @@ const generateMenus = () => {
   const currentRoutes = sortBy(
     router.getRoutes().filter((route) => {
       const { meta } = route;
-      if (!meta?.menu) {
+      if (!meta?.umenu) {
         return false;
       }
       if (meta.permissions) {
@@ -110,7 +110,7 @@ const generateMenus = () => {
     }),
     [
       (route: RouteRecordRaw) => !route.meta?.core,
-      (route: RouteRecordRaw) => route.meta?.menu?.priority || 0,
+      (route: RouteRecordRaw) => route.meta?.umenu?.priority || 0,
     ]
   );
 
@@ -118,13 +118,13 @@ const generateMenus = () => {
 
   // group by menu.group
   menus.value = currentRoutes.reduce((acc, route) => {
-    const { menu } = route.meta;
-    if (!menu) {
+    const { umenu } = route.meta;
+    if (!umenu) {
       return acc;
     }
-    const group = acc.find((item) => item.id === menu.group);
+    const group = acc.find((item) => item.id === umenu.group);
     const childRoute = route.children[0];
-    const childMetaMenu = childRoute?.meta?.menu;
+    const childMetaMenu = childRoute?.meta?.umenu;
 
     // only support one level
     const menuChildren = childMetaMenu
@@ -138,30 +138,30 @@ const generateMenus = () => {
       : undefined;
     if (group) {
       group.items?.push({
-        name: menu.name,
+        name: umenu.name,
         path: route.path,
-        icon: menu.icon,
-        mobile: menu.mobile,
+        icon: umenu.icon,
+        mobile: umenu.mobile,
         children: menuChildren,
       });
     } else {
-      const menuGroup = coreMenuGroups.find((item) => item.id === menu.group);
+      const menuGroup = coreMenuGroups.find((item) => item.id === umenu.group);
       let name = "";
       if (!menuGroup) {
-        name = menu.group;
+        name = umenu.group;
       } else if (menuGroup.name) {
         name = menuGroup.name;
       }
       acc.push({
-        id: menuGroup?.id || menu.group,
+        id: menuGroup?.id || umenu.group,
         name: name,
         priority: menuGroup?.priority || 0,
         items: [
           {
-            name: menu.name,
+            name: umenu.name,
             path: route.path,
-            icon: menu.icon,
-            mobile: menu.mobile,
+            icon: umenu.icon,
+            mobile: umenu.mobile,
             children: menuChildren,
           },
         ],

@@ -13,7 +13,7 @@ export default definePlugin({
   },
   routes: [
     {
-      path: "/single-pages",
+      path: "single-pages",
       component: BasicLayout,
       children: [
         {

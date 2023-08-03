@@ -5,12 +5,23 @@ import BasicLayout from "@/layouts/BasicLayout.vue";
 import Setup from "@/views/system/Setup.vue";
 import Redirect from "@/views/system/Redirect.vue";
 import type { MenuGroupType } from "@halo-dev/console-shared";
+import BlankLayout from "@/layouts/BlankLayout.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
     path: "/:pathMatch(.*)*",
     component: BasicLayout,
     children: [{ path: "", name: "NotFound", component: NotFound }],
+  },
+  {
+    path: "/a",
+    component: BlankLayout,
+    name: "Admin",
+  },
+  {
+    path: "/u",
+    component: BlankLayout,
+    name: "UserCenter",
   },
   {
     path: "/403",

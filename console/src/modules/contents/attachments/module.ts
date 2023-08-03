@@ -11,7 +11,7 @@ export default definePlugin({
   },
   routes: [
     {
-      path: "/attachments",
+      path: "attachments",
       component: BasicLayout,
       children: [
         {

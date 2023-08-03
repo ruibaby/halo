@@ -8,7 +8,7 @@ export default definePlugin({
   components: {},
   routes: [
     {
-      path: "/actuator",
+      path: "actuator",
       component: BasicLayout,
       children: [
         {
