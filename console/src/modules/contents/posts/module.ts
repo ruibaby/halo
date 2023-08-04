@@ -20,6 +20,19 @@ export default definePlugin({
   },
   routes: [
     {
+      parentName: "",
+      route: {
+        path: "/posts/editor",
+        name: "PostEditor",
+        component: PostEditor,
+        meta: {
+          title: "core.post_editor.title",
+          searchable: true,
+          permissions: ["system:posts:manage"],
+        },
+      },
+    },
+    {
       path: "posts",
       component: BasicLayout,
       children: [
@@ -48,16 +61,6 @@ export default definePlugin({
             title: "core.deleted_post.title",
             searchable: true,
             permissions: ["system:posts:view"],
-          },
-        },
-        {
-          path: "editor",
-          name: "PostEditor",
-          component: PostEditor,
-          meta: {
-            title: "core.post_editor.title",
-            searchable: true,
-            permissions: ["system:posts:manage"],
           },
         },
         {
@@ -106,7 +109,7 @@ export default definePlugin({
             name: "UserPosts",
             component: UserPostList,
             meta: {
-              title: "core.post.title",
+              title: "我的文章",
               searchable: true,
               permissions: ["system:posts:view"],
               umenu: {

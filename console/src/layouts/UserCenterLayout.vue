@@ -298,12 +298,11 @@ onMounted(() => {
               <VDropdownItem
                 @click="
                   $router.push({
-                    name: 'UserDetail',
-                    params: { name: '-' },
+                    name: 'Dashboard',
                   })
                 "
               >
-                {{ $t("core.sidebar.operations.profile.button") }}
+                管理
               </VDropdownItem>
               <VDropdownItem @click="handleLogout">
                 {{ $t("core.sidebar.operations.logout.button") }}

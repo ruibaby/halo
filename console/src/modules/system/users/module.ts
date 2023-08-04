@@ -28,7 +28,7 @@ export default definePlugin({
             name: "UserProfile",
             component: UserProfileDetail,
             meta: {
-              title: "core.user.detail.title",
+              title: "我的资料",
               umenu: {
                 name: "资料",
                 group: "我的",

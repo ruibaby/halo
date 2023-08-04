@@ -6,11 +6,39 @@ import { IconDashboard } from "@halo-dev/components";
 import QuickLinkWidget from "./widgets/QuickLinkWidget.vue";
 import ViewsStatsWidget from "./widgets/ViewsStatsWidget.vue";
 import { markRaw } from "vue";
+import UserCenterLayout from "@/layouts/UserCenterLayout.vue";
+import UserDashboard from "./UserDashboard.vue";
 
 export default definePlugin({
   components: {
     QuickLinkWidget,
     ViewsStatsWidget,
+  },
+  uc: {
+    routes: [
+      {
+        path: "dashboard",
+        component: UserCenterLayout,
+        children: [
+          {
+            path: "",
+            name: "UserDashboard",
+            component: UserDashboard,
+            meta: {
+              title: "首页",
+              searchable: true,
+              umenu: {
+                name: "首页",
+                group: "dashboard",
+                icon: markRaw(IconDashboard),
+                priority: 0,
+                mobile: true,
+              },
+            },
+          },
+        ],
+      },
+    ],
   },
   routes: [
     {

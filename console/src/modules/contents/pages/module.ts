@@ -13,6 +13,19 @@ export default definePlugin({
   },
   routes: [
     {
+      parentName: "",
+      route: {
+        path: "/single-pages/editor",
+        name: "SinglePageEditor",
+        component: SinglePageEditor,
+        meta: {
+          title: "core.page_editor.title",
+          searchable: true,
+          permissions: ["system:singlepages:manage"],
+        },
+      },
+    },
+    {
       path: "single-pages",
       component: BasicLayout,
       children: [
@@ -40,16 +53,6 @@ export default definePlugin({
             title: "core.deleted_page.title",
             searchable: true,
             permissions: ["system:singlepages:view"],
-          },
-        },
-        {
-          path: "editor",
-          name: "SinglePageEditor",
-          component: SinglePageEditor,
-          meta: {
-            title: "core.page_editor.title",
-            searchable: true,
-            permissions: ["system:singlepages:manage"],
           },
         },
       ],

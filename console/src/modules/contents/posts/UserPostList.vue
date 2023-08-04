@@ -28,6 +28,7 @@ import TagFilterDropdown from "@/components/filter/TagFilterDropdown.vue";
 import PostListItem from "./components/PostListItem.vue";
 import { provide } from "vue";
 import type { Ref } from "vue";
+import { useUserStore } from "@/stores/user";
 
 const { t } = useI18n();
 
@@ -93,6 +94,8 @@ const hasFilters = computed(() => {
   );
 });
 
+const userStore = useUserStore();
+
 const {
   data: posts,
   isLoading,
@@ -114,7 +117,6 @@ const {
   queryFn: async () => {
     let categories: string[] | undefined;
     let tags: string[] | undefined;
-    let contributors: string[] | undefined;
     const labelSelector: string[] = ["content.halo.run/deleted=false"];
 
     if (selectedCategory.value) {
@@ -123,10 +125,6 @@ const {
 
     if (selectedTag.value) {
       tags = [selectedTag.value];
-    }
-
-    if (selectedContributor.value) {
-      contributors = [selectedContributor.value];
     }
 
     if (selectedPublishStatus.value !== undefined) {
@@ -144,7 +142,9 @@ const {
       keyword: keyword.value,
       category: categories,
       tag: tags,
-      contributor: contributors,
+      contributor: [userStore.currentUser?.metadata.name].filter(
+        Boolean
+      ) as string[],
     });
 
     total.value = data.total;

@@ -298,8 +298,7 @@ onMounted(() => {
               <VDropdownItem
                 @click="
                   $router.push({
-                    name: 'UserDetail',
-                    params: { name: '-' },
+                    name: 'UserProfile',
                   })
                 "
               >
