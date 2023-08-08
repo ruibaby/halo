@@ -3,6 +3,7 @@ import BasicLayout from "@/layouts/BasicLayout.vue";
 import BlankLayout from "@/layouts/BlankLayout.vue";
 import PluginList from "./PluginList.vue";
 import PluginDetail from "./PluginDetail.vue";
+import PluginInstallation from "./PluginInstallation.vue";
 import { IconPlug } from "@halo-dev/components";
 import { markRaw } from "vue";
 
@@ -31,6 +32,16 @@ export default definePlugin({
                   icon: markRaw(IconPlug),
                   priority: 0,
                 },
+              },
+            },
+            {
+              path: "install",
+              name: "PluginInstallation",
+              component: PluginInstallation,
+              meta: {
+                title: "安装插件",
+                searchable: true,
+                permissions: ["system:plugins:manage"],
               },
             },
           ],

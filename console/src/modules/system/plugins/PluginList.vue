@@ -122,7 +122,7 @@ onMounted(() => {
       <VButton
         v-permission="['system:plugins:manage']"
         type="secondary"
-        @click="pluginInstall = true"
+        :route="{ name: 'PluginInstallation' }"
       >
         <template #icon>
           <IconAddCircle class="h-full w-full" />
