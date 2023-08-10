@@ -17,6 +17,7 @@ import { useQueryClient } from "@tanstack/vue-query";
 import { useRouteQuery } from "@vueuse/router";
 import { submitForm } from "@formkit/core";
 import AppDownloadAlert from "@/components/common/AppDownloadAlert.vue";
+import StoreTab from "@/components/store/StoreTab.vue";
 
 const { t } = useI18n();
 const queryClient = useQueryClient();
@@ -177,7 +178,7 @@ watch(
 );
 
 // remote download
-const activeTabId = ref("local");
+const activeTabId = ref("store");
 const remoteDownloadUrl = ref("");
 const downloading = ref(false);
 
@@ -242,12 +243,16 @@ watch(
 <template>
   <VModal
     :visible="visible"
-    :width="600"
     :title="modalTitle"
-    :centered="false"
+    :centered="true"
+    :width="920"
+    height="calc(100vh - 20px)"
     @update:visible="handleVisibleChange"
   >
     <VTabs v-model:active-id="activeTabId" type="outline" class="!rounded-none">
+      <VTabItem id="store" label="应用市场">
+        <StoreTab type="PLUGIN" />
+      </VTabItem>
       <VTabItem id="local" :label="$t('core.plugin.upload_modal.tabs.local')">
         <div class="pb-3">
           <AppDownloadAlert />
@@ -260,6 +265,7 @@ watch(
             allowedFileTypes: ['.jar'],
           }"
           :endpoint="endpoint"
+          width="100%"
           auto-proceed
           @uploaded="onUploaded"
           @error="onError"
@@ -294,5 +300,8 @@ watch(
         </div>
       </VTabItem>
     </VTabs>
+    <template #footer>
+      <VButton @click="handleVisibleChange(false)">关闭</VButton>
+    </template>
   </VModal>
 </template>

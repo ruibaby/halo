@@ -18,6 +18,7 @@ import { useRouteQuery } from "@vueuse/router";
 import { submitForm } from "@formkit/core";
 import type { ErrorResponse, UppyFile } from "@uppy/core";
 import AppDownloadAlert from "@/components/common/AppDownloadAlert.vue";
+import StoreTab from "@/components/store/StoreTab.vue";
 
 const { t } = useI18n();
 const queryClient = useQueryClient();
@@ -158,7 +159,7 @@ const handleCatchExistsException = async (
 };
 
 // remote download
-const activeTabId = ref("local");
+const activeTabId = ref("store");
 const remoteDownloadUrl = ref("");
 const downloading = ref(false);
 
@@ -228,12 +229,16 @@ watch(
 <template>
   <VModal
     :visible="visible"
-    :width="600"
+    :width="920"
     :title="modalTitle"
-    :centered="false"
+    :centered="true"
+    height="calc(100vh - 20px)"
     @update:visible="handleVisibleChange"
   >
     <VTabs v-model:active-id="activeTabId" type="outline" class="!rounded-none">
+      <VTabItem id="store" label="应用市场">
+        <StoreTab type="THEME" />
+      </VTabItem>
       <VTabItem id="local" :label="$t('core.theme.upload_modal.tabs.local')">
         <div class="pb-3">
           <AppDownloadAlert />
@@ -246,6 +251,7 @@ watch(
           }"
           :endpoint="endpoint"
           auto-proceed
+          width="100%"
           @uploaded="onUploaded"
           @error="onError"
         />
@@ -279,5 +285,8 @@ watch(
         </div>
       </VTabItem>
     </VTabs>
+    <template #footer>
+      <VButton @click="handleVisibleChange(false)">关闭</VButton>
+    </template>
   </VModal>
 </template>
