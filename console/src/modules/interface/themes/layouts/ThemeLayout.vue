@@ -204,13 +204,13 @@ onMounted(() => {
           >
             {{ $t("core.common.buttons.active") }}
           </VButton>
-          <VButton type="secondary" size="sm" @click="previewModal = true">
+          <VButton type="default" size="sm" @click="previewModal = true">
             <template #icon>
               <IconEye class="h-full w-full" />
             </template>
             {{ $t("core.common.buttons.preview") }}
           </VButton>
-          <VButton size="sm" type="default" @click="themesModal = true">
+          <VButton type="secondary" @click="themesModal = true">
             <template #icon>
               <IconExchange class="h-full w-full" />
             </template>

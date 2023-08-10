@@ -10,6 +10,7 @@ import {
   VDropdownItem,
   VDropdown,
   VDropdownDivider,
+  IconArrowUpCircleLine,
 } from "@halo-dev/components";
 import PluginUploadModal from "./PluginUploadModal.vue";
 import { ref, toRefs } from "vue";
@@ -113,6 +114,22 @@ const handleResetSettingConfig = async () => {
         </template>
       </VEntityField>
       <VEntityField :description="plugin?.spec.version" />
+      <!-- extension point: plugin:list:field:create -->
+      <VEntityField v-if="plugin?.metadata.name === 'PluginSitemap'">
+        <template #description>
+          <div
+            class="group/upgrade inline-flex cursor-pointer items-center gap-1"
+            @click="upgradeModal = true"
+          >
+            <IconArrowUpCircleLine class="h-4 w-4 animate-pulse text-primary" />
+            <span
+              class="text-xs text-gray-500 group-hover/upgrade:text-gray-900"
+            >
+              新版本
+            </span>
+          </div>
+        </template>
+      </VEntityField>
       <VEntityField v-if="plugin?.metadata.creationTimestamp">
         <template #description>
           <span class="truncate text-xs tabular-nums text-gray-500">

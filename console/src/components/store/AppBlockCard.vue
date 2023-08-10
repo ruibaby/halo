@@ -39,7 +39,7 @@ const prependDomain = (url: string) => {
 
 <template>
   <div
-    class="group relative flex grid-cols-1 flex-col overflow-hidden rounded bg-white p-2 shadow-sm transition-all duration-500 hover:shadow-md hover:ring-1 sm:grid sm:grid-cols-6"
+    class="group relative flex grid-cols-1 flex-col overflow-hidden rounded bg-white p-2 shadow-sm transition-all duration-500 hover:shadow-md hover:ring-1 sm:grid sm:grid-cols-7"
   >
     <div class="col-span-2">
       <div class="relative block">
@@ -83,7 +83,7 @@ const prependDomain = (url: string) => {
       </div>
     </div>
     <div
-      class="relative col-span-4 grid grid-cols-1 content-between px-0 py-1 sm:px-4"
+      class="relative col-span-5 grid grid-cols-1 content-between px-0 py-1 sm:px-4"
     >
       <div>
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -111,7 +111,9 @@ const prependDomain = (url: string) => {
           {{ app.application.spec.description }}
         </p>
       </div>
-      <div class="mt-4 flex w-full flex-1 items-center justify-between gap-2">
+      <div
+        class="mt-4 flex w-full flex-1 items-center justify-between gap-2 sm:mt-0"
+      >
         <div v-if="vendor" class="inline-flex items-center gap-1.5">
           <img
             v-if="vendor?.logo"
