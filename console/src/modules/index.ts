@@ -12,6 +12,7 @@ import settingModule from "./system/settings/module";
 import actuatorModule from "./system/actuator/module";
 import authProviderModule from "./system/auth-providers/module";
 import backupModule from "./system/backup/module";
+import storeModule from "./system/store/module";
 
 // const coreModules = [
 //   dashboardModule,
@@ -42,6 +43,7 @@ const coreModules = [
   roleModule,
   authProviderModule,
   backupModule,
+  storeModule,
 ];
 
 export { coreModules };
