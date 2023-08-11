@@ -49,7 +49,7 @@ const keyword = ref("");
 const page = ref(1);
 const size = ref(20);
 const selectedSort = ref("latestReleaseTimestamp,desc");
-const selectedPriceMode = ref("");
+const selectedPriceMode = ref();
 
 const { data, isFetching, isLoading, refetch } = useQuery({
   queryKey: [
@@ -155,7 +155,6 @@ const handleSelectNext = async () => {
             label="价格"
             :items="[
               {
-                value: '',
                 label: '全部',
               },
               {
