@@ -2,6 +2,8 @@
 import { useQuery } from "@tanstack/vue-query";
 import axios from "axios";
 import {
+  IconArrowLeft,
+  IconArrowRight,
   IconGrid,
   IconList,
   IconRefreshLine,
@@ -17,6 +19,7 @@ import AppBlockCard from "./AppBlockCard.vue";
 import { useI18n } from "vue-i18n";
 import { useLocalStorage } from "@vueuse/core";
 import AppDetailModal from "./AppDetailModal.vue";
+import { nextTick } from "vue";
 
 const { t } = useI18n();
 
@@ -89,6 +92,54 @@ function handleOpenDetailModal(app: any) {
   selectedApp.value = app.application.metadata.name;
   detailModal.value = true;
 }
+
+const handleSelectPrevious = async () => {
+  if (!data.value) return;
+
+  const items = data.value.items;
+
+  const index = items.findIndex(
+    (app) => app.application.metadata.name === selectedApp.value
+  );
+
+  if (index === undefined) return;
+
+  if (index > 0) {
+    selectedApp.value = items[index - 1].application.metadata.name;
+    return;
+  }
+
+  if (index === 0 && data.value.hasPrevious) {
+    page.value--;
+    await nextTick();
+    await refetch();
+    selectedApp.value = items[data.value.length - 1].application.metadata.name;
+  }
+};
+
+const handleSelectNext = async () => {
+  if (!data.value) return;
+
+  const items = data.value.items;
+
+  const index = items.findIndex(
+    (app) => app.application.metadata.name === selectedApp.value
+  );
+
+  if (index === undefined) return;
+
+  if (index < items.length - 1) {
+    selectedApp.value = items[index + 1].application.metadata.name;
+    return;
+  }
+
+  if (index === items.length - 1 && data.value?.hasNext) {
+    page.value++;
+    await nextTick();
+    await refetch();
+    selectedApp.value = items[0].application.metadata.name;
+  }
+};
 </script>
 
 <template>
@@ -202,5 +253,14 @@ function handleOpenDetailModal(app: any) {
     :size-options="[10, 20, 30, 50, 100]"
   />
 
-  <AppDetailModal v-model:visible="detailModal" :name="selectedApp" />
+  <AppDetailModal v-model:visible="detailModal" :name="selectedApp">
+    <template #actions>
+      <span @click="handleSelectPrevious">
+        <IconArrowLeft />
+      </span>
+      <span @click="handleSelectNext">
+        <IconArrowRight />
+      </span>
+    </template>
+  </AppDetailModal>
 </template>

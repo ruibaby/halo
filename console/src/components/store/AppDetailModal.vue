@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { relativeTimeTo } from "@/utils/date";
 import {
-  IconArrowLeft,
-  IconArrowRight,
   VButton,
   VLoading,
   VModal,
@@ -18,6 +16,7 @@ import TablerGraph from "~icons/tabler/graph";
 import TablerDownload from "~icons/tabler/download";
 import TablerCloudDownload from "~icons/tabler/cloud-download";
 import prettyBytes from "pretty-bytes";
+import { toRefs } from "vue";
 
 const props = withDefaults(
   defineProps<{
@@ -44,30 +43,41 @@ const onVisibleChange = (visible: boolean) => {
   }
 };
 
+const { name, visible } = toRefs(props);
+
 const {
   data: app,
   isLoading,
   isFetching,
 } = useQuery({
-  queryKey: ["store-app", props.name, props.visible],
+  queryKey: ["store-app", name, visible],
   queryFn: async () => {
     const { data } = await axios.get(
       `https://halo.run/apis/api.store.halo.run/v1alpha1/applications/${props.name}`
     );
     return data;
   },
-  enabled: computed(() => props.visible && !!props.name),
+  enabled: computed(() => visible.value && !!name.value),
 });
 
 const { data: releases } = useQuery({
-  queryKey: ["store-app-releases", props.name, props.visible],
+  queryKey: ["store-app-releases", name, visible],
   queryFn: async () => {
     const { data } = await axios.get(
       `https://halo.run/apis/api.store.halo.run/v1alpha1/applications/${props.name}/releases`
     );
     return data;
   },
-  enabled: computed(() => props.visible && !!props.name),
+  enabled: computed(
+    () => visible.value && !!name.value && activeId.value === "releases"
+  ),
+});
+
+const title = computed(() => {
+  if (isLoading.value) {
+    return "加载中...";
+  }
+  return `应用：${app.value?.application.spec.displayName}`;
 });
 
 const activeId = ref("readme");
@@ -82,7 +92,7 @@ const prependDomain = (url: string) => {
 
 <template>
   <VModal
-    title="应用详情"
+    :title="title"
     :visible="visible"
     :width="1200"
     :layer-closable="true"
@@ -91,12 +101,7 @@ const prependDomain = (url: string) => {
     @update:visible="onVisibleChange"
   >
     <template #actions>
-      <span>
-        <IconArrowLeft />
-      </span>
-      <span>
-        <IconArrowRight />
-      </span>
+      <slot name="actions" />
     </template>
     <div>
       <VLoading v-if="isLoading || isFetching" />
