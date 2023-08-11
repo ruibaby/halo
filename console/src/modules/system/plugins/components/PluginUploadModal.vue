@@ -251,7 +251,7 @@ watch(
   >
     <VTabs v-model:active-id="activeTabId" type="outline" class="!rounded-none">
       <VTabItem id="store" label="应用市场">
-        <StoreTab type="PLUGIN" />
+        <StoreTab v-if="uploadVisible" type="PLUGIN" />
       </VTabItem>
       <VTabItem id="local" :label="$t('core.plugin.upload_modal.tabs.local')">
         <div class="pb-3">

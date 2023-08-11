@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { relativeTimeTo } from "@/utils/date";
 import {
+  IconLink,
   VButton,
   VLoading,
   VModal,
@@ -102,6 +103,16 @@ const prependDomain = (url: string) => {
   >
     <template #actions>
       <slot name="actions" />
+      <span
+        v-tooltip="{
+          content: '跳转到 halo.run',
+          delay: 300,
+        }"
+      >
+        <a :href="`https://halo.run/store/apps/${name}`" target="_blank">
+          <IconLink />
+        </a>
+      </span>
     </template>
     <div>
       <VLoading v-if="isLoading || isFetching" />

@@ -23,6 +23,7 @@ import { apiClient } from "@/utils/api-client";
 import { useI18n } from "vue-i18n";
 import { useQuery } from "@tanstack/vue-query";
 import { useRouteQuery } from "@vueuse/router";
+import StoreTab from "@/components/store/StoreTab.vue";
 
 const { t } = useI18n();
 
@@ -162,7 +163,7 @@ watch(
   <VModal
     :body-class="['!p-0']"
     :visible="visible"
-    :width="888"
+    :width="920"
     height="calc(100vh - 20px)"
     :title="modalTitle"
     @update:visible="onVisibleChange"
@@ -225,6 +226,11 @@ watch(
           </ul>
         </Transition>
       </VTabItem>
+      <VTabItem id="store" label="应用市场">
+        <StoreTab type="THEME" />
+      </VTabItem>
+      <VTabItem id="local" label="本地上传"></VTabItem>
+      <VTabItem id="download" label="远程下载"></VTabItem>
       <VTabItem
         id="uninstalled"
         :label="$t('core.theme.list_modal.tabs.not_installed')"
