@@ -111,7 +111,7 @@ const handleChange = (id: number | string) => {
     @apply border-b-gray-100;
 
     .tabbar-items {
-      margin-bottom: -2px;
+      margin-bottom: -4px;
       justify-content: flex-start;
     }
 

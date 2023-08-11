@@ -16,6 +16,7 @@ import AppCard from "./AppCard.vue";
 import AppBlockCard from "./AppBlockCard.vue";
 import { useI18n } from "vue-i18n";
 import { useLocalStorage } from "@vueuse/core";
+import AppDetailModal from "./AppDetailModal.vue";
 
 const { t } = useI18n();
 
@@ -78,6 +79,16 @@ const { data, isFetching, isLoading, refetch } = useQuery({
     size.value = data.size;
   },
 });
+
+// detail modal
+const detailModal = ref(false);
+const selectedApp = ref();
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function handleOpenDetailModal(app: any) {
+  selectedApp.value = app.application.metadata.name;
+  detailModal.value = true;
+}
 </script>
 
 <template>
@@ -174,6 +185,7 @@ const { data, isFetching, isLoading, refetch } = useQuery({
           :key="index"
           :index="index"
           :app="app"
+          @open-detail-modal="handleOpenDetailModal"
         />
       </div>
     </div>
@@ -189,4 +201,6 @@ const { data, isFetching, isLoading, refetch } = useQuery({
     :total="data?.total"
     :size-options="[10, 20, 30, 50, 100]"
   />
+
+  <AppDetailModal v-model:visible="detailModal" :name="selectedApp" />
 </template>

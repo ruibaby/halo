@@ -12,6 +12,11 @@ const props = withDefaults(
   {}
 );
 
+const emit = defineEmits<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (event: "open-detail-modal", app: any): void;
+}>();
+
 const screenshots = computed(() => {
   return props.app.application.spec.screenshots;
 });
@@ -89,7 +94,8 @@ const prependDomain = (url: string) => {
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="inline-flex items-center gap-2">
             <div
-              class="relative block text-base font-medium text-black transition-all"
+              class="relative block cursor-pointer text-base font-medium text-black transition-all hover:text-gray-600 hover:underline"
+              @click="emit('open-detail-modal', app)"
             >
               {{ app.application.spec.displayName }}
             </div>
@@ -123,13 +129,13 @@ const prependDomain = (url: string) => {
           />
           <a
             v-if="vendor?.website"
-            class="text-sm text-gray-700 hover:text-gray-900"
+            class="text-xs text-gray-700 hover:text-gray-900"
             :href="vendor.website"
             target="_blank"
           >
             {{ vendor.displayName }}
           </a>
-          <span v-else class="text-sm text-gray-700">
+          <span v-else class="text-xs text-gray-700">
             {{ vendor.displayName }}
           </span>
         </div>
