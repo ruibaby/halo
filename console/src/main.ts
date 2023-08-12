@@ -18,10 +18,10 @@ import { hasPermission } from "@/utils/permission";
 import { useRoleStore } from "@/stores/role";
 import type { RouteRecordRaw } from "vue-router";
 import { useThemeStore } from "./stores/theme";
-import { useSystemStatesStore } from "./stores/system-states";
 import { useUserStore } from "./stores/user";
 import { useSystemConfigMapStore } from "./stores/system-configmap";
 import { setupVueQuery } from "./setup/setupVueQuery";
+import { useGlobalInfoStore } from "./stores/global-info";
 
 const app = createApp(App);
 
@@ -264,6 +264,9 @@ async function initApp() {
     i18n.global.locale.value =
       localStorage.getItem("locale") || getBrowserLanguage();
 
+    const globalInfoStore = useGlobalInfoStore();
+    await globalInfoStore.fetchGlobalInfo();
+
     if (userStore.isAnonymous) {
       return;
     }
@@ -276,15 +279,11 @@ async function initApp() {
       console.error("Failed to load plugins", e);
     }
 
-    // load system setup state
-    const systemStateStore = useSystemStatesStore();
-    await systemStateStore.fetchSystemStates();
-
     // load system configMap
     const systemConfigMapStore = useSystemConfigMapStore();
     await systemConfigMapStore.fetchSystemConfigMap();
 
-    if (systemStateStore.states.isSetup) {
+    if (globalInfoStore.globalInfo?.userInitialized) {
       await loadActivatedTheme();
     }
   } catch (e) {
