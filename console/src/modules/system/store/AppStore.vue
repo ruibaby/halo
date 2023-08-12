@@ -1,6 +1,9 @@
 <script lang="ts" setup>
+import AppBlockCard from "@/components/store/AppBlockCard.vue";
 import AppCard from "@/components/store/AppCard.vue";
 import {
+  IconGrid,
+  IconList,
   IconRefreshLine,
   VButton,
   VCard,
@@ -11,9 +14,56 @@ import {
   VSpace,
 } from "@halo-dev/components";
 import { useQuery } from "@tanstack/vue-query";
+import { useLocalStorage } from "@vueuse/core";
 import axios from "axios";
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import RiApps2Line from "~icons/ri/apps-2-line";
+
+const Types = [
+  {
+    label: "全部",
+  },
+  {
+    value: "THEME",
+    label: "主题",
+  },
+  {
+    value: "PLUGIN",
+    label: "插件",
+  },
+];
+
+const PriceModes = [
+  {
+    label: "全部",
+  },
+  {
+    value: "FREE",
+    label: "免费",
+  },
+  {
+    value: "ONE_TIME",
+    label: "付费",
+  },
+];
+
+const { t } = useI18n();
+
+const viewTypes = [
+  {
+    name: "list",
+    tooltip: t("core.attachment.filters.view_type.items.grid"),
+    icon: IconList,
+  },
+  {
+    name: "grid",
+    tooltip: t("core.attachment.filters.view_type.items.list"),
+    icon: IconGrid,
+  },
+];
+
+const viewType = useLocalStorage<string>("app-store-list-view", "list");
 
 const keyword = ref("");
 const page = ref(1);
@@ -75,40 +125,6 @@ const { data, isFetching, isLoading, refetch } = useQuery({
             <div class="mt-4 flex sm:mt-0">
               <VSpace spacing="lg">
                 <FilterDropdown
-                  v-model="selectedType"
-                  label="类型"
-                  :items="[
-                    {
-                      label: '全部',
-                    },
-                    {
-                      value: 'THEME',
-                      label: '主题',
-                    },
-                    {
-                      value: 'PLUGIN',
-                      label: '插件',
-                    },
-                  ]"
-                />
-                <FilterDropdown
-                  v-model="selectedPriceMode"
-                  label="价格"
-                  :items="[
-                    {
-                      label: '全部',
-                    },
-                    {
-                      value: 'FREE',
-                      label: '免费',
-                    },
-                    {
-                      value: 'ONE_TIME',
-                      label: '付费',
-                    },
-                  ]"
-                />
-                <FilterDropdown
                   v-model="selectedSort"
                   :label="$t('core.common.filters.labels.sort')"
                   :items="[
@@ -122,7 +138,7 @@ const { data, isFetching, isLoading, refetch } = useQuery({
                     },
                   ]"
                 />
-                <!-- <div class="flex flex-row gap-2">
+                <div class="flex flex-row gap-2">
                   <div
                     v-for="(item, index) in viewTypes"
                     :key="index"
@@ -136,7 +152,7 @@ const { data, isFetching, isLoading, refetch } = useQuery({
                   >
                     <component :is="item.icon" class="h-4 w-4" />
                   </div>
-                </div> -->
+                </div>
                 <div class="flex flex-row gap-2">
                   <div
                     class="group cursor-pointer rounded p-1 hover:bg-gray-200"
@@ -154,26 +170,109 @@ const { data, isFetching, isLoading, refetch } = useQuery({
           </div>
         </div>
       </template>
-      <VLoading v-if="isLoading" />
-      <Transition v-else-if="!data?.items.length" appear name="fade">
-        <VEmpty message="没有找到符合条件的插件" title="提示">
-          <template #actions>
-            <VButton :loading="isFetching" @click="refetch()">
-              {{ $t("core.common.buttons.refresh") }}
-            </VButton>
-          </template>
-        </VEmpty>
-      </Transition>
-      <Transition v-else appear name="fade">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
-          <AppCard
-            v-for="(app, index) in data.items"
-            :key="index"
-            :index="index"
-            :app="app"
-          />
+      <div class="grid grid-cols-12 gap-5">
+        <aside class="sticky top-0 hidden h-screen sm:col-span-2 sm:block">
+          <ul role="list" class="divide-y divide-gray-200">
+            <li class="flex py-4 pt-0">
+              <div class="space-y-2">
+                <h2 class="text-base font-medium text-gray-900">类型</h2>
+                <div>
+                  <fieldset class="mt-4">
+                    <div class="space-y-4">
+                      <div
+                        v-for="(type, index) in Types"
+                        :key="index"
+                        class="flex items-center"
+                      >
+                        <input
+                          :id="`type-${type.label}`"
+                          v-model="selectedType"
+                          name="type"
+                          type="radio"
+                          class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                          :value="type.value"
+                        />
+                        <label
+                          :for="`type-${type.label}`"
+                          class="ml-3 block cursor-pointer text-sm font-medium text-gray-700"
+                        >
+                          {{ type.label }}
+                        </label>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </li>
+            <li class="flex py-4">
+              <div class="space-y-2">
+                <h2 class="text-base font-medium text-gray-900">价格</h2>
+                <div>
+                  <fieldset class="mt-4">
+                    <div class="space-y-4">
+                      <div
+                        v-for="(priceMode, index) in PriceModes"
+                        :key="index"
+                        class="flex items-center"
+                      >
+                        <input
+                          :id="`priceMode-${priceMode.label}`"
+                          v-model="selectedPriceMode"
+                          name="priceMode"
+                          type="radio"
+                          class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                          :value="priceMode.value"
+                        />
+                        <label
+                          :for="`priceMode-${priceMode.label}`"
+                          class="ml-3 block cursor-pointer text-sm font-medium text-gray-700"
+                        >
+                          {{ priceMode.label }}
+                        </label>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </aside>
+        <div class="col-span-12 sm:col-span-10">
+          <VLoading v-if="isLoading" />
+          <Transition v-else-if="!data?.items.length" appear name="fade">
+            <VEmpty message="没有找到符合条件的插件" title="提示">
+              <template #actions>
+                <VButton :loading="isFetching" @click="refetch()">
+                  {{ $t("core.common.buttons.refresh") }}
+                </VButton>
+              </template>
+            </VEmpty>
+          </Transition>
+          <Transition v-else appear name="fade">
+            <div>
+              <div
+                v-if="viewType === 'grid'"
+                class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4"
+              >
+                <AppCard
+                  v-for="(app, index) in data.items"
+                  :key="index"
+                  :app="app"
+                  :index="index"
+                />
+              </div>
+              <div v-if="viewType === 'list'" class="grid grid-cols-1 gap-3">
+                <AppBlockCard
+                  v-for="(app, index) in data.items"
+                  :key="index"
+                  :index="index"
+                  :app="app"
+                />
+              </div>
+            </div>
+          </Transition>
         </div>
-      </Transition>
+      </div>
       <template #footer>
         <VPagination
           v-model:page="page"

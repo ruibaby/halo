@@ -1,10 +1,13 @@
 <script lang="ts" setup>
+import { VButton } from "@halo-dev/components";
+import { ref } from "vue";
 import { computed } from "vue";
 
 const props = withDefaults(
   defineProps<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     app: any;
+    index: number;
   }>(),
   {}
 );
@@ -32,6 +35,8 @@ const prependDomain = (url: string) => {
   }
   return `https://halo.run${url}`;
 };
+
+const installing = ref(false);
 </script>
 
 <template>
@@ -125,12 +130,34 @@ const prependDomain = (url: string) => {
           </span>
         </div>
         <div class="inline-flex items-center justify-between gap-1">
-          <span
-            v-if="app.application.spec.priceConfig?.mode === 'ONE_TIME'"
-            class="text-xs font-medium text-gray-600"
+          <VButton v-if="index === 3" size="sm" disabled>已安装</VButton>
+          <VButton
+            v-else-if="index === 1"
+            :loading="installing"
+            size="sm"
+            type="primary"
+            @click="installing = true"
+          >
+            可升级
+          </VButton>
+          <VButton v-else-if="index === 2" size="sm" disabled>
+            版本不兼容
+          </VButton>
+          <VButton
+            v-else-if="app.application.spec.priceConfig?.mode === 'ONE_TIME'"
+            size="sm"
           >
             ￥{{ app.application.spec.priceConfig.oneTimePrice / 100 }}
-          </span>
+          </VButton>
+          <VButton
+            v-else
+            size="sm"
+            type="default"
+            :loading="installing"
+            @click="installing = true"
+          >
+            安装
+          </VButton>
         </div>
       </div>
     </div>

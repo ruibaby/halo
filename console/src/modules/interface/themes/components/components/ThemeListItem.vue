@@ -10,6 +10,7 @@ import {
   VButton,
   VSpace,
   IconMore,
+  IconArrowUpCircleLine,
 } from "@halo-dev/components";
 import type { Theme } from "@halo-dev/api-client";
 import { apiClient } from "@/utils/api-client";
@@ -150,6 +151,19 @@ const handleUninstall = async (theme: Theme, deleteExtensions?: boolean) => {
             </VTag>
           </div>
           <div>
+            <div
+              v-if="isSelected"
+              class="group/upgrade inline-flex cursor-pointer items-center gap-1"
+            >
+              <IconArrowUpCircleLine
+                class="h-4 w-4 animate-pulse text-primary"
+              />
+              <span
+                class="text-xs text-gray-500 group-hover/upgrade:text-gray-900"
+              >
+                新版本
+              </span>
+            </div>
             <VStatusDot
               v-if="getFailedMessage()"
               v-tooltip="getFailedMessage()"
