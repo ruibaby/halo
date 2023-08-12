@@ -1,19 +1,15 @@
 <script lang="ts" setup>
 import {
   IconAddCircle,
-  IconGitHub,
   VButton,
   VEmpty,
   VModal,
   VSpace,
-  VEntity,
-  VEntityField,
   VTabItem,
   VTabs,
   VLoading,
   Toast,
 } from "@halo-dev/components";
-import LazyImage from "@/components/image/LazyImage.vue";
 import ThemePreviewModal from "./preview/ThemePreviewModal.vue";
 import ThemeUploadModal from "./ThemeUploadModal.vue";
 import ThemeListItem from "./components/ThemeListItem.vue";
@@ -178,7 +174,6 @@ watch(
       <VTabItem
         id="installed"
         :label="$t('core.theme.list_modal.tabs.installed')"
-        class="-mx-[16px]"
       >
         <VLoading v-if="isLoading" />
         <Transition v-else-if="!themes?.length" appear name="fade">
@@ -206,15 +201,8 @@ watch(
           </VEmpty>
         </Transition>
         <Transition v-else appear name="fade">
-          <ul
-            class="box-border h-full w-full divide-y divide-gray-100"
-            role="list"
-          >
-            <li
-              v-for="(theme, index) in themes"
-              :key="index"
-              @click="handleSelectTheme(theme)"
-            >
+          <ul class="box-border h-full w-full space-y-3" role="list">
+            <li v-for="(theme, index) in themes" :key="index">
               <ThemeListItem
                 :theme="theme"
                 :is-selected="
@@ -223,6 +211,7 @@ watch(
                 @reload="refetch"
                 @preview="handleOpenPreview(theme)"
                 @upgrade="handleOpenUpgradeModal(theme)"
+                @select="handleSelectTheme"
               />
             </li>
           </ul>
@@ -269,7 +258,6 @@ watch(
       <VTabItem
         id="uninstalled"
         :label="$t('core.theme.list_modal.tabs.not_installed')"
-        class="-mx-[16px]"
       >
         <VLoading v-if="isLoading" />
         <Transition v-else-if="!themes?.length" appear name="fade">
@@ -286,12 +274,104 @@ watch(
           </VEmpty>
         </Transition>
         <Transition v-else appear name="fade">
-          <ul
-            class="box-border h-full w-full divide-y divide-gray-100"
-            role="list"
-          >
+          <ul class="box-border h-full w-full space-y-3" role="list">
             <li v-for="(theme, index) in themes" :key="index">
-              <VEntity>
+              <div
+                class="group relative flex grid-cols-1 flex-col overflow-hidden rounded bg-white p-2 shadow-sm transition-all duration-500 hover:shadow-md hover:ring-1 sm:grid sm:grid-cols-7"
+              >
+                <div class="col-span-2">
+                  <div class="relative block">
+                    <div v-if="false" class="aspect-h-9 aspect-w-16">
+                      <img
+                        class="pointer-events-none transform-gpu rounded object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div v-else class="aspect-h-9 aspect-w-16">
+                      <div
+                        class="transform-gpu rounded bg-cover bg-center bg-no-repeat"
+                        :style="{
+                          backgroundImage: `url('${theme.spec.logo}')`,
+                        }"
+                      >
+                        <div
+                          class="flex h-full w-full items-center justify-center rounded backdrop-blur-3xl"
+                        >
+                          <img
+                            class="h-16 w-16 rounded"
+                            :src="theme.spec.logo"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="relative col-span-5 grid grid-cols-1 content-between px-0 py-1 sm:px-4"
+                >
+                  <div>
+                    <div
+                      class="flex flex-wrap items-center justify-between gap-2"
+                    >
+                      <div class="inline-flex items-center gap-2">
+                        <div
+                          class="relative block cursor-pointer text-base font-medium text-black transition-all hover:text-gray-600 hover:underline"
+                        >
+                          {{ theme.spec.displayName }}
+                        </div>
+                        <span class="text-sm text-gray-500">
+                          {{ theme.spec.version }}
+                        </span>
+                      </div>
+                      <div>
+                        <VStatusDot
+                          v-if="theme.metadata.deletionTimestamp"
+                          v-tooltip="$t('core.common.status.deleting')"
+                          state="warning"
+                          animate
+                        />
+                      </div>
+                    </div>
+                    <p
+                      class="mt-2 line-clamp-6 text-sm font-normal text-gray-500"
+                    >
+                      {{ theme.spec.description }}
+                    </p>
+                  </div>
+                  <div
+                    class="mt-4 flex w-full flex-1 items-center justify-between gap-2 sm:mt-0"
+                  >
+                    <div
+                      v-if="theme.spec.author"
+                      class="inline-flex items-center gap-1.5"
+                    >
+                      <a
+                        v-if="theme.spec.author.website"
+                        class="text-xs text-gray-700 hover:text-gray-900"
+                        :href="theme.spec.author.website"
+                        target="_blank"
+                      >
+                        {{ theme.spec.author.name }}
+                      </a>
+                      <span v-else class="text-xs text-gray-700">
+                        {{ theme.spec.author.name }}
+                      </span>
+                    </div>
+
+                    <div>
+                      <VButton
+                        size="sm"
+                        type="default"
+                        :disabled="creating"
+                        @click="handleCreateTheme(theme)"
+                      >
+                        {{ $t("core.common.buttons.install") }}
+                      </VButton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <VEntity>
                 <template #start>
                   <VEntityField>
                     <template #description>
@@ -370,7 +450,7 @@ watch(
                     </template>
                   </VEntityField>
                 </template>
-              </VEntity>
+              </VEntity> -->
             </li>
           </ul>
         </Transition>
