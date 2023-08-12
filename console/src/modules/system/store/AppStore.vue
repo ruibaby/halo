@@ -8,6 +8,7 @@ import {
   IconGrid,
   IconList,
   IconRefreshLine,
+  VAvatar,
   VButton,
   VCard,
   VEmpty,
@@ -165,12 +166,23 @@ const handleSelectNext = async () => {
     selectedApp.value = items[0].application.metadata.name;
   }
 };
+
+const auth = ref(false);
 </script>
 
 <template>
   <VPageHeader title="应用市场">
     <template #icon>
       <RiApps2Line class="mr-2 self-center" />
+    </template>
+    <template #actions>
+      <div class="flex items-center">
+        <VButton v-if="!auth" size="sm" @click="auth = true">授权</VButton>
+        <div v-else class="inline-flex items-center gap-2">
+          <VAvatar src="https://ryanc.cc/avatar" circle size="xs"></VAvatar>
+          <span class="text-sm font-semibold text-gray-900">Ryan Wang</span>
+        </div>
+      </div>
     </template>
   </VPageHeader>
 
