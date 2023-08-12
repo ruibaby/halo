@@ -52,7 +52,7 @@ function registerModule(pluginModule: PluginModule, core: boolean) {
       if ("parentName" in route) {
         router.addRoute(route.parentName, route.route);
       } else {
-        router.addRoute("Admin", route);
+        router.addRoute(route);
       }
     }
   }

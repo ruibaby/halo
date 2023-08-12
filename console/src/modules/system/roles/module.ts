@@ -7,7 +7,7 @@ export default definePlugin({
   components: {},
   routes: [
     {
-      path: "users",
+      path: "/users",
       component: BasicLayout,
       children: [
         {

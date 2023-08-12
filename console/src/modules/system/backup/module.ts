@@ -8,7 +8,7 @@ export default definePlugin({
   components: {},
   routes: [
     {
-      path: "backup",
+      path: "/backup",
       component: BasicLayout,
       children: [
         {

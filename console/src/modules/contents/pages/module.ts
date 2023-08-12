@@ -26,7 +26,7 @@ export default definePlugin({
       },
     },
     {
-      path: "single-pages",
+      path: "/single-pages",
       component: BasicLayout,
       children: [
         {

@@ -6,7 +6,7 @@ import AuthProviderDetail from "./AuthProviderDetail.vue";
 export default definePlugin({
   routes: [
     {
-      path: "users",
+      path: "/users",
       component: BasicLayout,
       children: [
         {

@@ -60,7 +60,7 @@ export default definePlugin({
       },
     },
     {
-      path: "users",
+      path: "/users",
       component: BlankLayout,
       children: [
         {

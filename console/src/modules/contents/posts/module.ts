@@ -33,7 +33,7 @@ export default definePlugin({
       },
     },
     {
-      path: "posts",
+      path: "/posts",
       component: BasicLayout,
       children: [
         {

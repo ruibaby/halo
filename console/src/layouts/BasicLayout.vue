@@ -6,8 +6,6 @@ import {
   VTag,
   VAvatar,
   Dialog,
-  VDropdown,
-  VDropdownItem,
 } from "@halo-dev/components";
 import { RoutesMenu } from "@/components/menu/RoutesMenu";
 import type { MenuGroupType, MenuItemType } from "@halo-dev/console-shared";
@@ -34,6 +32,8 @@ import {
   useOverlayScrollbars,
   type UseOverlayScrollbarsParams,
 } from "overlayscrollbars-vue";
+import RiLogoutCircleRLine from "~icons/ri/logout-circle-r-line";
+import RiAccountCircleLine from "~icons/ri/account-circle-line";
 
 const route = useRoute();
 const router = useRouter();
@@ -290,25 +290,24 @@ onMounted(() => {
               </VTag>
             </div>
           </div>
-          <VDropdown
-            class="profile-control cursor-pointer rounded p-1 transition-all hover:bg-gray-100"
+          <div
+            v-tooltip="$t('core.sidebar.operations.profile.button')"
+            class="cursor-pointer self-center rounded p-1 text-gray-600 transition-all hover:bg-gray-100 hover:text-gray-900"
+            @click="
+              $router.push({
+                name: 'UserProfile',
+              })
+            "
           >
-            <IconMore />
-            <template #popper>
-              <VDropdownItem
-                @click="
-                  $router.push({
-                    name: 'UserProfile',
-                  })
-                "
-              >
-                {{ $t("core.sidebar.operations.profile.button") }}
-              </VDropdownItem>
-              <VDropdownItem @click="handleLogout">
-                {{ $t("core.sidebar.operations.logout.button") }}
-              </VDropdownItem>
-            </template>
-          </VDropdown>
+            <RiAccountCircleLine />
+          </div>
+          <div
+            v-tooltip="$t('core.sidebar.operations.logout.button')"
+            class="cursor-pointer self-center rounded p-1 text-gray-600 transition-all hover:bg-gray-100 hover:text-gray-900"
+            @click="handleLogout"
+          >
+            <RiLogoutCircleRLine />
+          </div>
         </div>
       </div>
     </aside>

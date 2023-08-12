@@ -15,11 +15,6 @@ export const routes: Array<RouteRecordRaw> = [
     children: [{ path: "", name: "NotFound", component: NotFound }],
   },
   {
-    path: "/a",
-    component: BlankLayout,
-    name: "Admin",
-  },
-  {
     path: "/u",
     component: BlankLayout,
     name: "UserCenter",

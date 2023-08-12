@@ -13,7 +13,7 @@ export default definePlugin({
   },
   routes: [
     {
-      path: "comments",
+      path: "/comments",
       component: BasicLayout,
       children: [
         {
