@@ -67,6 +67,7 @@ const themesModal = ref(false);
 const previewModal = ref(false);
 const activeTab = ref(tabs.value[0].id);
 provide<Ref<string>>("activeTab", activeTab);
+provide<Ref<boolean>>("themesModal", themesModal);
 
 const { loading, isActivated, handleActiveTheme } =
   useThemeLifeCycle(selectedTheme);

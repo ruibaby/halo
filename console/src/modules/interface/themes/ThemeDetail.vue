@@ -30,6 +30,7 @@ const { t } = useI18n();
 
 const selectedTheme = inject<Ref<Theme | undefined>>("selectedTheme", ref());
 const upgradeModal = ref(false);
+const themesModal = inject<Ref<boolean>>("themesModal");
 
 const { isActivated, getFailedMessage, handleResetSettingConfig } =
   useThemeLifeCycle(selectedTheme);
@@ -110,7 +111,7 @@ const onUpgradeModalClose = () => {
               <IconMore />
             </div>
             <template #popper>
-              <VDropdownItem @click="upgradeModal = true">
+              <VDropdownItem @click="themesModal = true">
                 {{ $t("core.common.buttons.upgrade") }}
               </VDropdownItem>
               <VDropdownDivider />

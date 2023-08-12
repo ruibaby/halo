@@ -24,6 +24,8 @@ import { useI18n } from "vue-i18n";
 import { useQuery } from "@tanstack/vue-query";
 import { useRouteQuery } from "@vueuse/router";
 import StoreTab from "@/components/store/StoreTab.vue";
+import AppDownloadAlert from "@/components/common/AppDownloadAlert.vue";
+import UppyUpload from "@/components/upload/UppyUpload.vue";
 
 const { t } = useI18n();
 
@@ -49,11 +51,11 @@ const activeTab = ref("installed");
 const themeUploadVisible = ref(false);
 const creating = ref(false);
 
-const modalTitle = computed(() => {
-  return activeTab.value === "installed"
-    ? t("core.theme.list_modal.titles.installed_themes")
-    : t("core.theme.list_modal.titles.not_installed_themes");
-});
+// const modalTitle = computed(() => {
+//   return activeTab.value === "installed"
+//     ? t("core.theme.list_modal.titles.installed_themes")
+//     : t("core.theme.list_modal.titles.not_installed_themes");
+// });
 
 const {
   data: themes,
@@ -165,7 +167,7 @@ watch(
     :visible="visible"
     :width="920"
     height="calc(100vh - 20px)"
-    :title="modalTitle"
+    title="主题管理"
     @update:visible="onVisibleChange"
   >
     <VTabs
@@ -229,8 +231,41 @@ watch(
       <VTabItem id="store" label="应用市场">
         <StoreTab type="THEME" />
       </VTabItem>
-      <VTabItem id="local" label="本地上传"></VTabItem>
-      <VTabItem id="download" label="远程下载"></VTabItem>
+      <VTabItem id="local" label="本地上传">
+        <div class="pb-3">
+          <AppDownloadAlert />
+        </div>
+        <UppyUpload
+          :restrictions="{
+            maxNumberOfFiles: 1,
+            allowedFileTypes: ['.zip'],
+          }"
+          auto-proceed
+          width="100%"
+        />
+      </VTabItem>
+      <VTabItem id="download" label="远程下载">
+        <FormKit
+          id="theme-remote-download-form"
+          name="theme-remote-download-form"
+          type="form"
+          :preserve="true"
+        >
+          <FormKit
+            :label="$t('core.theme.upload_modal.tabs.remote.fields.url')"
+            type="text"
+          ></FormKit>
+        </FormKit>
+
+        <div class="pt-5">
+          <VButton
+            type="secondary"
+            @click="$formkit.submit('theme-remote-download-form')"
+          >
+            {{ $t("core.common.buttons.download") }}
+          </VButton>
+        </div>
+      </VTabItem>
       <VTabItem
         id="uninstalled"
         :label="$t('core.theme.list_modal.tabs.not_installed')"
@@ -343,18 +378,9 @@ watch(
     </VTabs>
 
     <template #footer>
-      <VSpace>
-        <VButton
-          v-permission="['system:themes:manage']"
-          type="secondary"
-          @click="handleOpenInstallModal()"
-        >
-          {{ $t("core.theme.common.buttons.install") }}
-        </VButton>
-        <VButton @click="onVisibleChange(false)">
-          {{ $t("core.common.buttons.close") }}
-        </VButton>
-      </VSpace>
+      <VButton @click="onVisibleChange(false)">
+        {{ $t("core.common.buttons.close") }}
+      </VButton>
     </template>
   </VModal>
 

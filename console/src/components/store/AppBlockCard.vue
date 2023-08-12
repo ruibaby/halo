@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { relativeTimeTo } from "@/utils/date";
 import { VButton } from "@halo-dev/components";
+import { ref } from "vue";
 import { computed } from "vue";
 
 const props = withDefaults(
@@ -40,6 +41,8 @@ const prependDomain = (url: string) => {
   }
   return `https://halo.run${url}`;
 };
+
+const installing = ref(false);
 </script>
 
 <template>
@@ -142,7 +145,13 @@ const prependDomain = (url: string) => {
 
         <div>
           <VButton v-if="index === 3" size="sm" disabled>已安装</VButton>
-          <VButton v-else-if="index === 1" size="sm" type="primary">
+          <VButton
+            v-else-if="index === 1"
+            :loading="installing"
+            size="sm"
+            type="primary"
+            @click="installing = true"
+          >
             可升级
           </VButton>
           <VButton v-else-if="index === 2" size="sm" disabled>
@@ -154,7 +163,15 @@ const prependDomain = (url: string) => {
           >
             ￥{{ app.application.spec.priceConfig.oneTimePrice / 100 }}
           </VButton>
-          <VButton v-else size="sm" type="default">安装</VButton>
+          <VButton
+            v-else
+            size="sm"
+            type="default"
+            :loading="installing"
+            @click="installing = true"
+          >
+            安装
+          </VButton>
         </div>
       </div>
     </div>
