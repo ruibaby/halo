@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import AppBlockCard from "@/components/store/AppBlockCard.vue";
 import AppCard from "@/components/store/AppCard.vue";
+import AppDetailModal from "@/components/store/AppDetailModal.vue";
 import {
+  IconArrowLeft,
+  IconArrowRight,
   IconGrid,
   IconList,
   IconRefreshLine,
@@ -16,6 +19,7 @@ import {
 import { useQuery } from "@tanstack/vue-query";
 import { useLocalStorage } from "@vueuse/core";
 import axios from "axios";
+import { nextTick } from "vue";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import RiApps2Line from "~icons/ri/apps-2-line";
@@ -103,6 +107,64 @@ const { data, isFetching, isLoading, refetch } = useQuery({
     size.value = data.size;
   },
 });
+
+// detail modal
+const detailModal = ref(false);
+const selectedApp = ref();
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function handleOpenDetailModal(app: any) {
+  selectedApp.value = app.application.metadata.name;
+  detailModal.value = true;
+}
+
+const handleSelectPrevious = async () => {
+  if (!data.value) return;
+
+  const items = data.value.items;
+
+  const index = items.findIndex(
+    (app) => app.application.metadata.name === selectedApp.value
+  );
+
+  if (index === undefined) return;
+
+  if (index > 0) {
+    selectedApp.value = items[index - 1].application.metadata.name;
+    return;
+  }
+
+  if (index === 0 && data.value.hasPrevious) {
+    page.value--;
+    await nextTick();
+    await refetch();
+    selectedApp.value = items[data.value.length - 1].application.metadata.name;
+  }
+};
+
+const handleSelectNext = async () => {
+  if (!data.value) return;
+
+  const items = data.value.items;
+
+  const index = items.findIndex(
+    (app) => app.application.metadata.name === selectedApp.value
+  );
+
+  if (index === undefined) return;
+
+  if (index < items.length - 1) {
+    selectedApp.value = items[index + 1].application.metadata.name;
+    return;
+  }
+
+  if (index === items.length - 1 && data.value?.hasNext) {
+    page.value++;
+    await nextTick();
+    await refetch();
+    selectedApp.value = items[0].application.metadata.name;
+  }
+};
 </script>
 
 <template>
@@ -113,7 +175,7 @@ const { data, isFetching, isLoading, refetch } = useQuery({
   </VPageHeader>
 
   <div class="m-0 md:m-4">
-    <VCard>
+    <VCard class="overflow-visible">
       <template #header>
         <div class="block w-full bg-gray-50 px-4 py-3">
           <div
@@ -252,13 +314,14 @@ const { data, isFetching, isLoading, refetch } = useQuery({
             <div>
               <div
                 v-if="viewType === 'grid'"
-                class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4"
+                class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
               >
                 <AppCard
                   v-for="(app, index) in data.items"
                   :key="index"
                   :app="app"
                   :index="index"
+                  @open-detail-modal="handleOpenDetailModal"
                 />
               </div>
               <div v-if="viewType === 'list'" class="grid grid-cols-1 gap-3">
@@ -267,6 +330,7 @@ const { data, isFetching, isLoading, refetch } = useQuery({
                   :key="index"
                   :index="index"
                   :app="app"
+                  @open-detail-modal="handleOpenDetailModal"
                 />
               </div>
             </div>
@@ -287,5 +351,16 @@ const { data, isFetching, isLoading, refetch } = useQuery({
         />
       </template>
     </VCard>
+
+    <AppDetailModal v-model:visible="detailModal" :name="selectedApp">
+      <template #actions>
+        <span @click="handleSelectPrevious">
+          <IconArrowLeft />
+        </span>
+        <span @click="handleSelectNext">
+          <IconArrowRight />
+        </span>
+      </template>
+    </AppDetailModal>
   </div>
 </template>

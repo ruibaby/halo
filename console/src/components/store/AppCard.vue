@@ -12,6 +12,11 @@ const props = withDefaults(
   {}
 );
 
+const emit = defineEmits<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (event: "open-detail-modal", app: any): void;
+}>();
+
 const screenshots = computed(() => {
   return props.app.application.spec.screenshots;
 });
@@ -92,8 +97,8 @@ const installing = ref(false);
         <div class="flex flex-1 flex-col gap-1">
           <div class="inline-flex flex-row items-center gap-2">
             <div
-              :href="`/store/apps/${app.application.metadata.name}`"
-              class="text-sm font-semibold text-gray-800 hover:text-blue-600"
+              class="cursor-pointer text-sm font-semibold text-gray-800 hover:text-gray-600 hover:underline"
+              @click="emit('open-detail-modal', app)"
             >
               {{ app.application.spec.displayName }}
             </div>
