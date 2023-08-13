@@ -174,106 +174,885 @@ onMounted(() => {
         <div>
           <dl class="divide-y divide-gray-100">
             <div
-              v-for="(group, groupIndex) in roleTemplateGroups"
-              :key="groupIndex"
               class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
             >
               <dt class="text-sm font-medium text-gray-900">
-                <div>
-                  {{ $t(`core.rbac.${group.module}`, group.module as string) }}
-                </div>
-                <div
-                  v-if="
-                    group.roles.length &&
-                    group.roles[0].metadata.labels?.[pluginLabels.NAME]
-                  "
-                  class="mt-3 text-xs text-gray-500"
-                >
-                  <i18n-t
-                    keypath="core.role.common.text.provided_by_plugin"
-                    tag="div"
-                  >
-                    <template #plugin>
-                      <RouterLink
-                        :to="{
-                          name: 'PluginDetail',
-                          params: {
-                            name: group.roles[0].metadata.labels?.[
-                              pluginLabels.NAME
-                            ],
-                          },
-                        }"
-                        class="hover:text-blue-600"
-                      >
-                        {{
-                          group.roles[0].metadata.labels?.[pluginLabels.NAME]
-                        }}
-                      </RouterLink>
-                    </template>
-                  </i18n-t>
+                <div>Moments Management</div>
+                <div class="mt-3 text-xs text-gray-500">
+                  <div>
+                    由
+                    <a
+                      href="/console/plugins/PluginMoments"
+                      class="hover:text-blue-600"
+                      >PluginMoments</a
+                    >
+                    提供
+                  </div>
                 </div>
               </dt>
               <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                 <ul class="space-y-2">
-                  <li v-for="(role, index) in group.roles" :key="index">
+                  <li>
                     <label
-                      class="inline-flex w-72 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
-                    >
-                      <input
-                        v-if="!isSuperRole"
-                        v-model="selectedRoleTemplates"
-                        :value="role.metadata.name"
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
                         class="h-4 w-4 rounded border-gray-300 text-indigo-600"
                         type="checkbox"
-                        :disabled="isSystemReserved"
-                        @change="handleRoleTemplateSelect"
-                      />
-                      <input
-                        v-else
-                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
-                        type="checkbox"
-                        checked
-                        disabled
+                        value="role-template-moments-manage"
                       />
                       <div class="flex flex-1 flex-col gap-y-3">
                         <span class="font-medium text-gray-900">
-                          {{
-                            $t(
-                              `core.rbac.${
-                                role.metadata.annotations?.[
-                                  rbacAnnotations.DISPLAY_NAME
-                                ]
-                              }`,
-                              role.metadata.annotations?.[
-                                rbacAnnotations.DISPLAY_NAME
-                              ] as string
-                            )
-                          }}
+                          管理瞬间内容
                         </span>
-                        <span
-                          v-if="
-                            role.metadata.annotations?.[
-                              rbacAnnotations.DEPENDENCIES
-                            ]
-                          "
-                          class="text-xs text-gray-400"
-                        >
-                          {{
-                            $t("core.role.common.text.dependent_on", {
-                              roles: JSON.parse(
-                                role.metadata.annotations?.[
-                                  rbacAnnotations.DEPENDENCIES
-                                ]
-                              )
-                                .map((item: string) =>
-                                  $t(`core.rbac.${item}`, item as string)
-                                )
-                                .join("，"),
-                            })
-                          }}
+                        <span class="text-xs text-gray-400">
+                          包括删除和修改状态
                         </span>
                       </div>
                     </label>
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                    >
+                      <input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-moments-view"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">
+                          发布瞬间
+                        </span>
+                        <span class="text-xs text-gray-400">
+                          允许自己的瞬间，但需要拥有管理权限的用户审核。
+                        </span>
+                      </div>
+                    </label>
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                    >
+                      <input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-moments-view"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">
+                          发布瞬间无需审核
+                        </span>
+                      </div>
+                    </label>
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>Migration</div>
+                <div class="mt-3 text-xs text-gray-500">
+                  <div>
+                    由
+                    <a
+                      href="/console/plugins/PluginMigrate"
+                      class="hover:text-blue-600"
+                      >PluginMigrate</a
+                    >
+                    提供
+                  </div>
+                </div>
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-migration"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">Migration</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>core.rbac.undefined</div>
+                <div class="mt-3 text-xs text-gray-500">
+                  <div>
+                    由
+                    <a
+                      href="/console/plugins/app-store"
+                      class="hover:text-blue-600"
+                      >app-store</a
+                    >
+                    提供
+                  </div>
+                </div>
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="authenticated-store-role"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900"
+                          >core.rbac.undefined</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-publicly-view-store"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900"
+                          >core.rbac.undefined</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>联系表单</div>
+                <div class="mt-3 text-xs text-gray-500">
+                  <div>
+                    由
+                    <a
+                      href="/console/plugins/PluginContactForm"
+                      class="hover:text-blue-600"
+                      >PluginContactForm</a
+                    >
+                    提供
+                  </div>
+                </div>
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-entry-manage"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">条目管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于
+                          role-template-form-template-view-list，role-template-entry-view</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-form-template-view-list"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900"
+                          >表单模板列表查看</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-entry-view"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">条目查看</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 role-template-form-template-view-list</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-form-template-manage"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900"
+                          >表单模板管理</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>AppStore Management</div>
+                <div class="mt-3 text-xs text-gray-500">
+                  <div>
+                    由
+                    <a
+                      href="/console/plugins/app-store"
+                      class="hover:text-blue-600"
+                      >app-store</a
+                    >
+                    提供
+                  </div>
+                </div>
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-appstore"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900"
+                          >AppStore Manage</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>备份与恢复</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-migration"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900"
+                          >备份与恢复管理</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>Cache Management</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-cache"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900"
+                          >Cache Manage</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>用户</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-view-users"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">用户查看</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-users"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">用户管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 用户查看，修改密码</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>主题</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-view-themes"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">主题查看</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-themes"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">主题管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 主题查看</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>文章</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-moments-manage"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">
+                          管理文章
+                        </span>
+                        <span class="text-xs text-gray-400">
+                          包括删除和修改状态
+                        </span>
+                      </div>
+                    </label>
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                    >
+                      <input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-posts"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">创建文章</span>
+                        <span class="text-xs text-gray-400">
+                          拥有创建文章的权限，但需要由拥有管理文章权限的用户发布
+                        </span>
+                      </div>
+                    </label>
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                    >
+                      <input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-posts"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">
+                          创建文章无需审核
+                        </span>
+                      </div>
+                    </label>
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                    >
+                      <input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-posts"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">
+                          允许编辑文章时上传图片
+                        </span>
+                      </div>
+                    </label>
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>页面</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-view-singlepages"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">页面查看</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 版本查看</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-singlepages"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">页面管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 页面查看，版本管理</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>设置表单</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-view-settings"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900"
+                          >设置表单查看</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-settings"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900"
+                          >设置表单管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 设置表单查看</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>角色</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-view-roles"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">角色查看</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-roles"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">角色管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 角色查看，权限管理</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>评论</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-comments"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">评论管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 评论查看</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-view-comments"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">评论查看</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>配置</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-view-configmaps"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">配置查看</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-configmaps"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">配置管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 配置查看</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>插件</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-view-plugins"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">插件查看</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-plugins"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">插件管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 插件查看</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>权限</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-view-permissions"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">权限查看</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-permissions"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">权限管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 权限查看</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>菜单</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-view-menus"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">菜单查看</span
+                        ><!--v-if-->
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-menus"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">菜单管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 菜单查看</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div
+              class="bg-white px-4 py-5 hover:bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+            >
+              <dt class="text-sm font-medium text-gray-900">
+                <div>附件</div>
+                <!--v-if-->
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul class="space-y-2">
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-manage-attachments"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">附件管理</span
+                        ><span class="text-xs text-gray-400"
+                          >依赖于 附件查看</span
+                        >
+                      </div></label
+                    >
+                  </li>
+                  <li>
+                    <label
+                      class="inline-flex w-96 cursor-pointer flex-row items-center gap-4 rounded-base border p-5 hover:border-primary"
+                      ><input
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                        type="checkbox"
+                        value="role-template-view-attachments"
+                      />
+                      <div class="flex flex-1 flex-col gap-y-3">
+                        <span class="font-medium text-gray-900">附件查看</span
+                        ><!--v-if-->
+                      </div></label
+                    >
                   </li>
                 </ul>
               </dd>

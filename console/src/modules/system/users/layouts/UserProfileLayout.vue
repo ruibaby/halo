@@ -59,11 +59,11 @@ const tabs = [
     label: t("core.user.detail.tabs.detail"),
     routeName: "UserDetail",
   },
-  // {
-  //   id: "tokens",
-  //   label: "个人令牌",
-  //   routeName: "PersonalAccessTokens",
-  // },
+  {
+    id: "tokens",
+    label: "个人令牌",
+    routeName: "PersonalAccessTokens",
+  },
 ];
 
 const editingModal = ref(false);

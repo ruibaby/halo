@@ -28,6 +28,11 @@ watch(
   () => {
     const { title: routeTitle } = route.meta;
     if (routeTitle) {
+      if (route.matched[0].name === "UserCenter") {
+        title.value = `个人中心：${t(routeTitle)} - ${AppName}`;
+        return;
+      }
+
       title.value = `${t(routeTitle)} - ${AppName}`;
       return;
     }

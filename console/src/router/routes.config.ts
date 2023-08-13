@@ -7,6 +7,7 @@ import Redirect from "@/views/system/Redirect.vue";
 import type { MenuGroupType } from "@halo-dev/console-shared";
 import BlankLayout from "@/layouts/BlankLayout.vue";
 import SetupInitialData from "@/views/system/SetupInitialData.vue";
+import UserCenterLayout from "@/layouts/UserCenterLayout.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -16,7 +17,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/u",
-    component: BlankLayout,
+    component: UserCenterLayout,
     name: "UserCenter",
   },
   {

@@ -143,6 +143,35 @@ const handleResetForm = () => {
               type="text"
               validation="required|length:0,50"
             ></FormKit>
+            <FormKit
+              label="是否为管理员"
+              type="select"
+              :options="[
+                {
+                  label: '否',
+                  value: false,
+                },
+                {
+                  label: '是',
+                  value: true,
+                },
+              ]"
+              help="非管理员将不允许进入管理后台"
+            ></FormKit>
+            <FormKit
+              label="登录后重定向至"
+              type="select"
+              :options="[
+                {
+                  label: '管理后台',
+                  value: true,
+                },
+                {
+                  label: '个人中心',
+                  value: false,
+                },
+              ]"
+            ></FormKit>
           </FormKit>
         </div>
       </div>

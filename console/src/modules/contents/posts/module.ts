@@ -102,7 +102,6 @@ export default definePlugin({
     routes: [
       {
         path: "posts",
-        component: UserCenterLayout,
         children: [
           {
             path: "",

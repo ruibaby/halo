@@ -18,7 +18,6 @@ export default definePlugin({
     routes: [
       {
         path: "dashboard",
-        component: UserCenterLayout,
         children: [
           {
             path: "",

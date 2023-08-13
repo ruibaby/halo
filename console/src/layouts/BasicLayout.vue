@@ -291,11 +291,11 @@ onMounted(() => {
             </div>
           </div>
           <div
-            v-tooltip="$t('core.sidebar.operations.profile.button')"
+            v-tooltip="`个人中心`"
             class="cursor-pointer self-center rounded p-1 text-gray-600 transition-all hover:bg-gray-100 hover:text-gray-900"
             @click="
               $router.push({
-                name: 'UserProfile',
+                name: 'UserDashboard',
               })
             "
           >

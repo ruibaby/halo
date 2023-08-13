@@ -29,7 +29,6 @@ import { useQuery } from "@tanstack/vue-query";
 import { useI18n } from "vue-i18n";
 import { useFileDialog } from "@vueuse/core";
 import { rbacAnnotations } from "@/constants/annotations";
-import UserCenterLayout from "@/layouts/UserCenterLayout.vue";
 
 const UserAvatarCropper = defineAsyncComponent(
   () => import("../components/UserAvatarCropper.vue")
@@ -51,6 +50,21 @@ const tabs = [
   {
     id: "detail",
     label: t("core.user.detail.tabs.detail"),
+    routeName: "UserProfile",
+  },
+  {
+    id: "login",
+    label: "登录方式",
+    routeName: "UserProfile",
+  },
+  {
+    id: "sessions",
+    label: "登录会话",
+    routeName: "UserProfile",
+  },
+  {
+    id: "tokens",
+    label: "个人令牌",
     routeName: "UserProfile",
   },
 ];
@@ -175,121 +189,119 @@ const changeUploadAvatar = () => {
 };
 </script>
 <template>
-  <UserCenterLayout>
-    <UserEditingModal v-model:visible="editingModal" :user="user?.user" />
+  <UserEditingModal v-model:visible="editingModal" :user="user?.user" />
 
-    <UserPasswordChangeModal
-      v-model:visible="passwordChangeModal"
-      :user="user?.user"
-      @close="refetch"
-    />
+  <UserPasswordChangeModal
+    v-model:visible="passwordChangeModal"
+    :user="user?.user"
+    @close="refetch"
+  />
 
-    <header class="bg-white">
-      <div class="p-4">
-        <div class="flex items-center justify-between">
-          <div class="flex flex-row items-center gap-5">
-            <div class="group relative h-20 w-20">
-              <VLoading v-if="isFetching" class="h-full w-full" />
-              <div
-                v-else
-                class="h-full w-full"
-                @mouseover="showAvatarEditor = true"
-                @mouseout="showAvatarEditor = false"
-              >
-                <VAvatar
-                  v-if="user"
-                  :src="user.user.spec.avatar"
-                  :alt="user.user.spec.displayName"
-                  circle
-                  width="100%"
-                  height="100%"
-                  class="ring-4 ring-white drop-shadow-md"
-                />
-                <VDropdown>
-                  <div
-                    v-show="showAvatarEditor"
-                    class="absolute left-0 right-0 top-0 h-full w-full cursor-pointer rounded-full border-0 bg-black/60 text-center leading-[5rem] transition-opacity duration-300 group-hover:opacity-100"
-                  >
-                    <IconRiPencilFill
-                      class="inline-block w-full self-center text-2xl text-white"
-                    />
-                  </div>
-                  <template #popper>
-                    <VDropdownItem @click="open()">
-                      {{ $t("core.common.buttons.upload") }}
-                    </VDropdownItem>
-                    <VDropdownItem @click="handleRemoveCurrentAvatar">
-                      {{ $t("core.common.buttons.delete") }}
-                    </VDropdownItem>
-                  </template>
-                </VDropdown>
-              </div>
-            </div>
-            <div class="block">
-              <h1 class="truncate text-lg font-bold text-gray-900">
-                {{ user?.user.spec.displayName }}
-              </h1>
-              <span v-if="!isLoading" class="text-sm text-gray-600">
-                @{{ user?.user.metadata.name }}
-              </span>
+  <header class="bg-white">
+    <div class="p-4">
+      <div class="flex items-center justify-between">
+        <div class="flex flex-row items-center gap-5">
+          <div class="group relative h-20 w-20">
+            <VLoading v-if="isFetching" class="h-full w-full" />
+            <div
+              v-else
+              class="h-full w-full"
+              @mouseover="showAvatarEditor = true"
+              @mouseout="showAvatarEditor = false"
+            >
+              <VAvatar
+                v-if="user"
+                :src="user.user.spec.avatar"
+                :alt="user.user.spec.displayName"
+                circle
+                width="100%"
+                height="100%"
+                class="ring-4 ring-white drop-shadow-md"
+              />
+              <VDropdown>
+                <div
+                  v-show="showAvatarEditor"
+                  class="absolute left-0 right-0 top-0 h-full w-full cursor-pointer rounded-full border-0 bg-black/60 text-center leading-[5rem] transition-opacity duration-300 group-hover:opacity-100"
+                >
+                  <IconRiPencilFill
+                    class="inline-block w-full self-center text-2xl text-white"
+                  />
+                </div>
+                <template #popper>
+                  <VDropdownItem @click="open()">
+                    {{ $t("core.common.buttons.upload") }}
+                  </VDropdownItem>
+                  <VDropdownItem @click="handleRemoveCurrentAvatar">
+                    {{ $t("core.common.buttons.delete") }}
+                  </VDropdownItem>
+                </template>
+              </VDropdown>
             </div>
           </div>
-          <div>
-            <VDropdown>
-              <VButton type="default">
-                {{ $t("core.common.buttons.edit") }}
-              </VButton>
-              <template #popper>
-                <VDropdownItem @click="editingModal = true">
-                  {{ $t("core.user.detail.actions.update_profile.title") }}
-                </VDropdownItem>
-                <VDropdownItem @click="passwordChangeModal = true">
-                  {{ $t("core.user.detail.actions.change_password.title") }}
-                </VDropdownItem>
-              </template>
-            </VDropdown>
+          <div class="block">
+            <h1 class="truncate text-lg font-bold text-gray-900">
+              {{ user?.user.spec.displayName }}
+            </h1>
+            <span v-if="!isLoading" class="text-sm text-gray-600">
+              @{{ user?.user.metadata.name }}
+            </span>
           </div>
         </div>
+        <div>
+          <VDropdown>
+            <VButton type="default">
+              {{ $t("core.common.buttons.edit") }}
+            </VButton>
+            <template #popper>
+              <VDropdownItem @click="editingModal = true">
+                {{ $t("core.user.detail.actions.update_profile.title") }}
+              </VDropdownItem>
+              <VDropdownItem @click="passwordChangeModal = true">
+                {{ $t("core.user.detail.actions.change_password.title") }}
+              </VDropdownItem>
+            </template>
+          </VDropdown>
+        </div>
       </div>
-    </header>
-    <section class="bg-white p-4">
-      <VTabbar
-        v-model:active-id="activeTab"
-        :items="tabs"
-        class="w-full"
-        type="outline"
-        @change="handleTabChange"
-      ></VTabbar>
-      <div class="mt-2">
-        <RouterView></RouterView>
-      </div>
-    </section>
-    <VModal
-      :visible="visibleCropperModal"
-      :width="1200"
-      :title="$t('core.user.detail.avatar.cropper_modal.title')"
-      @update:visible="handleCloseCropperModal"
-    >
-      <UserAvatarCropper
-        ref="userAvatarCropper"
-        :file="originalFile"
-        @change-file="changeUploadAvatar"
-      />
-      <template #footer>
-        <VSpace>
-          <VButton
-            v-if="visibleCropperModal"
-            :loading="uploadSaving"
-            type="secondary"
-            @click="handleUploadAvatar"
-          >
-            {{ $t("core.common.buttons.submit") }}
-          </VButton>
-          <VButton @click="handleCloseCropperModal">
-            {{ $t("core.common.buttons.cancel") }}
-          </VButton>
-        </VSpace>
-      </template>
-    </VModal>
-  </UserCenterLayout>
+    </div>
+  </header>
+  <section class="bg-white p-4">
+    <VTabbar
+      v-model:active-id="activeTab"
+      :items="tabs"
+      class="w-full"
+      type="outline"
+      @change="handleTabChange"
+    ></VTabbar>
+    <div class="mt-2">
+      <RouterView></RouterView>
+    </div>
+  </section>
+  <VModal
+    :visible="visibleCropperModal"
+    :width="1200"
+    :title="$t('core.user.detail.avatar.cropper_modal.title')"
+    @update:visible="handleCloseCropperModal"
+  >
+    <UserAvatarCropper
+      ref="userAvatarCropper"
+      :file="originalFile"
+      @change-file="changeUploadAvatar"
+    />
+    <template #footer>
+      <VSpace>
+        <VButton
+          v-if="visibleCropperModal"
+          :loading="uploadSaving"
+          type="secondary"
+          @click="handleUploadAvatar"
+        >
+          {{ $t("core.common.buttons.submit") }}
+        </VButton>
+        <VButton @click="handleCloseCropperModal">
+          {{ $t("core.common.buttons.cancel") }}
+        </VButton>
+      </VSpace>
+    </template>
+  </VModal>
 </template>

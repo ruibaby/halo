@@ -40,7 +40,6 @@ export default definePlugin({
     routes: [
       {
         path: "comments",
-        component: UserCenterLayout,
         children: [
           {
             path: "",
