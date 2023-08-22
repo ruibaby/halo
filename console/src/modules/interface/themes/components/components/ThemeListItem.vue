@@ -201,6 +201,14 @@ const handleUninstall = async (theme: Theme, deleteExtensions?: boolean) => {
 
         <div>
           <VSpace>
+            <VButton
+              v-if="!isActivated"
+              size="sm"
+              type="primary"
+              @click="handleActiveTheme(true)"
+            >
+              启用
+            </VButton>
             <VButton size="sm" type="default" @click="emit('select', theme)">
               选择
             </VButton>
@@ -211,15 +219,6 @@ const handleUninstall = async (theme: Theme, deleteExtensions?: boolean) => {
                 <IconMore />
               </VButton>
               <template #popper>
-                <VDropdownItem
-                  v-if="!isActivated"
-                  @click="handleActiveTheme(true)"
-                >
-                  {{ $t("core.common.buttons.active") }}
-                </VDropdownItem>
-                <VDropdownItem @click="emit('upgrade')">
-                  {{ $t("core.common.buttons.upgrade") }}
-                </VDropdownItem>
                 <VDropdownItem @click="emit('preview')">
                   {{ $t("core.common.buttons.preview") }}
                 </VDropdownItem>
