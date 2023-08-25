@@ -7,13 +7,12 @@ import {
   VCard,
   VEmpty,
   VPageHeader,
-  VPagination,
   VSpace,
   VLoading,
   Dialog,
 } from "@halo-dev/components";
 import PluginListItem from "./components/PluginListItem.vue";
-import PluginUploadModal from "./components/PluginUploadModal.vue";
+import PluginInstallationModal from "./components/PluginInstallationModal.vue";
 import { computed, ref, onMounted } from "vue";
 import { apiClient } from "@/utils/api-client";
 import { usePermission } from "@/utils/permission";
@@ -21,24 +20,19 @@ import { useQuery } from "@tanstack/vue-query";
 import type { Plugin } from "@halo-dev/api-client";
 import { useI18n } from "vue-i18n";
 import { useRouteQuery } from "@vueuse/router";
-import { watch } from "vue";
 
 const { t } = useI18n();
-
 const { currentUserHasPermission } = usePermission();
 
-const pluginUploadModal = ref(false);
+const pluginInstallationModal = ref(false);
 const pluginToUpgrade = ref<Plugin>();
 
 function handleOpenUploadModal(plugin?: Plugin) {
   pluginToUpgrade.value = plugin;
-  pluginUploadModal.value = true;
+  pluginInstallationModal.value = true;
 }
 
 const keyword = ref("");
-const page = ref(1);
-const size = ref(20);
-const total = ref(0);
 
 const selectedEnabledValue = ref();
 const selectedSortValue = ref();
@@ -52,33 +46,16 @@ function handleClearFilters() {
   selectedEnabledValue.value = undefined;
 }
 
-watch(
-  () => [selectedEnabledValue.value, selectedSortValue.value, keyword.value],
-  () => {
-    page.value = 1;
-  }
-);
-
 const { data, isLoading, isFetching, refetch } = useQuery<Plugin[]>({
-  queryKey: [
-    "plugins",
-    page,
-    size,
-    keyword,
-    selectedEnabledValue,
-    selectedSortValue,
-  ],
+  queryKey: ["plugins", keyword, selectedEnabledValue, selectedSortValue],
   queryFn: async () => {
     const { data } = await apiClient.plugin.listPlugins({
-      page: page.value,
-      size: size.value,
+      page: 0,
+      size: 0,
       keyword: keyword.value,
       enabled: selectedEnabledValue.value,
       sort: [selectedSortValue.value].filter(Boolean) as string[],
     });
-
-    total.value = data.total;
-
     return data.items;
   },
   keepPreviousData: true,
@@ -115,10 +92,10 @@ onMounted(() => {
 });
 </script>
 <template>
-  <PluginUploadModal
+  <PluginInstallationModal
     v-if="currentUserHasPermission(['system:plugins:manage'])"
-    v-model:visible="pluginUploadModal"
-    :upgrade-plugin="pluginToUpgrade"
+    v-model:visible="pluginInstallationModal"
+    :plugin-to-upgrade="pluginToUpgrade"
   />
 
   <VPageHeader :title="$t('core.plugin.title')">
@@ -251,20 +228,6 @@ onMounted(() => {
           </li>
         </ul>
       </Transition>
-
-      <template #footer>
-        <VPagination
-          v-model:page="page"
-          v-model:size="size"
-          :page-label="$t('core.components.pagination.page_label')"
-          :size-label="$t('core.components.pagination.size_label')"
-          :total-label="
-            $t('core.components.pagination.total_label', { total: total })
-          "
-          :total="total"
-          :size-options="[10, 20, 30, 50, 100]"
-        />
-      </template>
     </VCard>
   </div>
 </template>
