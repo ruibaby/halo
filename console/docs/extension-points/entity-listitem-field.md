@@ -9,6 +9,7 @@
 目前支持扩展的数据列表：
 
 - 插件：`"plugin:list-item:field:create"?: (plugin: Ref<Plugin>) => | EntityFieldItem[] | Promise<EntityFieldItem[]>`
+- 文章：`"post:list-item:field:create"?: (post: Ref<ListedPost>) => | EntityFieldItem[] | Promise<EntityFieldItem[]>`
 
 示例：
 
@@ -48,6 +49,6 @@ export interface EntityFieldItem {
   component: Raw<Component>;            // 字段组件，可以使用 `@halo-dev/components` 中提供的 `VEntityField`，也可以自定义
   props?: Record<string, unknown>;      // 组件的 props
   permissions?: string[];               // 权限设置
-  visible?: boolean;                    // 是否可见
+  hidden?: boolean;                     // 是否隐藏
 }
 ```
