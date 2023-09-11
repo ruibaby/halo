@@ -68,6 +68,7 @@ public class SystemSetting {
         public static final String GROUP = "user";
         Boolean allowRegistration;
         String defaultRole;
+        String avatarPolicy;
     }
 
     @Data
@@ -78,6 +79,7 @@ public class SystemSetting {
         Integer categoryPageSize;
         Integer tagPageSize;
         Boolean review;
+        String slugGenerationStrategy;
     }
 
     @Data

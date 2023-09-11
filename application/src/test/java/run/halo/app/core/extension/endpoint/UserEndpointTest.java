@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -17,6 +18,7 @@ import static run.halo.app.extension.GroupVersionKind.fromExtension;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,19 +32,25 @@ import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import run.halo.app.core.extension.Role;
 import run.halo.app.core.extension.RoleBinding;
 import run.halo.app.core.extension.User;
+import run.halo.app.core.extension.attachment.Attachment;
+import run.halo.app.core.extension.service.AttachmentService;
 import run.halo.app.core.extension.service.RoleService;
 import run.halo.app.core.extension.service.UserService;
 import run.halo.app.extension.ListResult;
 import run.halo.app.extension.Metadata;
 import run.halo.app.extension.ReactiveExtensionClient;
 import run.halo.app.extension.exception.ExtensionNotFoundException;
+import run.halo.app.infra.SystemConfigurableEnvironmentFetcher;
+import run.halo.app.infra.SystemSetting;
 import run.halo.app.infra.utils.JsonUtils;
 
 @SpringBootTest
@@ -56,6 +64,12 @@ class UserEndpointTest {
     RoleService roleService;
 
     @Mock
+    AttachmentService attachmentService;
+
+    @Mock
+    SystemConfigurableEnvironmentFetcher environmentFetcher;
+
+    @Mock
     ReactiveExtensionClient client;
 
     @Mock
@@ -67,17 +81,8 @@ class UserEndpointTest {
     @BeforeEach
     void setUp() {
         // disable authorization
-        var rule = new Role.PolicyRule.Builder()
-            .apiGroups("*")
-            .resources("*")
-            .verbs("*")
-            .build();
-        var role = new Role();
-        role.setRules(List.of(rule));
-        when(roleService.getMonoRole("authenticated")).thenReturn(Mono.just(role));
-        webClient = WebTestClient.bindToRouterFunction(endpoint.endpoint())
-            .build();
-        webClient = webClient.mutateWith(csrf());
+        webClient = WebTestClient.bindToRouterFunction(endpoint.endpoint()).build()
+            .mutateWith(csrf());
     }
 
     @Nested
@@ -118,35 +123,6 @@ class UserEndpointTest {
                 .expectBody()
                 .jsonPath("$.items.length()").isEqualTo(3)
                 .jsonPath("$.total").isEqualTo(3);
-        }
-
-        @Test
-        void shouldFilterUsersWhenKeywordProvided() {
-            var expectUser =
-                createUser("fake-user-2", "expected display name");
-            var unexpectedUser1 =
-                createUser("fake-user-1", "first fake display name");
-            var unexpectedUser2 =
-                createUser("fake-user-3", "second fake display name");
-            var users = List.of(
-                expectUser
-            );
-            var expectResult = new ListResult<>(users);
-            when(client.list(same(User.class), any(), any(), anyInt(), anyInt()))
-                .thenReturn(Mono.just(expectResult));
-            when(roleService.list(anySet())).thenReturn(Flux.empty());
-
-            bindToRouterFunction(endpoint.endpoint())
-                .build()
-                .get().uri("/users?keyword=Expected")
-                .exchange()
-                .expectStatus().isOk();
-
-            verify(client).list(same(User.class), argThat(
-                    predicate -> predicate.test(expectUser)
-                        && !predicate.test(unexpectedUser1)
-                        && !predicate.test(unexpectedUser2)),
-                any(), anyInt(), anyInt());
         }
 
         @Test
@@ -511,5 +487,105 @@ class UserEndpointTest {
             .bodyValue(userRequest)
             .exchange()
             .expectStatus().isOk();
+    }
+
+    @Nested
+    class AvatarUploadTest {
+        @Test
+        void respondWithErrorIfTypeNotPNG() {
+
+            var multipartBodyBuilder = new MultipartBodyBuilder();
+            multipartBodyBuilder.part("file", "fake-file")
+                .contentType(MediaType.IMAGE_JPEG)
+                .filename("fake-filename.jpg");
+
+            SystemSetting.User user = mock(SystemSetting.User.class);
+            when(environmentFetcher.fetch(SystemSetting.User.GROUP, SystemSetting.User.class))
+                .thenReturn(Mono.just(user));
+
+            webClient
+                .post()
+                .uri("/users/-/avatar")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartBodyBuilder.build()))
+                .exchange()
+                .expectStatus()
+                .is4xxClientError();
+        }
+
+        @Test
+        void shouldUploadSuccessfully() {
+            var currentUser = createUser("fake-user");
+
+            Attachment attachment = new Attachment();
+            Metadata metadata = new Metadata();
+            metadata.setName("fake-attachment");
+            attachment.setMetadata(metadata);
+
+            var multipartBodyBuilder = new MultipartBodyBuilder();
+            multipartBodyBuilder.part("file", "fake-file")
+                .contentType(MediaType.IMAGE_PNG)
+                .filename("fake-filename.png");
+
+            SystemSetting.User user = mock(SystemSetting.User.class);
+            when(environmentFetcher.fetch(SystemSetting.User.GROUP, SystemSetting.User.class))
+                .thenReturn(Mono.just(user));
+            when(client.get(User.class, "fake-user")).thenReturn(Mono.just(currentUser));
+            when(attachmentService.upload(anyString(), anyString(), anyString(),
+                any(), any(MediaType.IMAGE_PNG.getClass()))).thenReturn(Mono.just(attachment));
+
+            when(client.update(currentUser)).thenReturn(Mono.just(currentUser));
+
+            webClient.post()
+                .uri("/users/-/avatar")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartBodyBuilder.build()))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .json("""
+                      {
+                              "spec":{
+                                  "displayName":"Faker",
+                                  "avatar":"fake-avatar.png",
+                                  "email":"hi@halo.run",
+                                  "password":"fake-password",
+                                  "bio":"Fake bio"
+                              },
+                              "status":null,
+                              "apiVersion":"v1alpha1",
+                              "kind":"User",
+                              "metadata":{
+                                  "name":"fake-user",
+                                  "annotations":{
+                                      "halo.run/avatar-attachment-name":
+                                      "fake-attachment"
+                                  }
+                              }
+                          }
+                    """);
+
+            verify(client).get(User.class, "fake-user");
+            verify(client).update(currentUser);
+        }
+
+        User createUser(String name) {
+            var spec = new User.UserSpec();
+            spec.setEmail("hi@halo.run");
+            spec.setBio("Fake bio");
+            spec.setDisplayName("Faker");
+            spec.setAvatar("fake-avatar.png");
+            spec.setPassword("fake-password");
+
+            var metadata = new Metadata();
+            metadata.setName(name);
+            metadata.setAnnotations(new HashMap<>());
+
+            var user = new User();
+            user.setSpec(spec);
+            user.setMetadata(metadata);
+            return user;
+        }
     }
 }

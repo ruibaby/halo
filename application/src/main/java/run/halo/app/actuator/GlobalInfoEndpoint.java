@@ -14,6 +14,7 @@ import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint;
 import org.springframework.stereotype.Component;
 import run.halo.app.extension.ConfigMap;
+import run.halo.app.infra.InitializationStateGetter;
 import run.halo.app.infra.SystemConfigurableEnvironmentFetcher;
 import run.halo.app.infra.SystemSetting;
 import run.halo.app.infra.SystemSetting.Basic;
@@ -33,6 +34,8 @@ public class GlobalInfoEndpoint {
 
     private final AuthProviderService authProviderService;
 
+    private final InitializationStateGetter initializationStateGetter;
+
     @ReadOperation
     public GlobalInfo globalInfo() {
         final var info = new GlobalInfo();
@@ -40,12 +43,17 @@ public class GlobalInfoEndpoint {
         info.setUseAbsolutePermalink(haloProperties.isUseAbsolutePermalink());
         info.setLocale(Locale.getDefault());
         info.setTimeZone(TimeZone.getDefault());
+        info.setUserInitialized(initializationStateGetter.userInitialized()
+            .blockOptional().orElse(false));
+        info.setDataInitialized(initializationStateGetter.dataInitialized()
+            .blockOptional().orElse(false));
         handleSocialAuthProvider(info);
         systemConfigFetcher.ifAvailable(fetcher -> fetcher.getConfigMapBlocking()
             .ifPresent(configMap -> {
                 handleCommentSetting(info, configMap);
                 handleUserSetting(info, configMap);
                 handleBasicSetting(info, configMap);
+                handlePostSlugGenerationStrategy(info, configMap);
             }));
 
         return info;
@@ -69,6 +77,12 @@ public class GlobalInfoEndpoint {
         private boolean allowRegistration;
 
         private String favicon;
+
+        private boolean userInitialized;
+
+        private boolean dataInitialized;
+
+        private String postSlugGenerationStrategy;
 
         private List<SocialAuthProvider> socialAuthProviders;
     }
@@ -109,6 +123,13 @@ public class GlobalInfoEndpoint {
         } else {
             info.setAllowRegistration(
                 user.getAllowRegistration() != null && user.getAllowRegistration());
+        }
+    }
+
+    private void handlePostSlugGenerationStrategy(GlobalInfo info, ConfigMap configMap) {
+        var post = SystemSetting.get(configMap, SystemSetting.Post.GROUP, SystemSetting.Post.class);
+        if (post != null) {
+            info.setPostSlugGenerationStrategy(post.getSlugGenerationStrategy());
         }
     }
 

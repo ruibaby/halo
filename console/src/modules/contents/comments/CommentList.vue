@@ -19,6 +19,7 @@ import { apiClient } from "@/utils/api-client";
 import { useQuery } from "@tanstack/vue-query";
 import { useI18n } from "vue-i18n";
 import UserFilterDropdown from "@/components/filter/UserFilterDropdown.vue";
+import { useRouteQuery } from "@vueuse/router";
 
 const { t } = useI18n();
 
@@ -26,10 +27,17 @@ const checkAll = ref(false);
 const selectedComment = ref<ListedComment>();
 const selectedCommentNames = ref<string[]>([]);
 
-const keyword = ref("");
-const selectedApprovedStatus = ref();
-const selectedSort = ref();
-const selectedUser = ref();
+const keyword = useRouteQuery<string>("keyword", "");
+const selectedApprovedStatus = useRouteQuery<
+  string | undefined,
+  boolean | undefined
+>("approved", undefined, {
+  transform: (value) => {
+    return value ? value === "true" : undefined;
+  },
+});
+const selectedSort = useRouteQuery<string | undefined>("sort");
+const selectedUser = useRouteQuery<string | undefined>("user");
 
 watch(
   () => [
@@ -57,8 +65,12 @@ function handleClearFilters() {
   selectedUser.value = undefined;
 }
 
-const page = ref(1);
-const size = ref(20);
+const page = useRouteQuery<number>("page", 1, {
+  transform: Number,
+});
+const size = useRouteQuery<number>("size", 20, {
+  transform: Number,
+});
 const total = ref(0);
 
 const {
@@ -84,6 +96,8 @@ const {
       sort: [selectedSort.value].filter(Boolean) as string[],
       keyword: keyword.value,
       ownerName: selectedUser.value,
+      // TODO: email users are not supported at the moment.
+      ownerKind: selectedUser.value ? "User" : undefined,
     });
 
     total.value = data.total;
@@ -260,13 +274,13 @@ const handleApproveInBatch = async () => {
                     },
                     {
                       label: t('core.comment.filters.status.items.approved'),
-                      value: true,
+                      value: 'true',
                     },
                     {
                       label: t(
                         'core.comment.filters.status.items.pending_review'
                       ),
-                      value: false,
+                      value: 'false',
                     },
                   ]"
                 />
@@ -360,7 +374,6 @@ const handleApproveInBatch = async () => {
             <CommentListItem
               :comment="comment"
               :is-selected="checkSelection(comment)"
-              @reload="refetch()"
             >
               <template #checkbox>
                 <input
@@ -377,16 +390,17 @@ const handleApproveInBatch = async () => {
       </Transition>
 
       <template #footer>
-        <div class="bg-white sm:flex sm:items-center sm:justify-end">
-          <VPagination
-            v-model:page="page"
-            v-model:size="size"
-            :page-label="$t('core.components.pagination.page_label')"
-            :size-label="$t('core.components.pagination.size_label')"
-            :total="total"
-            :size-options="[20, 30, 50, 100]"
-          />
-        </div>
+        <VPagination
+          v-model:page="page"
+          v-model:size="size"
+          :page-label="$t('core.components.pagination.page_label')"
+          :size-label="$t('core.components.pagination.size_label')"
+          :total-label="
+            $t('core.components.pagination.total_label', { total: total })
+          "
+          :total="total"
+          :size-options="[20, 30, 50, 100]"
+        />
       </template>
     </VCard>
   </div>

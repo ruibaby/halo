@@ -32,11 +32,13 @@ import {
   ExtensionVideo,
   ExtensionAudio,
   ExtensionCodeBlock,
-  ToolbarItem,
+  ExtensionFontSize,
+  ExtensionColor,
+  ExtensionIndent,
   lowlight,
   type AnyExtension,
   Editor,
-  ToolbarSubItem,
+  ToolboxItem,
 } from "@halo-dev/richtext-editor";
 import {
   IconCalendar,
@@ -50,10 +52,6 @@ import {
 } from "@halo-dev/components";
 import AttachmentSelectorModal from "@/modules/contents/attachments/components/AttachmentSelectorModal.vue";
 import ExtensionCharacterCount from "@tiptap/extension-character-count";
-import MdiFileImageBox from "~icons/mdi/file-image-box";
-import MdiVideoPlusOutline from "~icons/mdi/video-plus-outline";
-import MdiImagePlusOutline from "~icons/mdi/image-plus-outline";
-import MdiVolume from "~icons/mdi/volume";
 import MdiFormatHeader1 from "~icons/mdi/format-header-1";
 import MdiFormatHeader2 from "~icons/mdi/format-header-2";
 import MdiFormatHeader3 from "~icons/mdi/format-header-3";
@@ -80,7 +78,9 @@ import { useFetchAttachmentPolicy } from "@/modules/contents/attachments/composa
 import { useI18n } from "vue-i18n";
 import { i18n } from "@/locales";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
-import { usePluginModuleStore, type PluginModule } from "@/stores/plugin";
+import { usePluginModuleStore } from "@/stores/plugin";
+import type { PluginModule } from "@halo-dev/console-shared";
+import { useDebounceFn } from "@vueuse/core";
 
 const { t } = useI18n();
 
@@ -144,6 +144,14 @@ onMounted(() => {
     extensionsFromPlugins.push(...extensions);
   });
 
+  // debounce OnUpdate
+  const debounceOnUpdate = useDebounceFn(() => {
+    const html = editor.value?.getHTML() + "";
+    emit("update:raw", html);
+    emit("update:content", html);
+    emit("update", html);
+  }, 250);
+
   editor.value = new Editor({
     content: props.raw,
     extensions: [
@@ -197,6 +205,9 @@ onMounted(() => {
       ExtensionVideo,
       ExtensionAudio,
       ExtensionCharacterCount,
+      ExtensionFontSize,
+      ExtensionColor,
+      ExtensionIndent,
       ...extensionsFromPlugins,
       Extension.create({
         addGlobalAttributes() {
@@ -215,79 +226,21 @@ onMounted(() => {
       Extension.create({
         addOptions() {
           return {
-            getToolbarItems: ({ editor }: { editor: Editor }) => {
-              return {
-                priority: 220,
-                component: ToolbarItem,
-                props: {
-                  editor,
-                  isActive: false,
-                  icon: markRaw(MdiFileImageBox),
-                  title: i18n.global.t(
-                    "core.components.default_editor.toolbar.attachment"
-                  ),
+            getToolboxItems({ editor }: { editor: Editor }) {
+              return [
+                {
+                  priority: 0,
+                  component: markRaw(ToolboxItem),
+                  props: {
+                    editor,
+                    icon: markRaw(IconFolder),
+                    title: i18n.global.t(
+                      "core.components.default_editor.toolbox.attachment"
+                    ),
+                    action: () => (attachmentSelectorModal.value = true),
+                  },
                 },
-                children: [
-                  {
-                    priority: 10,
-                    component: ToolbarSubItem,
-                    props: {
-                      editor,
-                      isActive: false,
-                      icon: markRaw(IconFolder),
-                      title: i18n.global.t(
-                        "core.components.default_editor.toolbar.select_attachment"
-                      ),
-                      action: () => (attachmentSelectorModal.value = true),
-                    },
-                  },
-                  {
-                    priority: 20,
-                    component: ToolbarSubItem,
-                    props: {
-                      editor,
-                      isActive: false,
-                      icon: markRaw(MdiImagePlusOutline),
-                      title: i18n.global.t(
-                        "core.components.default_editor.toolbar.insert_image"
-                      ),
-                      action: () => {
-                        editor.chain().focus().setImage({ src: "" }).run();
-                      },
-                    },
-                  },
-                  {
-                    priority: 30,
-                    component: ToolbarSubItem,
-                    props: {
-                      editor,
-                      isActive: false,
-                      icon: markRaw(MdiVideoPlusOutline),
-                      title: i18n.global.t(
-                        "core.components.default_editor.toolbar.insert_video"
-                      ),
-                      action: () => {
-                        editor.chain().focus().setVideo({ src: "" }).run();
-                      },
-                    },
-                  },
-                  {
-                    priority: 40,
-                    component: ToolbarSubItem,
-                    props: {
-                      editor,
-                      isActive: false,
-                      icon: markRaw(MdiVolume),
-                      title: i18n.global.t(
-                        "core.components.default_editor.toolbar.insert_audio"
-                      ),
-                      action: () => {
-                        editor.chain().focus().setAudio({ src: "" }).run();
-                      },
-                    },
-                  },
-                ],
-              };
+              ];
             },
           };
         },
@@ -295,9 +248,7 @@ onMounted(() => {
     ],
     autofocus: "start",
     onUpdate: () => {
-      emit("update:raw", editor.value?.getHTML() + "");
-      emit("update:content", editor.value?.getHTML() + "");
-      emit("update", editor.value?.getHTML() + "");
+      debounceOnUpdate();
       nextTick(() => {
         handleGenerateTableOfContent();
       });
@@ -516,6 +467,13 @@ watch(
     immediate: true,
   }
 );
+
+// fixme: temporary solution
+const currentLocale = i18n.global.locale.value as
+  | "zh-CN"
+  | "en"
+  | "zh"
+  | "en-US";
 </script>
 
 <template>
@@ -523,19 +481,12 @@ watch(
     v-model:visible="attachmentSelectorModal"
     @select="onAttachmentSelect"
   />
-  <RichTextEditor
-    v-if="editor"
-    :editor="editor"
-    :locale="i18n.global.locale.value"
-    :content-styles="{
-      width: 'calc(100% - 18rem)',
-    }"
-  >
+  <RichTextEditor v-if="editor" :editor="editor" :locale="currentLocale">
     <template #extra>
       <OverlayScrollbarsComponent
         element="div"
         :options="{ scrollbars: { autoHide: 'scroll' } }"
-        class="h-full w-72 border-l bg-white"
+        class="h-full border-l bg-white"
         defer
       >
         <VTabs v-model:active-id="extraActiveId" type="outline">

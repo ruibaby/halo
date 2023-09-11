@@ -34,7 +34,6 @@ import { formatDatetime } from "@/utils/date";
 import prettyBytes from "pretty-bytes";
 import { useFetchAttachmentPolicy } from "./composables/use-attachment-policy";
 import { useAttachmentControl } from "./composables/use-attachment";
-import AttachmentFileTypeIcon from "./components/AttachmentFileTypeIcon.vue";
 import { apiClient } from "@/utils/api-client";
 import cloneDeep from "lodash.clonedeep";
 import { isImage } from "@/utils/image";
@@ -42,6 +41,7 @@ import { useRouteQuery } from "@vueuse/router";
 import { useFetchAttachmentGroup } from "./composables/use-attachment-group";
 import { usePermission } from "@/utils/permission";
 import { useI18n } from "vue-i18n";
+import { useLocalStorage } from "@vueuse/core";
 import UserFilterDropdown from "@/components/filter/UserFilterDropdown.vue";
 
 const { currentUserHasPermission } = usePermission();
@@ -57,12 +57,16 @@ const { groups, handleFetchGroups } = useFetchAttachmentGroup();
 const selectedGroup = ref<Group>();
 
 // Filter
-const keyword = ref<string>("");
-const page = ref<number>(1);
-const size = ref<number>(60);
-const selectedPolicy = ref();
-const selectedUser = ref();
-const selectedSort = ref();
+const keyword = useRouteQuery<string>("keyword", "");
+const page = useRouteQuery<number>("page", 1, {
+  transform: Number,
+});
+const size = useRouteQuery<number>("size", 60, {
+  transform: Number,
+});
+const selectedPolicy = useRouteQuery<string | undefined>("policy");
+const selectedUser = useRouteQuery<string | undefined>("user");
+const selectedSort = useRouteQuery<string | undefined>("sort");
 
 watch(
   () => [
@@ -192,7 +196,7 @@ const viewTypes = [
   },
 ];
 
-const viewType = useRouteQuery<string>("view", "list");
+const viewType = useLocalStorage("attachment-view-type", "list");
 
 // Route query action
 const routeQueryAction = useRouteQuery<string | undefined>("action");
@@ -665,16 +669,17 @@ onMounted(() => {
           </div>
 
           <template #footer>
-            <div class="bg-white sm:flex sm:items-center sm:justify-end">
-              <VPagination
-                v-model:page="page"
-                v-model:size="size"
-                :page-label="$t('core.components.pagination.page_label')"
-                :size-label="$t('core.components.pagination.size_label')"
-                :total="total"
-                :size-options="[60, 120, 200]"
-              />
-            </div>
+            <VPagination
+              v-model:page="page"
+              v-model:size="size"
+              :page-label="$t('core.components.pagination.page_label')"
+              :size-label="$t('core.components.pagination.size_label')"
+              :total-label="
+                $t('core.components.pagination.total_label', { total: total })
+              "
+              :total="total"
+              :size-options="[60, 120, 200]"
+            />
           </template>
         </VCard>
       </div>
