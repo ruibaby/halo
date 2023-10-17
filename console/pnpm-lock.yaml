@@ -71,6 +71,9 @@ importers:
       '@halo-dev/richtext-editor':
         specifier: 0.0.0-alpha.32
         version: 0.0.0-alpha.32(vue@3.3.4)
+      '@he-tree/vue':
+        specifier: ^2.7.0
+        version: 2.7.0(vue@3.3.4)
       '@tanstack/vue-query':
         specifier: ^4.29.1
         version: 4.29.1(vue@3.3.4)
@@ -2457,6 +2460,40 @@ packages:
       '@hapi/hoek': 9.3.0
     dev: true
 
+  /@he-tree/dnd-utils@0.1.0-alpha.3:
+    resolution: {integrity: sha512-0Tg+HC558lihvweGXQrAZziZSTfH5kDO8w1dVZpLCpUpDADn7Y9K4X6QlUCYCi9rqTteHnzaKdj45Dp7zJl6lw==}
+    dependencies:
+      '@babel/runtime': 7.19.0
+      drag-event-service: 2.0.0
+      helper-js: 3.1.5
+    dev: false
+
+  /@he-tree/tree-utils@0.1.0-alpha.2:
+    resolution: {integrity: sha512-5BgRlLb6IP8OIue9NVgWF8ngjqG4YcQLHvPngzb4QY6nh9jq5CoUNjRP7YC1Nn0p7wGxdzcDxNWIFlA8yf9n9Q==}
+    dependencies:
+      '@babel/runtime': 7.19.0
+      drag-event-service: 2.0.0
+      helper-js: 3.1.5
+    dev: false
+
+  /@he-tree/vue@2.7.0(vue@3.3.4):
+    resolution: {integrity: sha512-UMm1FSdvopEUSYbwEiGphcSxMkgOHiSsP39igntlBM8SY4yyAir1/ibeMf+88KXK/BOpnDKflnJfkWCvr7q2bw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@vue/composition-api': ^1.4.6
+      vue: ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      '@he-tree/dnd-utils': 0.1.0-alpha.3
+      '@he-tree/tree-utils': 0.1.0-alpha.2
+      '@virtual-list/vue': 1.2.0(vue@3.3.4)
+      helper-js: 3.1.5
+      vue: 3.3.4
+      vue-demi: 0.14.6(vue@3.3.4)
+    dev: false
+
   /@histoire/app@0.11.7(vite@3.2.4):
     resolution: {integrity: sha512-Kyi9R7MdKAE4vXp6L4DuZNNEucLJTexs3tQeHcg/YM3kGOJ4nKdJZ21MmpWXHzpLR91alSpd3da69p4pCX+pyA==}
     dependencies:
@@ -4361,6 +4398,21 @@ packages:
       nanoid: 4.0.0
     dev: false
 
+  /@virtual-list/vue@1.2.0(vue@3.3.4):
+    resolution: {integrity: sha512-sTWCJAIU6NoRWU+6Nzw6TDJcwxnFgK3NmwGu4iDgV6Nhh/iaCEZDDhmChTV+CoXbShLfsgasQRhaVyC7SmkDDg==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@vue/composition-api': ^1.4.6
+      vue: ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      helper-js: 3.1.5
+      vue: 3.3.4
+      vue-demi: 0.14.6(vue@3.3.4)
+    dev: false
+
   /@vitejs/plugin-vue-jsx@3.0.1(vite@4.2.3)(vue@3.3.4):
     resolution: {integrity: sha512-+Jb7ggL48FSPS1uhPnJbJwWa9Sr90vQ+d0InW+AhBM22n+cfuYqJZDckBc+W3QSHe1WDvewMZfa4wZOtk5pRgw==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -5964,6 +6016,13 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
+  /drag-event-service@2.0.0:
+    resolution: {integrity: sha512-JVEnOEbbNDS3RrWd+tVVIDu2SHQZ9luhEFGSQ1hXMjl+ABw0PxhHmnkGjzPVE836Tsg+k7rkm5GM9Ln/UgbYpA==}
+    dependencies:
+      '@babel/runtime': 7.19.0
+      helper-js: 3.1.5
+    dev: false
+
   /duplexer@0.1.2:
     resolution: {integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==}
     dev: true
@@ -7449,6 +7508,12 @@ packages:
       capital-case: 1.0.4
       tslib: 2.4.0
     dev: true
+
+  /helper-js@3.1.5:
+    resolution: {integrity: sha512-CQ56onWqmWwJRUK55/aJ6EeJUV/eqoRiayG6bk2i0Bhs79U94M+aRdA2QLOUGXp/Hy5yAos+YQK1LQHRWiSOHw==}
+    dependencies:
+      '@babel/runtime': 7.19.0
+    dev: false
 
   /highlight.js@11.8.0:
     resolution: {integrity: sha512-MedQhoqVdr0U6SSnWPzfiadUcDHfN/Wzq25AkXiQv9oiOO/sG0S7XkvpFIqWBl9Yq1UYyYOOVORs5UW2XlPyzg==}
@@ -11532,6 +11597,21 @@ packages:
 
   /vue-demi@0.14.5(vue@3.3.4):
     resolution: {integrity: sha512-o9NUVpl/YlsGJ7t+xuqJKx8EBGf1quRhCiT6D/J0pfwmk9zUwYkC7yrF4SZCe6fETvSM3UNL2edcbYrSyc4QHA==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.3.4
+    dev: false
+
+  /vue-demi@0.14.6(vue@3.3.4):
+    resolution: {integrity: sha512-8QA7wrYSHKaYgUxDA5ZC24w+eHm3sYCbp0EzcDwKqN3p6HqtTCGR/GVsPyZW92unff4UlcSh++lmqDWN3ZIq4w==}
     engines: {node: '>=12'}
     hasBin: true
     requiresBuild: true
