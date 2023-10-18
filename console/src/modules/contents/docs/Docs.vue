@@ -2,6 +2,10 @@
 import { IconAddCircle, VPageHeader } from "@halo-dev/components";
 import RiBook2Line from "~icons/ri/book-2-line";
 import DocCard from "./components/DocCard.vue";
+import DocCreationModal from "./components/DocCreationModal.vue";
+import { ref } from "vue";
+
+const creationModal = ref(false);
 </script>
 
 <template>
@@ -19,6 +23,7 @@ import DocCard from "./components/DocCard.vue";
 
       <div
         class="group flex cursor-pointer items-center justify-center rounded-lg border border-dashed bg-white px-4 py-3 shadow transition-all hover:border-solid"
+        @click="creationModal = true"
       >
         <IconAddCircle
           class="text-xl text-gray-600 group-hover:text-gray-900"
@@ -26,4 +31,6 @@ import DocCard from "./components/DocCard.vue";
       </div>
     </div>
   </div>
+
+  <DocCreationModal v-model="creationModal" @close="creationModal = false" />
 </template>
