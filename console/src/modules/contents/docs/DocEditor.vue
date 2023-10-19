@@ -10,6 +10,8 @@ import {
   IconMore,
   VDropdown,
   VDropdownItem,
+  VStatusDot,
+  VSpace,
 } from "@halo-dev/components";
 import { useRouteQuery } from "@vueuse/router";
 import { Draggable } from "@he-tree/vue";
@@ -24,10 +26,12 @@ import ContextMenu from "@imengyu/vue3-context-menu";
 import "@imengyu/vue3-context-menu/lib/vue3-context-menu.css";
 import { ref } from "vue";
 import FolderPropertiesModal from "./components/FolderPropertiesModal.vue";
+import DocSettingModal from "./components/DocSettingModal.vue";
 
 const version = useRouteQuery("version", "");
 
 const propertiesModal = ref(false);
+const docSettingModal = ref(false);
 
 function onContextMenu(e: MouseEvent) {
   //prevent the browser's default menu
@@ -70,7 +74,7 @@ function onContextMenu(e: MouseEvent) {
       <VAvatar src="https://www.halo.run/logo" class="mr-2" size="sm" />
     </template>
     <template #actions>
-      <VButton type="secondary">
+      <VButton @click="docSettingModal = true">
         <template #icon>
           <IconSettings class="h-full w-full" />
         </template>
@@ -272,6 +276,12 @@ function onContextMenu(e: MouseEvent) {
                   <span class="line-clamp-1 flex-1 select-none text-sm">
                     {{ node.text }}
                   </span>
+                  <VStatusDot
+                    v-if="stat.level === 4 && !stat.children.length"
+                    v-tooltip="'未发布'"
+                    state="warning"
+                    animate
+                  />
                 </div>
 
                 <div v-if="stat.children.length" class="inline-flex gap-2">
@@ -286,8 +296,14 @@ function onContextMenu(e: MouseEvent) {
 
         <div
           class="col-span-12 sm:col-span-6 lg:col-span-7 xl:col-span-9"
-          style="height: calc(100vh - 5.5rem)"
+          style="height: calc(100vh - 8.5rem)"
         >
+          <div class="flex h-12 items-center justify-end border-b px-2">
+            <VSpace>
+              <VButton type="default">保存</VButton>
+              <VButton type="secondary">发布</VButton>
+            </VSpace>
+          </div>
           <DefaultEditor class="h-full" />
         </div>
       </div>
@@ -297,4 +313,5 @@ function onContextMenu(e: MouseEvent) {
     v-model="propertiesModal"
     @close="propertiesModal = false"
   />
+  <DocSettingModal v-model="docSettingModal" @close="docSettingModal = false" />
 </template>
