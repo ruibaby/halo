@@ -74,6 +74,9 @@ importers:
       '@he-tree/vue':
         specifier: ^2.7.0
         version: 2.7.0(vue@3.3.4)
+      '@imengyu/vue3-context-menu':
+        specifier: ^1.3.3
+        version: 1.3.3
       '@tanstack/vue-query':
         specifier: ^4.29.1
         version: 4.29.1(vue@3.3.4)
@@ -2606,6 +2609,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@imengyu/vue3-context-menu@1.3.3:
+    resolution: {integrity: sha512-FyST4cyjWMkU7Ays/D45g0UPL8HtR5jtIL8DbN+dYGgFgNEQoqCZuEwm50SEckVztks7dITROHhjWO/LZTP1jA==}
+    dev: false
 
   /@interactjs/actions@1.10.17(@interactjs/core@1.10.17)(@interactjs/utils@1.10.17):
     resolution: {integrity: sha512-wyB1ZqpaZy5gmz6VDqK9KWh98xKnFgL7VyLvxHODFi9V0IYX4HJAAOBlhtfze0D1R1f1cY+gqPDK+dLaHMlE+w==}

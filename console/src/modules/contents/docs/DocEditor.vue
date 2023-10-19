@@ -7,9 +7,12 @@ import {
   VAvatar,
   VButton,
   IconSettings,
+  IconMore,
+  VDropdown,
+  VDropdownItem,
 } from "@halo-dev/components";
 import { useRouteQuery } from "@vueuse/router";
-import { BaseTree } from "@he-tree/vue";
+import { Draggable } from "@he-tree/vue";
 import "@he-tree/vue/style/default.css";
 import RiFile3Line from "~icons/ri/file-3-line";
 import RiFolder2Line from "~icons/ri/folder-2-line";
@@ -17,8 +20,48 @@ import RiArrowDownSLine from "~icons/ri/arrow-down-s-line";
 import RiArrowRightSLine from "~icons/ri/arrow-right-s-line";
 import RiFileAddLine from "~icons/ri/file-add-line";
 import RiFolderAddLine from "~icons/ri/folder-add-line";
+import ContextMenu from "@imengyu/vue3-context-menu";
+import "@imengyu/vue3-context-menu/lib/vue3-context-menu.css";
+import { ref } from "vue";
+import FolderPropertiesModal from "./components/FolderPropertiesModal.vue";
 
 const version = useRouteQuery("version", "");
+
+const propertiesModal = ref(false);
+
+function onContextMenu(e: MouseEvent) {
+  //prevent the browser's default menu
+  e.preventDefault();
+  //show our menu
+  ContextMenu.showContextMenu({
+    x: e.x,
+    y: e.y,
+    theme: "mac",
+    items: [
+      {
+        label: "属性设置",
+        preserveIconWidth: false,
+        onClick: () => {
+          propertiesModal.value = true;
+        },
+      },
+      {
+        label: "重命名",
+        preserveIconWidth: false,
+        onClick: () => {
+          alert("重命名");
+        },
+      },
+      {
+        label: "删除",
+        preserveIconWidth: false,
+        onClick: () => {
+          alert("删除");
+        },
+      },
+    ],
+  });
+}
 </script>
 
 <template>
@@ -52,8 +95,7 @@ const version = useRouteQuery("version", "");
                   v-model="version"
                   type="select"
                   :options="[
-                    { label: '最新', value: '' },
-                    { label: '2.10.0', value: '2.10.0' },
+                    { label: '2.10.0（最新）', value: '2.10.0' },
                     { label: '2.9.0', value: '2.9.0' },
                   ]"
                 >
@@ -66,6 +108,20 @@ const version = useRouteQuery("version", "");
                         class="h-4 w-4 text-gray-500 group-hover:text-gray-700"
                       />
                     </div>
+                    <VDropdown class="h-full">
+                      <div
+                        v-tooltip="'更多'"
+                        class="group flex h-full cursor-pointer items-center border-l px-3 transition-all hover:bg-gray-100"
+                      >
+                        <IconMore
+                          class="h-4 w-4 text-gray-500 group-hover:text-gray-700"
+                        />
+                      </div>
+                      <template #popper>
+                        <VDropdownItem>设置为默认版本</VDropdownItem>
+                        <VDropdownItem type="danger">删除</VDropdownItem>
+                      </template>
+                    </VDropdown>
                   </template>
                 </FormKit>
               </FormKit>
@@ -86,158 +142,117 @@ const version = useRouteQuery("version", "");
             </div>
           </div>
 
-          <BaseTree
+          <Draggable
             :model-value="[
               {
-                text: '简介',
-              },
-              {
-                text: '入门',
+                text: 'zh',
                 children: [
                   {
-                    text: '写在前面',
+                    text: '简介',
                   },
                   {
-                    text: '安装指南',
+                    text: '入门',
                     children: [
                       {
-                        text: '使用 Docker Compose 部署',
+                        text: '写在前面',
                       },
                       {
-                        text: '使用 Docker 部署',
-                      },
-                      {
-                        text: '使用 1Panel 部署',
-                      },
-                      {
-                        text: '使用 Helm 部署',
-                      },
-                      {
-                        text: '使用 Podman 部署',
-                      },
-                      {
-                        text: '其他指南',
+                        text: '安装指南',
                         children: [
                           {
-                            text: '与 OneinStack 配合使用',
+                            text: '使用 Docker Compose 部署',
                           },
                           {
-                            text: '与 Nginx Proxy Manager 配合使用',
+                            text: '使用 Docker 部署',
                           },
                           {
-                            text: '与 Traefik 配合使用',
+                            text: '使用 1Panel 部署',
+                          },
+                          {
+                            text: '使用 Helm 部署',
+                          },
+                          {
+                            text: '使用 Podman 部署',
+                          },
+                          {
+                            text: '其他指南',
+                            children: [
+                              {
+                                text: '与 OneinStack 配合使用',
+                              },
+                              {
+                                text: '与 Nginx Proxy Manager 配合使用',
+                              },
+                              {
+                                text: '与 Traefik 配合使用',
+                              },
+                            ],
                           },
                         ],
                       },
+                      {
+                        text: '从 Halo 1.x 迁移',
+                      },
+                      {
+                        text: '第一篇文章',
+                      },
                     ],
-                  },
-                  {
-                    text: '从 Halo 1.x 迁移',
-                  },
-                  {
-                    text: '第一篇文章',
                   },
                 ],
               },
               {
-                text: '简介',
-              },
-              {
-                text: '入门',
+                text: 'en',
                 children: [
                   {
-                    text: '写在前面',
+                    text: '简介',
                   },
                   {
-                    text: '安装指南',
+                    text: '入门',
                     children: [
                       {
-                        text: '使用 Docker Compose 部署',
+                        text: '写在前面',
                       },
                       {
-                        text: '使用 Docker 部署',
-                      },
-                      {
-                        text: '使用 1Panel 部署',
-                      },
-                      {
-                        text: '使用 Helm 部署',
-                      },
-                      {
-                        text: '使用 Podman 部署',
-                      },
-                      {
-                        text: '其他指南',
+                        text: '安装指南',
                         children: [
                           {
-                            text: '与 OneinStack 配合使用',
+                            text: '使用 Docker Compose 部署',
                           },
                           {
-                            text: '与 Nginx Proxy Manager 配合使用',
+                            text: '使用 Docker 部署',
                           },
                           {
-                            text: '与 Traefik 配合使用',
+                            text: '使用 1Panel 部署',
+                          },
+                          {
+                            text: '使用 Helm 部署',
+                          },
+                          {
+                            text: '使用 Podman 部署',
+                          },
+                          {
+                            text: '其他指南',
+                            children: [
+                              {
+                                text: '与 OneinStack 配合使用',
+                              },
+                              {
+                                text: '与 Nginx Proxy Manager 配合使用',
+                              },
+                              {
+                                text: '与 Traefik 配合使用',
+                              },
+                            ],
                           },
                         ],
                       },
-                    ],
-                  },
-                  {
-                    text: '从 Halo 1.x 迁移',
-                  },
-                  {
-                    text: '第一篇文章',
-                  },
-                ],
-              },
-              {
-                text: '简介',
-              },
-              {
-                text: '入门',
-                children: [
-                  {
-                    text: '写在前面',
-                  },
-                  {
-                    text: '安装指南',
-                    children: [
                       {
-                        text: '使用 Docker Compose 部署',
+                        text: '从 Halo 1.x 迁移',
                       },
                       {
-                        text: '使用 Docker 部署',
-                      },
-                      {
-                        text: '使用 1Panel 部署',
-                      },
-                      {
-                        text: '使用 Helm 部署',
-                      },
-                      {
-                        text: '使用 Podman 部署',
-                      },
-                      {
-                        text: '其他指南',
-                        children: [
-                          {
-                            text: '与 OneinStack 配合使用',
-                          },
-                          {
-                            text: '与 Nginx Proxy Manager 配合使用',
-                          },
-                          {
-                            text: '与 Traefik 配合使用',
-                          },
-                        ],
+                        text: '第一篇文章',
                       },
                     ],
-                  },
-                  {
-                    text: '从 Halo 1.x 迁移',
-                  },
-                  {
-                    text: '第一篇文章',
                   },
                 ],
               },
@@ -247,8 +262,9 @@ const version = useRouteQuery("version", "");
           >
             <template #default="{ node, stat }">
               <div
-                class="flex w-full cursor-pointer items-center justify-between gap-2 rounded-base p-1 hover:bg-gray-100"
+                class="group flex w-full cursor-pointer items-center justify-between gap-2 rounded-base p-1 hover:bg-gray-100"
                 @click="stat.children.length && (stat.open = !stat.open)"
+                @contextmenu="onContextMenu($event)"
               >
                 <div class="inline-flex items-center gap-2">
                   <RiFolder2Line v-if="stat.children.length" class="h-4 w-4" />
@@ -258,13 +274,14 @@ const version = useRouteQuery("version", "");
                   </span>
                 </div>
 
-                <div v-if="stat.children.length">
+                <div v-if="stat.children.length" class="inline-flex gap-2">
+                  <IconAddCircle class="hidden h-4 w-4 group-hover:block" />
                   <RiArrowRightSLine v-if="!stat.open" class="h-4 w-4" />
                   <RiArrowDownSLine v-else class="h-4 w-4" />
                 </div>
               </div>
             </template>
-          </BaseTree>
+          </Draggable>
         </div>
 
         <div
@@ -276,4 +293,8 @@ const version = useRouteQuery("version", "");
       </div>
     </VCard>
   </div>
+  <FolderPropertiesModal
+    v-model="propertiesModal"
+    @close="propertiesModal = false"
+  />
 </template>
