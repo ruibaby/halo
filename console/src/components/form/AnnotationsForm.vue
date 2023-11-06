@@ -17,10 +17,12 @@ import { randomUUID } from "@/utils/id";
 const themeStore = useThemeStore();
 
 function keyValidationRule(node: FormKitNode) {
-  return (
-    !annotations.value?.[node.value as string] &&
-    !customAnnotationsDuplicateKey.value
-  );
+  const validAnnotations = [
+    ...Object.keys(annotations.value),
+    ...customAnnotationsState.value.map((item) => item.key),
+  ];
+  const count = validAnnotations.filter((item) => item === node.value);
+  return count.length < 2;
 }
 
 const props = withDefaults(
@@ -73,12 +75,6 @@ const annotations = ref<{
 }>({});
 const customAnnotationsState = ref<{ key: string; value: string }[]>([]);
 
-const customAnnotationsDuplicateKey = computed(() => {
-  const keys = customAnnotationsState.value.map((item) => item.key);
-  const uniqueKeys = new Set(keys);
-  return keys.length !== uniqueKeys.size;
-});
-
 const customAnnotations = computed(() => {
   return customAnnotationsState.value.reduce((acc, cur) => {
     acc[cur.key] = cur.value;
@@ -109,8 +105,15 @@ const handleProcessCustomAnnotations = () => {
           value,
         };
       }
+      return {
+        key: "",
+        value: "",
+      };
     })
-    .filter((item) => item) as { key: string; value: string }[];
+    .filter((item) => item.key)
+    .filter(
+      (item, index, self) => self.findIndex((t) => t.key === item.key) === index
+    );
 
   annotations.value = formSchemas
     .map((item) => {

@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.springframework.context.ApplicationEvent;
@@ -102,10 +103,18 @@ public class PostReconciler implements Reconciler<Reconciler.Request> {
                     post.getMetadata().setAnnotations(annotations);
                 }
 
+                if (!annotations.containsKey(Post.PUBLISHED_LABEL)) {
+                    labels.put(Post.PUBLISHED_LABEL, BooleanUtils.FALSE);
+                }
+
                 var status = post.getStatus();
                 if (status == null) {
                     status = new Post.PostStatus();
                     post.setStatus(status);
+                }
+
+                if (post.isPublished() && post.getSpec().getPublishTime() == null) {
+                    post.getSpec().setPublishTime(Instant.now());
                 }
 
                 // calculate the sha256sum
