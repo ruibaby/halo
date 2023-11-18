@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'halo.publish'
+    id 'jacoco'
     id "io.freefair.lombok" version "8.4"
 }
 
@@ -14,6 +15,7 @@ javadoc.options.encoding = "UTF-8"
 repositories {
     mavenCentral()
     maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
@@ -79,4 +81,12 @@ java {
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+tasks.named('jacocoTestReport') {
+    reports {
+        xml.required = true
+        html.required = false
+    }
 }
