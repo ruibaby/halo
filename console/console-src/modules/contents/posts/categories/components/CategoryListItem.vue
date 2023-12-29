@@ -11,6 +11,7 @@ import type { CategoryTree } from "../utils";
 import { ref } from "vue";
 import { formatDatetime } from "@/utils/date";
 import { usePermission } from "@/utils/permission";
+import CategoryEditingModal from "./CategoryEditingModal.vue";
 
 const { currentUserHasPermission } = usePermission();
 
@@ -25,19 +26,15 @@ withDefaults(
 
 const emit = defineEmits<{
   (event: "change"): void;
-  (event: "open-editing", category: CategoryTree): void;
   (event: "open-create-by-parent", category: CategoryTree): void;
   (event: "delete", category: CategoryTree): void;
 }>();
 
+const categoryEditingModalVisible = ref(false);
 const isDragging = ref(false);
 
 function onChange() {
   emit("change");
-}
-
-function onOpenEditingModal(category: CategoryTree) {
-  emit("open-editing", category);
 }
 
 function onOpenCreateByParentModal(category: CategoryTree) {
@@ -63,6 +60,11 @@ function onDelete(category: CategoryTree) {
   >
     <template #item="{ element: category }">
       <li>
+        <CategoryEditingModal
+          v-if="categoryEditingModalVisible"
+          :category="category"
+          @close="categoryEditingModalVisible = false"
+        />
         <VEntity>
           <template #prepend>
             <div
@@ -118,7 +120,7 @@ function onDelete(category: CategoryTree) {
           >
             <VDropdownItem
               v-permission="['system:posts:manage']"
-              @click="onOpenEditingModal(category)"
+              @click="categoryEditingModalVisible = true"
             >
               {{ $t("core.common.buttons.edit") }}
             </VDropdownItem>
@@ -139,7 +141,6 @@ function onDelete(category: CategoryTree) {
           class="pl-10 transition-all duration-300"
           @change="onChange"
           @delete="onDelete"
-          @open-editing="onOpenEditingModal"
           @open-create-by-parent="onOpenCreateByParentModal"
         />
       </li>

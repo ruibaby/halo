@@ -14,7 +14,6 @@ import {
   VSpace,
   VLoading,
 } from "@halo-dev/components";
-import CategoryEditingModal from "./components/CategoryEditingModal.vue";
 import CategoryListItem from "./components/CategoryListItem.vue";
 
 // types
@@ -31,9 +30,9 @@ import { useDebounceFn } from "@vueuse/core";
 
 // hooks
 import { usePostCategory } from "./composables/use-post-category";
+import CategoryCreationModal from "./components/CategoryCreationModal.vue";
 
 const editingModal = ref(false);
-const selectedCategory = ref<Category>();
 const selectedParentCategory = ref<Category>();
 
 const {
@@ -64,28 +63,17 @@ const handleUpdateInBatch = useDebounceFn(async () => {
   }
 }, 500);
 
-const handleOpenEditingModal = (category: CategoryTree) => {
-  selectedCategory.value = convertCategoryTreeToCategory(category);
-  editingModal.value = true;
-};
-
 const handleOpenCreateByParentModal = (category: CategoryTree) => {
   selectedParentCategory.value = convertCategoryTreeToCategory(category);
   editingModal.value = true;
 };
 
-const onEditingModalClose = () => {
-  selectedCategory.value = undefined;
-  selectedParentCategory.value = undefined;
-  handleFetchCategories();
-};
+const categoryCreationModalVisible = ref(false);
 </script>
 <template>
-  <CategoryEditingModal
-    v-model:visible="editingModal"
-    :category="selectedCategory"
-    :parent-category="selectedParentCategory"
-    @close="onEditingModalClose"
+  <CategoryCreationModal
+    v-if="categoryCreationModalVisible"
+    @close="categoryCreationModalVisible = false"
   />
   <VPageHeader :title="$t('core.post_category.title')">
     <template #icon>
@@ -96,7 +84,7 @@ const onEditingModalClose = () => {
       <VButton
         v-permission="['system:posts:manage']"
         type="secondary"
-        @click="editingModal = true"
+        @click="categoryCreationModalVisible = true"
       >
         <template #icon>
           <IconAddCircle class="h-full w-full" />
@@ -154,7 +142,6 @@ const onEditingModalClose = () => {
           :categories="categoriesTree"
           @change="handleUpdateInBatch"
           @delete="handleDelete"
-          @open-editing="handleOpenEditingModal"
           @open-create-by-parent="handleOpenCreateByParentModal"
         />
       </Transition>
