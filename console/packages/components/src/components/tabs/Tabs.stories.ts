@@ -14,15 +14,15 @@ const meta: Meta<typeof VTabs> = {
     },
     template: `
       <div class="p-3">
-        <VTabs v-model:activeId="args.activeId" type="pills">
-          <VTabItem id="johnniang" label="JohnNiang">
-            This is JohnNiang's Item
+        <VTabs v-model:activeId="args.activeId" type="${args.type}">
+          <VTabItem id="general" label="基本设置">
+            基本设置
           </VTabItem>
-          <VTabItem id="ryanwang" label="Ryan Wang">
-            This is Ryan Wang's Item
+          <VTabItem id="post" label="文章设置">
+            文章设置
           </VTabItem>
-          <VTabItem id="guqing" label="guqing">
-            This is guqing's Item
+          <VTabItem id="seo" label="SEO 设置">
+            SEO 设置
           </VTabItem>
         </VTabs>
       </div>
@@ -41,21 +41,21 @@ type Story = StoryObj<typeof VTabs>;
 
 export const Default: Story = {
   args: {
-    activeId: "ryanwang",
+    activeId: "general",
     type: "default",
   },
 };
 
 export const Pills: Story = {
   args: {
-    activeId: "ryanwang",
+    activeId: "general",
     type: "pills",
   },
 };
 
 export const Outline: Story = {
   args: {
-    activeId: "ryanwang",
+    activeId: "general",
     type: "outline",
   },
 };

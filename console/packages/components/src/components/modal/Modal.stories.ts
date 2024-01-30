@@ -28,25 +28,14 @@ const meta: Meta<typeof VModal> = {
         :layerClosable="true"
         @close="args.visible = false"
       >
-        <template #actions>
-          <span>
-            <IconArrowLeft role="button" />
-          </span>
-
-          <span>
-            <IconArrowRight role="button" />
-          </span>
-        </template>
         <div class="flex flex-col">
-          <img class="w-full" src="https://ryanc.cc/avatar" />
-          <img class="w-full" src="https://ryanc.cc/avatar" />
-          <img class="w-full" src="https://halo.run/logo" />
+          Hello Halo
         </div>
 
         <template #footer>
           <VSpace>
-            <VButton loading type="primary" @click="args.visible = false"
-              >确定
+            <VButton type="primary" @click="modal.close()">
+              确定
             </VButton>
             <VButton @click="modal.close()">取消</VButton>
           </VSpace>
@@ -63,5 +52,7 @@ export default meta;
 type Story = StoryObj<typeof VModal>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    title: "Modal",
+  },
 };

@@ -30,39 +30,39 @@ type Story = StoryObj<typeof VAlert>;
 export const Default: Story = {
   args: {
     type: "default",
-    title: "default",
-    description: "Halo",
+    title: "提示",
+    description: "这是一段提示信息。",
   },
 };
 
 export const Success: Story = {
   args: {
     type: "success",
-    title: "success",
-    description: "Halo",
+    title: "成功",
+    description: "这是一段操作成功的信息。",
   },
 };
 
 export const Info: Story = {
   args: {
     type: "info",
-    title: "info",
-    description: "Halo",
+    title: "提示",
+    description: "这是一段提示信息。",
   },
 };
 
 export const Warning: Story = {
   args: {
     type: "warning",
-    title: "warning",
-    description: "Halo",
+    title: "警告",
+    description: "这是一段警告信息。",
   },
 };
 
 export const Error: Story = {
   args: {
     type: "error",
-    title: "error",
-    description: "Halo",
+    title: "错误",
+    description: "这是一段错误信息。",
   },
 };
