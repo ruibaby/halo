@@ -1374,6 +1374,16 @@ core:
     editor_provider_selector:
       tooltips:
         disallow: 內容格式不同，無法切換
+    uppy:
+      image_editor:
+        revert: "還原"
+        rotate: "旋轉"
+        zoom_in: "放大"
+        zoom_out: "縮小"
+        flip_horizontal: "水平翻轉"
+        aspect_ratio_square: "裁剪為正方形"
+        aspect_ratio_landscape: "裁剪為橫向 (16:9)"
+        aspect_ratio_portrait: "裁剪為縱向 (9:16)"
   composables:
     content_cache:
       toast_recovered: 已從緩存中恢復未保存的內容
@@ -1384,6 +1394,10 @@ core:
       creation_label: 創建 {text} 標籤
     validation:
       trim: 不能以空格開頭或結尾
+    verification_form:
+      no_action_defined: 未定義{label}介面
+      verify_success: "{label}成功"
+      verify_failed: "{label}失敗"
   common:
     buttons:
       save: 保存
