@@ -67,11 +67,10 @@ public class CommentReconciler implements Reconciler<Reconciler.Request> {
                     return;
                 }
                 if (addFinalizers(comment.getMetadata(), Set.of(FINALIZER_NAME))) {
+                    replyNotificationSubscriptionHelper.subscribeNewReplyReasonForComment(comment);
                     client.update(comment);
                     eventPublisher.publishEvent(new CommentCreatedEvent(this, comment));
                 }
-
-                replyNotificationSubscriptionHelper.subscribeNewReplyReasonForComment(comment);
 
                 compatibleCreationTime(comment);
                 Comment.CommentStatus status = comment.getStatusOrDefault();
@@ -79,6 +78,11 @@ public class CommentReconciler implements Reconciler<Reconciler.Request> {
 
                 updateUnReplyCountIfNecessary(comment);
                 updateSameSubjectRefCommentCounter(comment);
+
+                // version + 1 is required to truly equal version
+                // as a version will be incremented after the update
+                comment.getStatusOrDefault()
+                    .setObservedVersion(comment.getMetadata().getVersion() + 1);
 
                 client.update(comment);
             });

@@ -289,6 +289,8 @@ core:
   post_editor:
     title: Post edit
     untitled: Untitled post
+    actions:
+      snapshots: Snapshots
   post_tag:
     title: Post tags
     header:
@@ -455,6 +457,8 @@ core:
   page_editor:
     title: Page edit
     untitled: Untitled page
+    actions:
+      snapshots: Snapshots
   comment:
     title: Comments
     empty:
@@ -730,6 +734,7 @@ core:
         plugin_requires: Plugin Requires
         description: Description
         license: License
+        issues: Issues feedback
     settings:
       title: Theme settings
     custom_templates:
@@ -882,6 +887,7 @@ core:
         homepage: Homepage
         repo: Source Repository
         load_location: Storage Location
+        issues: Issues feedback
     loader:
       toast:
         entry_load_failed: Failed to load plugins entry file
@@ -975,6 +981,10 @@ core:
         bio: Bio
         creation_time: Creation time
         identity_authentication: Identity authentication
+        email_verified:
+          tooltip: Verified
+        email_not_verified:
+          tooltip: Not verified
   role:
     title: Roles
     common:
@@ -1079,6 +1089,8 @@ core:
           Your email address has not been verified yet, click the button below
           to verify it
         title: Verify email
+      email_verified:
+        tooltip: Verified
     pat:
       operations:
         delete:
@@ -1161,6 +1173,9 @@ core:
           label: Email address
         new_email:
           label: New email address
+        password:
+          label: Password
+          help: The login password for the current account
       operations:
         send_code:
           buttons:
@@ -1607,6 +1622,7 @@ core:
       not_activated: Not activated
       installed: Installed
       not_installed: Not installed
+      starting_up: Starting
     text:
       none: None
       tip: Tip
@@ -1662,3 +1678,39 @@ core:
       message: >-
         There are currently no tools available, and system tools may be provided
         by plugins
+  post_snapshots:
+    operations:
+      revert:
+        button: Revert
+        title: Revert snapshot
+        description: >-
+          Are you sure you want to restore this snapshot? This operation will
+          create a new snapshot based on this one and publish it.
+        toast_success: Reverted successfully
+      delete:
+        title: Delete snapshot
+        description: >-
+          Are you sure you want to delete this snapshot? This operation is
+          irreversible.
+    status:
+      released: Released
+      draft: Draft
+    title: Post snapshots
+  page_snapshots:
+    operations:
+      revert:
+        button: Revert
+        title: Revert snapshot
+        description: >-
+          Are you sure you want to restore this snapshot? This operation will
+          create a new snapshot based on this one and publish it.
+        toast_success: Reverted successfully
+      delete:
+        title: Delete snapshot
+        description: >-
+          Are you sure you want to delete this snapshot? This operation is
+          irreversible.
+    status:
+      released: Released
+      draft: Draft
+    title: Page snapshots

@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import { Content } from './content';
+import { ContentUpdateParam } from './content-update-param';
 // May contain unused imports in some cases
 // @ts-ignore
 import { SinglePage } from './single-page';
@@ -28,10 +28,10 @@ import { SinglePage } from './single-page';
 export interface SinglePageRequest {
     /**
      * 
-     * @type {Content}
+     * @type {ContentUpdateParam}
      * @memberof SinglePageRequest
      */
-    'content': Content;
+    'content': ContentUpdateParam;
     /**
      * 
      * @type {SinglePage}

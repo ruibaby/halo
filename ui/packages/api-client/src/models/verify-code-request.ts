@@ -26,5 +26,11 @@ export interface VerifyCodeRequest {
      * @memberof VerifyCodeRequest
      */
     'code': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof VerifyCodeRequest
+     */
+    'password': string;
 }
 

@@ -46,6 +46,7 @@ public class ReplyReconciler implements Reconciler<Reconciler.Request> {
                     return;
                 }
                 if (addFinalizers(reply.getMetadata(), Set.of(FINALIZER_NAME))) {
+                    replyNotificationSubscriptionHelper.subscribeNewReplyReasonForReply(reply);
                     client.update(reply);
                     eventPublisher.publishEvent(new ReplyCreatedEvent(this, reply));
                 }
@@ -57,9 +58,12 @@ public class ReplyReconciler implements Reconciler<Reconciler.Request> {
                         )
                     );
                 }
-                client.update(reply);
 
-                replyNotificationSubscriptionHelper.subscribeNewReplyReasonForReply(reply);
+                // version + 1 is required to truly equal version
+                // as a version will be incremented after the update
+                reply.getStatus().setObservedVersion(reply.getMetadata().getVersion() + 1);
+
+                client.update(reply);
 
                 eventPublisher.publishEvent(new ReplyChangedEvent(this, reply));
             });

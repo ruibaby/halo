@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import { Content } from './content';
+import { ContentUpdateParam } from './content-update-param';
 // May contain unused imports in some cases
 // @ts-ignore
 import { Post } from './post';
@@ -28,10 +28,10 @@ import { Post } from './post';
 export interface PostRequest {
     /**
      * 
-     * @type {Content}
+     * @type {ContentUpdateParam}
      * @memberof PostRequest
      */
-    'content'?: Content;
+    'content'?: ContentUpdateParam;
     /**
      * 
      * @type {Post}

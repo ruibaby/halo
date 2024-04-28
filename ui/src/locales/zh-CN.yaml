@@ -293,6 +293,8 @@ core:
   post_editor:
     title: 文章编辑
     untitled: 未命名文章
+    actions:
+      snapshots: 版本历史
   post_tag:
     title: 文章标签
     header:
@@ -451,6 +453,8 @@ core:
   page_editor:
     title: 页面编辑
     untitled: 未命名页面
+    actions:
+      snapshots: 版本历史
   comment:
     title: 评论
     empty:
@@ -700,6 +704,7 @@ core:
         plugin_requires: 插件依赖
         description: 描述
         license: 协议
+        issues: 问题反馈
     settings:
       title: 主题设置
     custom_templates:
@@ -840,6 +845,7 @@ core:
         homepage: 网站
         repo: 源码仓库
         load_location: 存储位置
+        issues: 问题反馈
     loader:
       toast:
         entry_load_failed: 加载插件入口文件失败
@@ -928,6 +934,10 @@ core:
         bio: 描述
         creation_time: 注册时间
         identity_authentication: 登录方式
+        email_verified:
+          tooltip: 已验证
+        email_not_verified:
+          tooltip: 未验证
   role:
     title: 角色
     common:
@@ -1024,6 +1034,8 @@ core:
       email_not_verified:
         title: 验证电子邮箱
         description: 电子邮箱地址还未验证，点击下方按钮进行验证
+      email_verified:
+        tooltip: 已验证
     pat:
       operations:
         delete:
@@ -1106,6 +1118,9 @@ core:
           label: 电子邮箱
         code:
           label: 验证码
+        password:
+          label: 验证密码
+          help: 当前账号的登录密码
       operations:
         send_code:
           buttons:
@@ -1551,6 +1566,7 @@ core:
       not_activated: 未启用
       installed: 已安装
       not_installed: 未安装
+      starting_up: 启动中
     text:
       none: 无
       tip: 提示
@@ -1566,3 +1582,31 @@ core:
     empty:
       title: 没有可用工具
       message: 当前没有可用的工具，系统工具可能由插件提供
+  post_snapshots:
+    operations:
+      revert:
+        button: 恢复
+        title: 恢复快照
+        description: 确定要恢复该快照吗？此操作将根据这个快照创建一个新的快照并发布。
+        toast_success: 恢复成功
+      delete:
+        title: 删除快照
+        description: 确定要删除该快照吗？此操作无法恢复。
+    status:
+      released: 已发布
+      draft: 草稿
+    title: 文章版本历史
+  page_snapshots:
+    operations:
+      revert:
+        button: 恢复
+        title: 恢复快照
+        description: 确定要恢复该快照吗？此操作将根据这个快照创建一个新的快照并发布。
+        toast_success: 恢复成功
+      delete:
+        title: 删除快照
+        description: 确定要删除该快照吗？此操作无法恢复。
+    status:
+      released: 已发布
+      draft: 草稿
+    title: 页面版本历史
