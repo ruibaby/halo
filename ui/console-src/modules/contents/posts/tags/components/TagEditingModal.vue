@@ -25,7 +25,7 @@ import useSlugify from "@console/composables/use-slugify";
 import { useI18n } from "vue-i18n";
 import { FormType } from "@/types/slug";
 import { onMounted } from "vue";
-import { toRaw } from "vue";
+import { cloneDeep } from "lodash-es";
 
 const props = withDefaults(
   defineProps<{
@@ -59,7 +59,7 @@ const formState = ref<Tag>({
   },
 });
 
-const modal = ref();
+const modal = ref<InstanceType<typeof VModal> | null>(null);
 
 const saving = ref(false);
 
@@ -101,7 +101,7 @@ const handleSaveTag = async () => {
       });
     }
 
-    modal.value.close();
+    modal.value?.close();
 
     Toast.success(t("core.common.toast.save_success"));
   } catch (e) {
@@ -119,7 +119,7 @@ watch(
   () => props.tag,
   (tag) => {
     if (tag) {
-      formState.value = toRaw(tag);
+      formState.value = cloneDeep(tag);
     }
   },
   {
@@ -258,7 +258,7 @@ const { handleGenerateSlug } = useSlugify(
           @submit="$formkit.submit('tag-form')"
         >
         </SubmitButton>
-        <VButton @click="modal.close()">
+        <VButton @click="modal?.close()">
           {{ $t("core.common.buttons.cancel_and_shortcut") }}
         </VButton>
       </VSpace>
