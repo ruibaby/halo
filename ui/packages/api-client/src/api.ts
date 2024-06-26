@@ -30,9 +30,11 @@ export * from './api/comment-v1alpha1-console-api';
 export * from './api/comment-v1alpha1-public-api';
 export * from './api/config-map-v1alpha1-api';
 export * from './api/counter-v1alpha1-api';
+export * from './api/device-v1alpha1-uc-api';
 export * from './api/extension-definition-v1alpha1-api';
 export * from './api/extension-point-definition-v1alpha1-api';
 export * from './api/group-v1alpha1-api';
+export * from './api/index-v1alpha1-public-api';
 export * from './api/indices-v1alpha1-console-api';
 export * from './api/login-api';
 export * from './api/menu-item-v1alpha1-api';
@@ -86,4 +88,5 @@ export * from './api/user-connection-v1alpha1-api';
 export * from './api/user-v1alpha1-api';
 export * from './api/user-v1alpha1-console-api';
 export * from './api/user-v1alpha1-public-api';
+export * from './api/v1alpha1-v1alpha1-api';
 
