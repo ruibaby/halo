@@ -6,9 +6,12 @@ import type { RouteRecordRaw } from "vue-router";
 import PluginDetail from "./PluginDetail.vue";
 import PluginExtensionPointSettings from "./PluginExtensionPointSettings.vue";
 import PluginList from "./PluginList.vue";
+import PluginDetailModal from "./components/PluginDetailModal.vue";
 
 export default definePlugin({
-  components: {},
+  components: {
+    PluginDetailModal,
+  },
   routes: [
     {
       path: "/plugins",
@@ -38,6 +41,7 @@ export default definePlugin({
           meta: {
             title: "core.plugin.extension-settings.title",
             hideFooter: true,
+            permissions: ["*"],
           },
         },
         {
