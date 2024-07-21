@@ -209,7 +209,7 @@ importers:
         version: 2.25.2
       '@iconify/json':
         specifier: ^2.2.117
-        version: 2.2.147
+        version: 2.2.229
       '@intlify/unplugin-vue-i18n':
         specifier: ^4.0.0
         version: 4.0.0(rollup@4.17.2)(vue-i18n@9.13.1(vue@3.4.27(typescript@5.3.3)))
@@ -590,7 +590,7 @@ importers:
     devDependencies:
       '@iconify/json':
         specifier: ^2.2.117
-        version: 2.2.147
+        version: 2.2.229
       '@types/linkifyjs':
         specifier: ^2.1.7
         version: 2.1.7
@@ -2599,8 +2599,8 @@ packages:
   '@iconify-json/ri@1.1.15':
     resolution: {integrity: sha512-A1g6jPANPRC1aKthtBpWGn53NI/bf7HsjNr/Zi2n3fIlWLHp4SI8MGXw7POUKAefzipb7HSqlBNpQxGLJ5qe2g==}
 
-  '@iconify/json@2.2.147':
-    resolution: {integrity: sha512-VTW1vVivOq5RVcZu7xqCXWptGH7fo6VPsUxT5QBlbBS042859YZnK1JTXHJu4InMuTwQC/3KLP+InJJ5kawOGg==}
+  '@iconify/json@2.2.229':
+    resolution: {integrity: sha512-DD1k97sjm87n+C15Ey1dVX1cBKCawfms6N0d+1vvAon5P3yurpPEO9OyU88f53+9Chpo+CuIp3+TihvsghlfQQ==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -13238,10 +13238,10 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify/json@2.2.147':
+  '@iconify/json@2.2.229':
     dependencies:
       '@iconify/types': 2.0.0
-      pathe: 1.1.1
+      pathe: 1.1.2
 
   '@iconify/types@2.0.0': {}
 
@@ -15778,12 +15778,12 @@ snapshots:
     dependencies:
       '@vitest/utils': 0.34.1
       p-limit: 4.0.0
-      pathe: 1.1.2
+      pathe: 1.1.1
 
   '@vitest/snapshot@0.34.1':
     dependencies:
       magic-string: 0.30.7
-      pathe: 1.1.2
+      pathe: 1.1.1
       pretty-format: 29.6.2
 
   '@vitest/spy@0.34.1':
@@ -19794,7 +19794,7 @@ snapshots:
   mlly@1.4.0:
     dependencies:
       acorn: 8.10.0
-      pathe: 1.1.2
+      pathe: 1.1.1
       pkg-types: 1.0.3
       ufo: 1.2.0
 
@@ -22311,7 +22311,7 @@ snapshots:
       cac: 6.7.14
       debug: 4.3.4(supports-color@8.1.1)
       mlly: 1.4.0
-      pathe: 1.1.2
+      pathe: 1.1.1
       picocolors: 1.0.0
       vite: 4.2.3(@types/node@18.19.34)(less@4.2.0)(sass@1.60.0)(terser@5.31.3)
     transitivePeerDependencies:
