@@ -317,7 +317,7 @@ importers:
         version: 1.2.3
       rollup-plugin-gzip:
         specifier: ^3.1.0
-        version: 3.1.0(rollup@4.17.2)
+        version: 3.1.2(rollup@4.17.2)
       sass:
         specifier: ^1.56.2
         version: 1.60.0
@@ -9083,8 +9083,8 @@ packages:
       esbuild: '>=0.10.1'
       rollup: ^1.20.0 || ^2.0.0
 
-  rollup-plugin-gzip@3.1.0:
-    resolution: {integrity: sha512-PFS9s6/w6dCra6/Z8PGD+ug3aaaqKLDCbr5y1Ek71Wd4rQSmMnOqCIIMgwbYxZ9A/gjP3pCN6rA4pAG47jxF0w==}
+  rollup-plugin-gzip@3.1.2:
+    resolution: {integrity: sha512-9xemMyvCjkklgNpu6jCYqQAbvCLJzA2nilkiOGzFuXTUX3cXEFMwIhsIBRF7kTKD/SnZ1tNPcxFm4m4zJ3VfNQ==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       rollup: '>=2.0.0'
@@ -21096,7 +21096,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  rollup-plugin-gzip@3.1.0(rollup@4.17.2):
+  rollup-plugin-gzip@3.1.2(rollup@4.17.2):
     dependencies:
       rollup: 4.17.2
 
