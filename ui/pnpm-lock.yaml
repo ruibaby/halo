@@ -403,7 +403,7 @@ importers:
     devDependencies:
       '@iconify-json/ri':
         specifier: ^1.1.15
-        version: 1.1.15
+        version: 1.1.21
       '@storybook/addon-essentials':
         specifier: ^7.6.3
         version: 7.6.3(@types/react@18.2.41)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2596,8 +2596,8 @@ packages:
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
 
-  '@iconify-json/ri@1.1.15':
-    resolution: {integrity: sha512-A1g6jPANPRC1aKthtBpWGn53NI/bf7HsjNr/Zi2n3fIlWLHp4SI8MGXw7POUKAefzipb7HSqlBNpQxGLJ5qe2g==}
+  '@iconify-json/ri@1.1.21':
+    resolution: {integrity: sha512-ssU2CRaB4T83Q3cncCZtITholhYkH6gEL5XLmdMII6Xzn8bTCpDCkt+HdX4URc24uUMD0PGIaNLJUIAgdfLMjQ==}
 
   '@iconify/json@2.2.147':
     resolution: {integrity: sha512-VTW1vVivOq5RVcZu7xqCXWptGH7fo6VPsUxT5QBlbBS042859YZnK1JTXHJu4InMuTwQC/3KLP+InJJ5kawOGg==}
@@ -13234,7 +13234,7 @@ snapshots:
 
   '@iarna/toml@2.2.5': {}
 
-  '@iconify-json/ri@1.1.15':
+  '@iconify-json/ri@1.1.21':
     dependencies:
       '@iconify/types': 2.0.0
 
