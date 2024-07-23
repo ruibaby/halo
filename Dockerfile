@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jre as builder
+FROM eclipse-temurin:21.0.4_7-jre as builder
 
 WORKDIR application
 ARG JAR_FILE=application/build/libs/*.jar
