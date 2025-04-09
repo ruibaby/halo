@@ -33,27 +33,22 @@ watch(
 );
 </script>
 <template>
-  <div v-if="editor" class="halo-rich-text-editor">
+  <div v-if="editor" class="halo-rich-text-editor flex flex-col">
     <editor-bubble-menu :editor="editor" />
-    <editor-header :editor="editor" />
-    <div class="h-full flex flex-row w-full overflow-hidden">
-      <div class="overflow-y-auto flex-1 bg-white relative">
-        <div v-if="$slots.content" class="editor-header-extra">
-          <slot name="content" />
-        </div>
+    <div class="overflow-y-auto flex-1 min-h-0 shrink bg-white relative">
+      <div v-if="$slots.content" class="editor-header-extra">
+        <slot name="content" />
+      </div>
 
-        <editor-content
-          :editor="editor"
-          :style="contentStyles"
-          class="editor-content markdown-body relative"
-        />
-      </div>
-      <div
-        v-if="$slots.extra"
-        class="h-full hidden sm:!block w-72 flex-shrink-0 flex-none"
-      >
-        <slot name="extra"></slot>
-      </div>
+      <editor-content
+        :editor="editor"
+        :style="contentStyles"
+        class="editor-content markdown-body relative"
+      />
+    </div>
+
+    <div class="flex-none">
+      <editor-header :editor="editor" />
     </div>
   </div>
 </template>

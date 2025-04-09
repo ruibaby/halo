@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Editor, type AnyExtension } from "@/tiptap/vue-3";
 import type { ToolbarItem, ToolboxItem } from "@/types";
-import { Dropdown as VDropdown, Menu as VMenu } from "floating-vue";
+import { Dropdown as VDropdown } from "floating-vue";
 import MdiPlusCircle from "~icons/mdi/plus-circle";
 
 const props = defineProps({
@@ -59,10 +59,10 @@ function getToolboxItemsFromExtensions() {
 </script>
 <template>
   <div
-    class="editor-header py-1 space-x-1 px-1 overflow-auto border-b shadow-sm bg-white text-center"
+    class="editor-header py-1 space-x-1 px-1 overflow-auto border-t shadow-sm bg-white text-center"
   >
     <div class="h-full inline-flex items-center">
-      <VMenu>
+      <VDropdown>
         <button class="p-1.5 rounded-md hover:bg-gray-100" tabindex="-1">
           <MdiPlusCircle class="text-[#4CCBA0]" />
         </button>
@@ -79,7 +79,7 @@ function getToolboxItemsFromExtensions() {
             />
           </div>
         </template>
-      </VMenu>
+      </VDropdown>
       <div class="h-5 bg-gray-100 w-[1px] !mx-1"></div>
       <div
         v-for="(item, index) in getToolbarItemsFromExtensions()"
