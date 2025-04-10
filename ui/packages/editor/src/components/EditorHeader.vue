@@ -59,10 +59,10 @@ function getToolboxItemsFromExtensions() {
 </script>
 <template>
   <div
-    class="editor-header py-1 space-x-1 px-1 overflow-auto border-t shadow-sm bg-white text-center"
+    class="editor-header py-1 space-x-1 px-3 overflow-auto border-t shadow-sm bg-white text-center"
   >
     <div class="h-full inline-flex items-center">
-      <VDropdown>
+      <VDropdown :triggers="['click']" :popper-triggers="['click']">
         <button class="p-1.5 rounded-md hover:bg-gray-100" tabindex="-1">
           <MdiPlusCircle class="text-[#4CCBA0]" />
         </button>

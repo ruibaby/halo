@@ -3963,7 +3963,7 @@ var RichTextEditor = (function (k, u) {
     NODE: "/opt/homebrew/Cellar/node@22/22.14.0_1/bin/node",
     ANDROID_HOME: "/Users/ryanwang/Library/Android/sdk",
     WASMER_DIR: "/Users/ryanwang/.wasmer",
-    _P9K_TTY: "/dev/ttys005",
+    _P9K_TTY: "/dev/ttys016",
     npm_package_homepage:
       "https://github.com/halo-dev/halo/tree/main/ui/packages/editor#readme",
     npm_package_dependencies__tiptap_vue_3: "^2.11.2",
@@ -3980,13 +3980,13 @@ var RichTextEditor = (function (k, u) {
     npm_package_scripts_lint:
       "eslint ./src --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
     npm_package_scripts_release: "release-it",
-    TERM_PROGRAM_VERSION: "0.48.7",
+    TERM_PROGRAM_VERSION: "0.48.8",
     npm_package_dependencies__tiptap_extension_dropcursor: "^2.11.2",
     npm_package_dependencies_floating_vue: "^5.2.2",
     npm_package_scripts_dev: "vite",
     MallocNanoZone: "0",
     ORIGINAL_XDG_CURRENT_DESKTOP: "undefined",
-    CURSOR_TRACE_ID: "f3aa1dd96f1a4d14ad3c22945b689fe9",
+    CURSOR_TRACE_ID: "6ea16c9e08334bc5b834d9cad3200341",
     ZDOTDIR: "/Users/ryanwang",
     npm_package_dependencies__tiptap_extension_document: "^2.11.2",
     npm_package_dependencies__tiptap_extension_highlight: "^2.11.2",
@@ -4002,6 +4002,7 @@ var RichTextEditor = (function (k, u) {
     npm_package_scripts_test_unit_ui: "vitest --environment jsdom --watch --ui",
     npm_package_dependencies__tiptap_pm: "^2.11.2",
     USER: "ryanwang",
+    http_proxy: "http://192.168.1.15:7890",
     DEVECO_SDK_HOME: "/Applications/DevEco-Studio.app/Contents/sdk",
     npm_package_description: "Default editor for Halo",
     LS_COLORS:
@@ -4016,8 +4017,10 @@ var RichTextEditor = (function (k, u) {
     npm_package_repository_directory: "ui/packages/editor",
     npm_package_dependencies__tiptap_extension_history: "^2.11.2",
     npm_config_strict_peer_dependencies: "",
-    SSH_AUTH_SOCK: "/private/tmp/com.apple.launchd.EWHtKwuaoy/Listeners",
+    SSH_AUTH_SOCK: "/private/tmp/com.apple.launchd.Vb3BgW8B2g/Listeners",
     __CF_USER_TEXT_ENCODING: "0x1F5:0x0:0x0",
+    ftp_proxy: "http://192.168.1.15:7890",
+    FTP_PROXY: "http://192.168.1.15:7890",
     npm_execpath:
       "/Users/ryanwang/.cache/node/corepack/v1/pnpm/9.15.0/bin/pnpm.cjs",
     PAGER: "less",
@@ -4027,15 +4030,21 @@ var RichTextEditor = (function (k, u) {
     npm_package_dependencies__tiptap_extension_list_item: "^2.11.2",
     npm_package_dependencies_scroll_into_view_if_needed: "^3.1.0",
     npm_config_frozen_lockfile: "",
+    ALL_PROXY: "socks5://192.168.1.15:7890",
+    all_proxy: "socks5://192.168.1.15:7890",
     npm_package_dependencies__tiptap_extension_horizontal_rule: "^2.11.2",
     npm_package_dependencies__tiptap_extension_text_style: "^2.11.2",
     npm_package_devDependencies__types_linkifyjs: "^2.1.7",
     PATH: "/Users/ryanwang/Workspace/github/ruibaby/halo-next/ui/packages/editor/node_modules/.bin:/Users/ryanwang/.cache/node/corepack/v1/pnpm/9.15.0/dist/node-gyp-bin:/Users/ryanwang/Workspace/github/ruibaby/halo-next/ui/node_modules/.bin:/Users/ryanwang/.codeium/windsurf/bin:/Users/ryanwang/.codeium/windsurf/bin:/Users/ryanwang/.wasmer/bin:/Users/ryanwang/.bun/bin:/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/toolchains:/Applications/DevEco-Studio.app/Contents/tools/hvigor/bin:/Applications/DevEco-Studio.app/Contents/tools/ohpm/bin:/Users/ryanwang/Workspace/sdk/flutter/bin/cache/dart-sdk/bin/:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/VMware Fusion.app/Contents/Public:/Users/ryanwang/Workspace/sdk/flutter/bin/cache/dart-sdk/bin/:/Users/ryanwang/.codeium/windsurf/bin:/Users/ryanwang/.sdkman/candidates/maven/current/bin:/Users/ryanwang/.sdkman/candidates/java/current/bin:/Users/ryanwang/.wasmer/bin:/Users/ryanwang/.bun/bin:/Users/ryanwang/Library/pnpm:/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/toolchains:/Applications/DevEco-Studio.app/Contents/tools/hvigor/bin:/Applications/DevEco-Studio.app/Contents/tools/ohpm/bin:/Users/ryanwang/.cargo/bin:/Users/ryanwang/.orbstack/bin:/Users/ryanwang/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/homebrew/opt/node@22/bin:/Users/ryanwang/Library/Python/3.9/bin:/Users/ryanwang/go/bin:/Users/ryanwang/Library/Android/sdk/cmdline-tools/latest/bin:/Users/ryanwang/Library/Android/sdk/platform-tools:/Users/ryanwang/.pub-cache/bin:/Users/ryanwang/.orbstack/bin:/Users/ryanwang/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/ryanwang/.cargo/bin:/opt/homebrew/opt/node@22/bin:/Users/ryanwang/Library/Python/3.9/bin:/Users/ryanwang/go/bin:/Users/ryanwang/Library/Android/sdk/cmdline-tools/latest/bin:/Users/ryanwang/Library/Android/sdk/platform-tools:/Users/ryanwang/.pub-cache/bin",
     MAVEN_HOME: "/Users/ryanwang/.sdkman/candidates/maven/current",
     npm_package_devDependencies_release_it: "^16.1.5",
+    rsync_proxy: "http://192.168.1.15:7890",
+    RSYNC_PROXY: "http://192.168.1.15:7890",
     npm_package_scripts_typecheck:
       "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    LaunchInstanceID: "6E016C22-C4B8-4E51-9B92-B94BD83F83FF",
     npm_package_peerDependencies_vue: "^3.5.13",
+    npm_config_https_proxy: "http://192.168.1.15:7890",
     __CFBundleIdentifier: "com.todesktop.230313mzl4w4u92",
     USER_ZDOTDIR: "/Users/ryanwang",
     COREPACK_ENABLE_DOWNLOAD_PROMPT: "0",
@@ -4045,7 +4054,7 @@ var RichTextEditor = (function (k, u) {
     PWD: "/Users/ryanwang/Workspace/github/ruibaby/halo-next/ui/packages/editor",
     npm_command: "run-script",
     JAVA_HOME: "/Users/ryanwang/.sdkman/candidates/java/current",
-    VSCODE_NONCE: "078999c2-62af-4aa8-a7f9-164286e175fd",
+    VSCODE_NONCE: "63880471-d9f8-4fd7-b2e6-e848a2c63d9d",
     npm_package_bugs_url: "https://github.com/halo-dev/halo/issues",
     npm_package_dependencies__tiptap_extension_bold: "^2.11.2",
     EDITOR: "nvim",
@@ -4068,6 +4077,8 @@ var RichTextEditor = (function (k, u) {
     VSCODE_GIT_ASKPASS_EXTRA_ARGS: "",
     npm_package_dependencies__tiptap_extension_task_list: "^2.11.2",
     npm_package_dependencies_tippy_js: "^6.3.7",
+    https_proxy: "http://192.168.1.15:7890",
+    HTTPS_PROXY: "http://192.168.1.15:7890",
     npm_package_main: "./dist/rich-text-editor.iife.js",
     npm_package_dependencies__tiptap_extension_bullet_list: "^2.11.2",
     npm_package_devDependencies_vite_plugin_dts: "^4.2.2",
@@ -4086,7 +4097,9 @@ var RichTextEditor = (function (k, u) {
       "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js",
     npm_package_dependencies__tiptap_extension_image: "^2.11.2",
     npm_package_dependencies__tiptap_extension_subscript: "^2.11.2",
+    no_proxy: "localhost,127.0.0.1,localaddress,.localdomain.com",
     npm_package_dependencies_github_markdown_css: "^5.2.0",
+    HTTP_PROXY: "http://192.168.1.15:7890",
     npm_package_dependencies__tiptap_extension_ordered_list: "^2.11.2",
     npm_package_dependencies__tiptap_extension_code_block: "^2.11.2",
     LOGNAME: "ryanwang",
@@ -4097,6 +4110,7 @@ var RichTextEditor = (function (k, u) {
       "/var/folders/pl/2sj_41xn3nv98xvrfr7xyrl00000gn/T/vscode-git-506635f378.sock",
     npm_package_dependencies__tiptap_extension_table: "^2.11.2",
     npm_package_dependencies__tiptap_extension_underline: "^2.11.2",
+    npm_config_proxy: "http://192.168.1.15:7890",
     BUN_INSTALL: "/Users/ryanwang/.bun",
     npm_package_scripts_test_unit_watch: "vitest --environment jsdom --watch",
     npm_package_dependencies__tiptap_extension_color: "^2.11.2",
@@ -4107,10 +4121,11 @@ var RichTextEditor = (function (k, u) {
       "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh",
     VSCODE_GIT_ASKPASS_NODE:
       "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)",
-    _P9K_SSH_TTY: "/dev/ttys005",
+    _P9K_SSH_TTY: "/dev/ttys016",
     npm_package_dependencies__tiptap_extension_blockquote: "^2.11.2",
     npm_package_files_0: "dist",
     npm_package_dependencies__tiptap_extension_table_row: "^2.11.2",
+    SECURITYSESSIONID: "186a2",
     OHOS_TOOL_HOME: "/Applications/DevEco-Studio.app/Contents",
     COLORTERM: "truecolor",
     npm_node_execpath: "/opt/homebrew/Cellar/node@22/22.14.0_1/bin/node",
@@ -5088,7 +5103,7 @@ var RichTextEditor = (function (k, u) {
     NODE: "/opt/homebrew/Cellar/node@22/22.14.0_1/bin/node",
     ANDROID_HOME: "/Users/ryanwang/Library/Android/sdk",
     WASMER_DIR: "/Users/ryanwang/.wasmer",
-    _P9K_TTY: "/dev/ttys005",
+    _P9K_TTY: "/dev/ttys016",
     npm_package_homepage:
       "https://github.com/halo-dev/halo/tree/main/ui/packages/editor#readme",
     npm_package_dependencies__tiptap_vue_3: "^2.11.2",
@@ -5105,13 +5120,13 @@ var RichTextEditor = (function (k, u) {
     npm_package_scripts_lint:
       "eslint ./src --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
     npm_package_scripts_release: "release-it",
-    TERM_PROGRAM_VERSION: "0.48.7",
+    TERM_PROGRAM_VERSION: "0.48.8",
     npm_package_dependencies__tiptap_extension_dropcursor: "^2.11.2",
     npm_package_dependencies_floating_vue: "^5.2.2",
     npm_package_scripts_dev: "vite",
     MallocNanoZone: "0",
     ORIGINAL_XDG_CURRENT_DESKTOP: "undefined",
-    CURSOR_TRACE_ID: "f3aa1dd96f1a4d14ad3c22945b689fe9",
+    CURSOR_TRACE_ID: "6ea16c9e08334bc5b834d9cad3200341",
     ZDOTDIR: "/Users/ryanwang",
     npm_package_dependencies__tiptap_extension_document: "^2.11.2",
     npm_package_dependencies__tiptap_extension_highlight: "^2.11.2",
@@ -5127,6 +5142,7 @@ var RichTextEditor = (function (k, u) {
     npm_package_scripts_test_unit_ui: "vitest --environment jsdom --watch --ui",
     npm_package_dependencies__tiptap_pm: "^2.11.2",
     USER: "ryanwang",
+    http_proxy: "http://192.168.1.15:7890",
     DEVECO_SDK_HOME: "/Applications/DevEco-Studio.app/Contents/sdk",
     npm_package_description: "Default editor for Halo",
     LS_COLORS:
@@ -5141,8 +5157,10 @@ var RichTextEditor = (function (k, u) {
     npm_package_repository_directory: "ui/packages/editor",
     npm_package_dependencies__tiptap_extension_history: "^2.11.2",
     npm_config_strict_peer_dependencies: "",
-    SSH_AUTH_SOCK: "/private/tmp/com.apple.launchd.EWHtKwuaoy/Listeners",
+    SSH_AUTH_SOCK: "/private/tmp/com.apple.launchd.Vb3BgW8B2g/Listeners",
     __CF_USER_TEXT_ENCODING: "0x1F5:0x0:0x0",
+    ftp_proxy: "http://192.168.1.15:7890",
+    FTP_PROXY: "http://192.168.1.15:7890",
     npm_execpath:
       "/Users/ryanwang/.cache/node/corepack/v1/pnpm/9.15.0/bin/pnpm.cjs",
     PAGER: "less",
@@ -5152,15 +5170,21 @@ var RichTextEditor = (function (k, u) {
     npm_package_dependencies__tiptap_extension_list_item: "^2.11.2",
     npm_package_dependencies_scroll_into_view_if_needed: "^3.1.0",
     npm_config_frozen_lockfile: "",
+    ALL_PROXY: "socks5://192.168.1.15:7890",
+    all_proxy: "socks5://192.168.1.15:7890",
     npm_package_dependencies__tiptap_extension_horizontal_rule: "^2.11.2",
     npm_package_dependencies__tiptap_extension_text_style: "^2.11.2",
     npm_package_devDependencies__types_linkifyjs: "^2.1.7",
     PATH: "/Users/ryanwang/Workspace/github/ruibaby/halo-next/ui/packages/editor/node_modules/.bin:/Users/ryanwang/.cache/node/corepack/v1/pnpm/9.15.0/dist/node-gyp-bin:/Users/ryanwang/Workspace/github/ruibaby/halo-next/ui/node_modules/.bin:/Users/ryanwang/.codeium/windsurf/bin:/Users/ryanwang/.codeium/windsurf/bin:/Users/ryanwang/.wasmer/bin:/Users/ryanwang/.bun/bin:/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/toolchains:/Applications/DevEco-Studio.app/Contents/tools/hvigor/bin:/Applications/DevEco-Studio.app/Contents/tools/ohpm/bin:/Users/ryanwang/Workspace/sdk/flutter/bin/cache/dart-sdk/bin/:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/VMware Fusion.app/Contents/Public:/Users/ryanwang/Workspace/sdk/flutter/bin/cache/dart-sdk/bin/:/Users/ryanwang/.codeium/windsurf/bin:/Users/ryanwang/.sdkman/candidates/maven/current/bin:/Users/ryanwang/.sdkman/candidates/java/current/bin:/Users/ryanwang/.wasmer/bin:/Users/ryanwang/.bun/bin:/Users/ryanwang/Library/pnpm:/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/toolchains:/Applications/DevEco-Studio.app/Contents/tools/hvigor/bin:/Applications/DevEco-Studio.app/Contents/tools/ohpm/bin:/Users/ryanwang/.cargo/bin:/Users/ryanwang/.orbstack/bin:/Users/ryanwang/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/homebrew/opt/node@22/bin:/Users/ryanwang/Library/Python/3.9/bin:/Users/ryanwang/go/bin:/Users/ryanwang/Library/Android/sdk/cmdline-tools/latest/bin:/Users/ryanwang/Library/Android/sdk/platform-tools:/Users/ryanwang/.pub-cache/bin:/Users/ryanwang/.orbstack/bin:/Users/ryanwang/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/ryanwang/.cargo/bin:/opt/homebrew/opt/node@22/bin:/Users/ryanwang/Library/Python/3.9/bin:/Users/ryanwang/go/bin:/Users/ryanwang/Library/Android/sdk/cmdline-tools/latest/bin:/Users/ryanwang/Library/Android/sdk/platform-tools:/Users/ryanwang/.pub-cache/bin",
     MAVEN_HOME: "/Users/ryanwang/.sdkman/candidates/maven/current",
     npm_package_devDependencies_release_it: "^16.1.5",
+    rsync_proxy: "http://192.168.1.15:7890",
+    RSYNC_PROXY: "http://192.168.1.15:7890",
     npm_package_scripts_typecheck:
       "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    LaunchInstanceID: "6E016C22-C4B8-4E51-9B92-B94BD83F83FF",
     npm_package_peerDependencies_vue: "^3.5.13",
+    npm_config_https_proxy: "http://192.168.1.15:7890",
     __CFBundleIdentifier: "com.todesktop.230313mzl4w4u92",
     USER_ZDOTDIR: "/Users/ryanwang",
     COREPACK_ENABLE_DOWNLOAD_PROMPT: "0",
@@ -5170,7 +5194,7 @@ var RichTextEditor = (function (k, u) {
     PWD: "/Users/ryanwang/Workspace/github/ruibaby/halo-next/ui/packages/editor",
     npm_command: "run-script",
     JAVA_HOME: "/Users/ryanwang/.sdkman/candidates/java/current",
-    VSCODE_NONCE: "078999c2-62af-4aa8-a7f9-164286e175fd",
+    VSCODE_NONCE: "63880471-d9f8-4fd7-b2e6-e848a2c63d9d",
     npm_package_bugs_url: "https://github.com/halo-dev/halo/issues",
     npm_package_dependencies__tiptap_extension_bold: "^2.11.2",
     EDITOR: "nvim",
@@ -5193,6 +5217,8 @@ var RichTextEditor = (function (k, u) {
     VSCODE_GIT_ASKPASS_EXTRA_ARGS: "",
     npm_package_dependencies__tiptap_extension_task_list: "^2.11.2",
     npm_package_dependencies_tippy_js: "^6.3.7",
+    https_proxy: "http://192.168.1.15:7890",
+    HTTPS_PROXY: "http://192.168.1.15:7890",
     npm_package_main: "./dist/rich-text-editor.iife.js",
     npm_package_dependencies__tiptap_extension_bullet_list: "^2.11.2",
     npm_package_devDependencies_vite_plugin_dts: "^4.2.2",
@@ -5211,7 +5237,9 @@ var RichTextEditor = (function (k, u) {
       "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js",
     npm_package_dependencies__tiptap_extension_image: "^2.11.2",
     npm_package_dependencies__tiptap_extension_subscript: "^2.11.2",
+    no_proxy: "localhost,127.0.0.1,localaddress,.localdomain.com",
     npm_package_dependencies_github_markdown_css: "^5.2.0",
+    HTTP_PROXY: "http://192.168.1.15:7890",
     npm_package_dependencies__tiptap_extension_ordered_list: "^2.11.2",
     npm_package_dependencies__tiptap_extension_code_block: "^2.11.2",
     LOGNAME: "ryanwang",
@@ -5222,6 +5250,7 @@ var RichTextEditor = (function (k, u) {
       "/var/folders/pl/2sj_41xn3nv98xvrfr7xyrl00000gn/T/vscode-git-506635f378.sock",
     npm_package_dependencies__tiptap_extension_table: "^2.11.2",
     npm_package_dependencies__tiptap_extension_underline: "^2.11.2",
+    npm_config_proxy: "http://192.168.1.15:7890",
     BUN_INSTALL: "/Users/ryanwang/.bun",
     npm_package_scripts_test_unit_watch: "vitest --environment jsdom --watch",
     npm_package_dependencies__tiptap_extension_color: "^2.11.2",
@@ -5232,10 +5261,11 @@ var RichTextEditor = (function (k, u) {
       "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh",
     VSCODE_GIT_ASKPASS_NODE:
       "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)",
-    _P9K_SSH_TTY: "/dev/ttys005",
+    _P9K_SSH_TTY: "/dev/ttys016",
     npm_package_dependencies__tiptap_extension_blockquote: "^2.11.2",
     npm_package_files_0: "dist",
     npm_package_dependencies__tiptap_extension_table_row: "^2.11.2",
+    SECURITYSESSIONID: "186a2",
     OHOS_TOOL_HOME: "/Applications/DevEco-Studio.app/Contents",
     COLORTERM: "truecolor",
     npm_node_execpath: "/opt/homebrew/Cellar/node@22/22.14.0_1/bin/node",
@@ -20965,7 +20995,7 @@ var RichTextEditor = (function (k, u) {
       !0
     );
   }
-  function eM(t, e, n, r) {
+  function e8(t, e, n, r) {
     let o = t.bMarks[e] + t.tShift[e],
       i = t.eMarks[e];
     const s = t.lineMax;
@@ -21048,7 +21078,7 @@ var RichTextEditor = (function (k, u) {
         (t.bsCount[w + e] = l[w]);
     return (t.blkIndent = g), !0;
   }
-  function tM(t, e, n, r) {
+  function t8(t, e, n, r) {
     const o = t.eMarks[e];
     if (t.sCount[e] - t.blkIndent >= 4) return !1;
     let i = t.bMarks[e] + t.tShift[e];
@@ -21099,14 +21129,14 @@ var RichTextEditor = (function (k, u) {
     }
     return o < r && ((i = t.src.charCodeAt(o)), !Re(i)) ? -1 : o;
   }
-  function nM(t, e) {
+  function n8(t, e) {
     const n = t.level + 2;
     for (let r = e + 2, o = t.tokens.length - 2; r < o; r++)
       t.tokens[r].level === n &&
         t.tokens[r].type === "paragraph_open" &&
         ((t.tokens[r + 2].hidden = !0), (t.tokens[r].hidden = !0), (r += 2));
   }
-  function rM(t, e, n, r) {
+  function r8(t, e, n, r) {
     let o,
       i,
       s,
@@ -21213,11 +21243,11 @@ var RichTextEditor = (function (k, u) {
       (b[1] = l),
       (t.line = l),
       (t.parentType = w),
-      c && nM(t, g),
+      c && n8(t, g),
       !0
     );
   }
-  function oM(t, e, n, r) {
+  function o8(t, e, n, r) {
     let o = 0,
       i = t.bMarks[e] + t.tShift[e],
       s = t.eMarks[e],
@@ -21305,7 +21335,7 @@ var RichTextEditor = (function (k, u) {
         !0)
       : !1;
   }
-  const iM = [
+  const i8 = [
       "address",
       "article",
       "aside",
@@ -21369,8 +21399,8 @@ var RichTextEditor = (function (k, u) {
       "track",
       "ul",
     ],
-    sM = "[a-zA-Z_:][a-zA-Z0-9:._-]*",
-    aM =
+    s8 = "[a-zA-Z_:][a-zA-Z0-9:._-]*",
+    a8 =
       "(?:" +
       "[^\"'=<>`\\x00-\\x20]+" +
       "|" +
@@ -21380,17 +21410,17 @@ var RichTextEditor = (function (k, u) {
       ")",
     Ub =
       "<[A-Za-z][A-Za-z0-9\\-]*" +
-      ("(?:\\s+" + sM + "(?:\\s*=\\s*" + aM + ")?)") +
+      ("(?:\\s+" + s8 + "(?:\\s*=\\s*" + a8 + ")?)") +
       "*\\s*\\/?>",
     jb = "<\\/[A-Za-z][A-Za-z0-9\\-]*\\s*>",
-    lM = "<!---->|<!--(?:-?[^>-])(?:-?[^-])*-->",
-    cM = "<[?][\\s\\S]*?[?]>",
-    uM = "<![A-Z]+\\s+[^>]*>",
-    dM = "<!\\[CDATA\\[[\\s\\S]*?\\]\\]>",
-    fM = new RegExp(
-      "^(?:" + Ub + "|" + jb + "|" + lM + "|" + cM + "|" + uM + "|" + dM + ")"
+    l8 = "<!---->|<!--(?:-?[^>-])(?:-?[^-])*-->",
+    c8 = "<[?][\\s\\S]*?[?]>",
+    u8 = "<![A-Z]+\\s+[^>]*>",
+    d8 = "<!\\[CDATA\\[[\\s\\S]*?\\]\\]>",
+    f8 = new RegExp(
+      "^(?:" + Ub + "|" + jb + "|" + l8 + "|" + c8 + "|" + u8 + "|" + d8 + ")"
     ),
-    pM = new RegExp("^(?:" + Ub + "|" + jb + ")"),
+    p8 = new RegExp("^(?:" + Ub + "|" + jb + ")"),
     xi = [
       [
         /^<(script|pre|style|textarea)(?=(\s|>|$))/i,
@@ -21401,10 +21431,10 @@ var RichTextEditor = (function (k, u) {
       [/^<\?/, /\?>/, !0],
       [/^<![A-Z]/, />/, !0],
       [/^<!\[CDATA\[/, /\]\]>/, !0],
-      [new RegExp("^</?(" + iM.join("|") + ")(?=(\\s|/?>|$))", "i"), /^$/, !0],
-      [new RegExp(pM.source + "\\s*$"), /^$/, !1],
+      [new RegExp("^</?(" + i8.join("|") + ")(?=(\\s|/?>|$))", "i"), /^$/, !0],
+      [new RegExp(p8.source + "\\s*$"), /^$/, !1],
     ];
-  function hM(t, e, n, r) {
+  function h8(t, e, n, r) {
     let o = t.bMarks[e] + t.tShift[e],
       i = t.eMarks[e];
     if (
@@ -21437,7 +21467,7 @@ var RichTextEditor = (function (k, u) {
       (c.map = [e, l]), (c.content = t.getLines(e, l, t.blkIndent, !0)), !0
     );
   }
-  function mM(t, e, n, r) {
+  function m8(t, e, n, r) {
     let o = t.bMarks[e] + t.tShift[e],
       i = t.eMarks[e];
     if (t.sCount[e] - t.blkIndent >= 4) return !1;
@@ -21460,7 +21490,7 @@ var RichTextEditor = (function (k, u) {
     const f = t.push("heading_close", "h" + String(a), -1);
     return (f.markup = "########".slice(0, a)), !0;
   }
-  function gM(t, e, n) {
+  function g8(t, e, n) {
     const r = t.md.block.ruler.getRules("paragraph");
     if (t.sCount[e] - t.blkIndent >= 4) return !1;
     const o = t.parentType;
@@ -21502,7 +21532,7 @@ var RichTextEditor = (function (k, u) {
     const f = t.push("heading_close", "h" + String(i), -1);
     return (f.markup = String.fromCharCode(s)), (t.parentType = o), !0;
   }
-  function bM(t, e, n) {
+  function b8(t, e, n) {
     const r = t.md.block.ruler.getRules("paragraph"),
       o = t.parentType;
     let i = e + 1;
@@ -21534,14 +21564,14 @@ var RichTextEditor = (function (k, u) {
     ["table", XS, ["paragraph", "reference"]],
     ["code", ZS],
     ["fence", QS, ["paragraph", "reference", "blockquote", "list"]],
-    ["blockquote", eM, ["paragraph", "reference", "blockquote", "list"]],
-    ["hr", tM, ["paragraph", "reference", "blockquote", "list"]],
-    ["list", rM, ["paragraph", "reference", "blockquote"]],
-    ["reference", oM],
-    ["html_block", hM, ["paragraph", "reference", "blockquote"]],
-    ["heading", mM, ["paragraph", "reference", "blockquote"]],
-    ["lheading", gM],
-    ["paragraph", bM],
+    ["blockquote", e8, ["paragraph", "reference", "blockquote", "list"]],
+    ["hr", t8, ["paragraph", "reference", "blockquote", "list"]],
+    ["list", r8, ["paragraph", "reference", "blockquote"]],
+    ["reference", o8],
+    ["html_block", h8, ["paragraph", "reference", "blockquote"]],
+    ["heading", m8, ["paragraph", "reference", "blockquote"]],
+    ["lheading", g8],
+    ["paragraph", b8],
   ];
   function oc() {
     this.ruler = new Lt();
@@ -21657,7 +21687,7 @@ var RichTextEditor = (function (k, u) {
       );
     }),
     (Ks.prototype.Token = Tn);
-  function yM(t) {
+  function y8(t) {
     switch (t) {
       case 10:
       case 33:
@@ -21687,15 +21717,15 @@ var RichTextEditor = (function (k, u) {
         return !1;
     }
   }
-  function _M(t, e) {
+  function _8(t, e) {
     let n = t.pos;
-    for (; n < t.posMax && !yM(t.src.charCodeAt(n)); ) n++;
+    for (; n < t.posMax && !y8(t.src.charCodeAt(n)); ) n++;
     return n === t.pos
       ? !1
       : (e || (t.pending += t.src.slice(t.pos, n)), (t.pos = n), !0);
   }
-  const kM = /(?:^|[^a-z0-9.+-])([a-z][a-z0-9.+-]*)$/i;
-  function wM(t, e) {
+  const k8 = /(?:^|[^a-z0-9.+-])([a-z][a-z0-9.+-]*)$/i;
+  function w8(t, e) {
     if (!t.md.options.linkify || t.linkLevel > 0) return !1;
     const n = t.pos,
       r = t.posMax;
@@ -21706,7 +21736,7 @@ var RichTextEditor = (function (k, u) {
       t.src.charCodeAt(n + 2) !== 47
     )
       return !1;
-    const o = t.pending.match(kM);
+    const o = t.pending.match(k8);
     if (!o) return !1;
     const i = o[1],
       s = t.md.linkify.matchAtStart(t.src.slice(n - i.length));
@@ -21727,7 +21757,7 @@ var RichTextEditor = (function (k, u) {
     }
     return (t.pos += a.length - i.length), !0;
   }
-  function xM(t, e) {
+  function x8(t, e) {
     let n = t.pos;
     if (t.src.charCodeAt(n) !== 10) return !1;
     const r = t.pending.length - 1,
@@ -21749,7 +21779,7 @@ var RichTextEditor = (function (k, u) {
   "\\!\"#$%&'()*+,./:;<=>?@[]^_`{|}~-".split("").forEach(function (t) {
     vp[t.charCodeAt(0)] = 1;
   });
-  function CM(t, e) {
+  function C8(t, e) {
     let n = t.pos;
     const r = t.posMax;
     if (t.src.charCodeAt(n) !== 92 || (n++, n >= r)) return !1;
@@ -21777,7 +21807,7 @@ var RichTextEditor = (function (k, u) {
     }
     return (t.pos = n + 1), !0;
   }
-  function vM(t, e) {
+  function v8(t, e) {
     let n = t.pos;
     if (t.src.charCodeAt(n) !== 96) return !1;
     const o = n;
@@ -21808,7 +21838,7 @@ var RichTextEditor = (function (k, u) {
     }
     return (t.backticksScanned = !0), e || (t.pending += s), (t.pos += a), !0;
   }
-  function EM(t, e) {
+  function E8(t, e) {
     const n = t.pos,
       r = t.src.charCodeAt(n);
     if (e || r !== 126) return !1;
@@ -21864,15 +21894,15 @@ var RichTextEditor = (function (k, u) {
           ((n = t.tokens[s]), (t.tokens[s] = t.tokens[i]), (t.tokens[i] = n));
     }
   }
-  function AM(t) {
+  function A8(t) {
     const e = t.tokens_meta,
       n = t.tokens_meta.length;
     Wb(t, t.delimiters);
     for (let r = 0; r < n; r++)
       e[r] && e[r].delimiters && Wb(t, e[r].delimiters);
   }
-  const qb = { tokenize: EM, postProcess: AM };
-  function SM(t, e) {
+  const qb = { tokenize: E8, postProcess: A8 };
+  function S8(t, e) {
     const n = t.pos,
       r = t.src.charCodeAt(n);
     if (e || (r !== 95 && r !== 42)) return !1;
@@ -21922,15 +21952,15 @@ var RichTextEditor = (function (k, u) {
           r--);
     }
   }
-  function MM(t) {
+  function M8(t) {
     const e = t.tokens_meta,
       n = t.tokens_meta.length;
     Kb(t, t.delimiters);
     for (let r = 0; r < n; r++)
       e[r] && e[r].delimiters && Kb(t, e[r].delimiters);
   }
-  const Gb = { tokenize: SM, postProcess: MM };
-  function TM(t, e) {
+  const Gb = { tokenize: S8, postProcess: M8 };
+  function T8(t, e) {
     let n,
       r,
       o,
@@ -22005,7 +22035,7 @@ var RichTextEditor = (function (k, u) {
     }
     return (t.pos = m), (t.posMax = f), !0;
   }
-  function NM(t, e) {
+  function N8(t, e) {
     let n,
       r,
       o,
@@ -22082,10 +22112,10 @@ var RichTextEditor = (function (k, u) {
     }
     return (t.pos = i), (t.posMax = p), !0;
   }
-  const OM =
+  const O8 =
       /^([a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*)$/,
-    RM = /^([a-zA-Z][a-zA-Z0-9+.-]{1,31}):([^<>\x00-\x20]*)$/;
-  function DM(t, e) {
+    R8 = /^([a-zA-Z][a-zA-Z0-9+.-]{1,31}):([^<>\x00-\x20]*)$/;
+  function D8(t, e) {
     let n = t.pos;
     if (t.src.charCodeAt(n) !== 60) return !1;
     const r = t.pos,
@@ -22097,7 +22127,7 @@ var RichTextEditor = (function (k, u) {
       if (s === 62) break;
     }
     const i = t.src.slice(r + 1, n);
-    if (RM.test(i)) {
+    if (R8.test(i)) {
       const s = t.md.normalizeLink(i);
       if (!t.md.validateLink(s)) return !1;
       if (!e) {
@@ -22110,7 +22140,7 @@ var RichTextEditor = (function (k, u) {
       }
       return (t.pos += i.length + 2), !0;
     }
-    if (OM.test(i)) {
+    if (O8.test(i)) {
       const s = t.md.normalizeLink("mailto:" + i);
       if (!t.md.validateLink(s)) return !1;
       if (!e) {
@@ -22125,41 +22155,41 @@ var RichTextEditor = (function (k, u) {
     }
     return !1;
   }
-  function LM(t) {
+  function L8(t) {
     return /^<a[>\s]/i.test(t);
   }
-  function IM(t) {
+  function I8(t) {
     return /^<\/a\s*>/i.test(t);
   }
-  function BM(t) {
+  function B8(t) {
     const e = t | 32;
     return e >= 97 && e <= 122;
   }
-  function PM(t, e) {
+  function P8(t, e) {
     if (!t.md.options.html) return !1;
     const n = t.posMax,
       r = t.pos;
     if (t.src.charCodeAt(r) !== 60 || r + 2 >= n) return !1;
     const o = t.src.charCodeAt(r + 1);
-    if (o !== 33 && o !== 63 && o !== 47 && !BM(o)) return !1;
-    const i = t.src.slice(r).match(fM);
+    if (o !== 33 && o !== 63 && o !== 47 && !B8(o)) return !1;
+    const i = t.src.slice(r).match(f8);
     if (!i) return !1;
     if (!e) {
       const s = t.push("html_inline", "", 0);
       (s.content = i[0]),
-        LM(s.content) && t.linkLevel++,
-        IM(s.content) && t.linkLevel--;
+        L8(s.content) && t.linkLevel++,
+        I8(s.content) && t.linkLevel--;
     }
     return (t.pos += i[0].length), !0;
   }
-  const $M = /^&#((?:x[a-f0-9]{1,6}|[0-9]{1,7}));/i,
-    FM = /^&([a-z][a-z0-9]{1,31});/i;
-  function HM(t, e) {
+  const $8 = /^&#((?:x[a-f0-9]{1,6}|[0-9]{1,7}));/i,
+    F8 = /^&([a-z][a-z0-9]{1,31});/i;
+  function H8(t, e) {
     const n = t.pos,
       r = t.posMax;
     if (t.src.charCodeAt(n) !== 38 || n + 1 >= r) return !1;
     if (t.src.charCodeAt(n + 1) === 35) {
-      const i = t.src.slice(n).match($M);
+      const i = t.src.slice(n).match($8);
       if (i) {
         if (!e) {
           const s =
@@ -22174,7 +22204,7 @@ var RichTextEditor = (function (k, u) {
         return (t.pos += i[0].length), !0;
       }
     } else {
-      const i = t.src.slice(n).match(FM);
+      const i = t.src.slice(n).match(F8);
       if (i) {
         const s = Db(i[0]);
         if (s !== i[0]) {
@@ -22235,13 +22265,13 @@ var RichTextEditor = (function (k, u) {
       d !== -1 && (e[a.marker][(a.open ? 3 : 0) + ((a.length || 0) % 3)] = d);
     }
   }
-  function zM(t) {
+  function z8(t) {
     const e = t.tokens_meta,
       n = t.tokens_meta.length;
     Jb(t.delimiters);
     for (let r = 0; r < n; r++) e[r] && e[r].delimiters && Jb(e[r].delimiters);
   }
-  function VM(t) {
+  function V8(t) {
     let e,
       n,
       r = 0;
@@ -22257,24 +22287,24 @@ var RichTextEditor = (function (k, u) {
     e !== n && (o.length = n);
   }
   const Ep = [
-      ["text", _M],
-      ["linkify", wM],
-      ["newline", xM],
-      ["escape", CM],
-      ["backticks", vM],
+      ["text", _8],
+      ["linkify", w8],
+      ["newline", x8],
+      ["escape", C8],
+      ["backticks", v8],
       ["strikethrough", qb.tokenize],
       ["emphasis", Gb.tokenize],
-      ["link", TM],
-      ["image", NM],
-      ["autolink", DM],
-      ["html_inline", PM],
-      ["entity", HM],
+      ["link", T8],
+      ["image", N8],
+      ["autolink", D8],
+      ["html_inline", P8],
+      ["entity", H8],
     ],
     Ap = [
-      ["balance_pairs", zM],
+      ["balance_pairs", z8],
       ["strikethrough", qb.postProcess],
       ["emphasis", Gb.postProcess],
-      ["fragments_join", VM],
+      ["fragments_join", V8],
     ];
   function Gs() {
     this.ruler = new Lt();
@@ -22335,7 +22365,7 @@ var RichTextEditor = (function (k, u) {
       for (let a = 0; a < s; a++) i[a](o);
     }),
     (Gs.prototype.State = Ks);
-  function UM(t) {
+  function U8(t) {
     const e = {};
     (t = t || {}),
       (e.src_Any = Tb.source),
@@ -22469,28 +22499,28 @@ var RichTextEditor = (function (k, u) {
   function ic(t) {
     return Object.prototype.toString.call(t);
   }
-  function jM(t) {
+  function j8(t) {
     return ic(t) === "[object String]";
   }
-  function WM(t) {
+  function W8(t) {
     return ic(t) === "[object Object]";
   }
-  function qM(t) {
+  function q8(t) {
     return ic(t) === "[object RegExp]";
   }
   function Yb(t) {
     return ic(t) === "[object Function]";
   }
-  function KM(t) {
+  function K8(t) {
     return t.replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
   }
   const Xb = { fuzzyLink: !0, fuzzyEmail: !0, fuzzyIP: !1 };
-  function GM(t) {
+  function G8(t) {
     return Object.keys(t || {}).reduce(function (e, n) {
       return e || Xb.hasOwnProperty(n);
     }, !1);
   }
-  const JM = {
+  const J8 = {
       "http:": {
         validate: function (t, e, n) {
           const r = t.slice(e);
@@ -22549,16 +22579,16 @@ var RichTextEditor = (function (k, u) {
         },
       },
     },
-    YM =
+    Y8 =
       "a[cdefgilmnoqrstuwxz]|b[abdefghijmnorstvwyz]|c[acdfghiklmnoruvwxyz]|d[ejkmoz]|e[cegrstu]|f[ijkmor]|g[abdefghilmnpqrstuwy]|h[kmnrtu]|i[delmnoqrst]|j[emop]|k[eghimnprwyz]|l[abcikrstuvy]|m[acdeghklmnopqrstuvwxyz]|n[acefgilopruz]|om|p[aefghklmnrstwy]|qa|r[eosuw]|s[abcdeghijklmnortuvxyz]|t[cdfghjklmnortvwz]|u[agksyz]|v[aceginu]|w[fs]|y[et]|z[amw]",
-    XM =
+    X8 =
       "biz|com|edu|gov|net|org|pro|web|xxx|aero|asia|coop|info|museum|name|shop|рф".split(
         "|"
       );
-  function ZM(t) {
+  function Z8(t) {
     (t.__index__ = -1), (t.__text_cache__ = "");
   }
-  function QM(t) {
+  function Q8(t) {
     return function (e, n) {
       const r = e.slice(n);
       return t.test(r) ? r.match(t)[0].length : 0;
@@ -22570,10 +22600,10 @@ var RichTextEditor = (function (k, u) {
     };
   }
   function sc(t) {
-    const e = (t.re = UM(t.__opts__)),
+    const e = (t.re = U8(t.__opts__)),
       n = t.__tlds__.slice();
     t.onCompile(),
-      t.__tlds_replaced__ || n.push(YM),
+      t.__tlds_replaced__ || n.push(Y8),
       n.push(e.src_xn),
       (e.src_tlds = n.join("|"));
     function r(a) {
@@ -22592,9 +22622,9 @@ var RichTextEditor = (function (k, u) {
       const l = t.__schemas__[a];
       if (l === null) return;
       const c = { validate: null, link: null };
-      if (((t.__compiled__[a] = c), WM(l))) {
-        qM(l.validate)
-          ? (c.validate = QM(l.validate))
+      if (((t.__compiled__[a] = c), W8(l))) {
+        q8(l.validate)
+          ? (c.validate = Q8(l.validate))
           : Yb(l.validate)
           ? (c.validate = l.validate)
           : i(a, l),
@@ -22605,7 +22635,7 @@ var RichTextEditor = (function (k, u) {
             : (c.normalize = Zb());
         return;
       }
-      if (jM(l)) {
+      if (j8(l)) {
         o.push(a);
         return;
       }
@@ -22623,7 +22653,7 @@ var RichTextEditor = (function (k, u) {
       .filter(function (a) {
         return a.length > 0 && t.__compiled__[a];
       })
-      .map(KM)
+      .map(K8)
       .join("|");
     (t.re.schema_test = RegExp(
       "(^|(?!_)(?:[><｜]|" + e.src_ZPCc + "))(" + s + ")",
@@ -22642,9 +22672,9 @@ var RichTextEditor = (function (k, u) {
           ")|@",
         "i"
       )),
-      ZM(t);
+      Z8(t);
   }
-  function e8(t, e) {
+  function eM(t, e) {
     const n = t.__index__,
       r = t.__last_index__,
       o = t.__text_cache__.slice(n, r);
@@ -22656,20 +22686,20 @@ var RichTextEditor = (function (k, u) {
       (this.url = o);
   }
   function Mp(t, e) {
-    const n = new e8(t, e);
+    const n = new eM(t, e);
     return t.__compiled__[n.schema].normalize(n, t), n;
   }
   function zt(t, e) {
     if (!(this instanceof zt)) return new zt(t, e);
-    e || (GM(t) && ((e = t), (t = {}))),
+    e || (G8(t) && ((e = t), (t = {}))),
       (this.__opts__ = Sp({}, Xb, e)),
       (this.__index__ = -1),
       (this.__last_index__ = -1),
       (this.__schema__ = ""),
       (this.__text_cache__ = ""),
-      (this.__schemas__ = Sp({}, JM, t)),
+      (this.__schemas__ = Sp({}, J8, t)),
       (this.__compiled__ = {}),
-      (this.__tlds__ = XM),
+      (this.__tlds__ = X8),
       (this.__tlds_replaced__ = !1),
       (this.re = {}),
       sc(this);
@@ -22793,15 +22823,15 @@ var RichTextEditor = (function (k, u) {
     Wn = 36,
     Tp = 1,
     Js = 26,
-    t8 = 38,
-    n8 = 700,
+    tM = 38,
+    nM = 700,
     Qb = 72,
     ey = 128,
     ty = "-",
-    r8 = /^xn--/,
-    o8 = /[^\0-\x7F]/,
-    i8 = /[\x2E\u3002\uFF0E\uFF61]/g,
-    s8 = {
+    rM = /^xn--/,
+    oM = /[^\0-\x7F]/,
+    iM = /[\x2E\u3002\uFF0E\uFF61]/g,
+    sM = {
       overflow: "Overflow: input needs wider integers to process",
       "not-basic": "Illegal input >= 0x80 (not a basic code point)",
       "invalid-input": "Invalid input",
@@ -22810,9 +22840,9 @@ var RichTextEditor = (function (k, u) {
     qn = Math.floor,
     Op = String.fromCharCode;
   function Zr(t) {
-    throw new RangeError(s8[t]);
+    throw new RangeError(sM[t]);
   }
-  function a8(t, e) {
+  function aM(t, e) {
     const n = [];
     let r = t.length;
     for (; r--; ) n[r] = e(t[r]);
@@ -22821,9 +22851,9 @@ var RichTextEditor = (function (k, u) {
   function ny(t, e) {
     const n = t.split("@");
     let r = "";
-    n.length > 1 && ((r = n[0] + "@"), (t = n[1])), (t = t.replace(i8, "."));
+    n.length > 1 && ((r = n[0] + "@"), (t = n[1])), (t = t.replace(iM, "."));
     const o = t.split("."),
-      i = a8(o, e).join(".");
+      i = aM(o, e).join(".");
     return r + i;
   }
   function ry(t) {
@@ -22841,8 +22871,8 @@ var RichTextEditor = (function (k, u) {
     }
     return e;
   }
-  const l8 = (t) => String.fromCodePoint(...t),
-    c8 = function (t) {
+  const lM = (t) => String.fromCodePoint(...t),
+    cM = function (t) {
       return t >= 48 && t < 58
         ? 26 + (t - 48)
         : t >= 65 && t < 91
@@ -22857,12 +22887,12 @@ var RichTextEditor = (function (k, u) {
     iy = function (t, e, n) {
       let r = 0;
       for (
-        t = n ? qn(t / n8) : t >> 1, t += qn(t / e);
+        t = n ? qn(t / nM) : t >> 1, t += qn(t / e);
         t > (Np * Js) >> 1;
         r += Wn
       )
         t = qn(t / Np);
-      return qn(r + ((Np + 1) * t) / (t + t8));
+      return qn(r + ((Np + 1) * t) / (t + tM));
     },
     sy = function (t) {
       const e = [],
@@ -22878,7 +22908,7 @@ var RichTextEditor = (function (k, u) {
         const l = r;
         for (let d = 1, f = Wn; ; f += Wn) {
           a >= n && Zr("invalid-input");
-          const p = c8(t.charCodeAt(a++));
+          const p = cM(t.charCodeAt(a++));
           p >= Wn && Zr("invalid-input"),
             p > qn((Ci - r) / d) && Zr("overflow"),
             (r += p * d);
@@ -22929,21 +22959,21 @@ var RichTextEditor = (function (k, u) {
     },
     ly = {
       version: "2.3.1",
-      ucs2: { decode: ry, encode: l8 },
+      ucs2: { decode: ry, encode: lM },
       decode: sy,
       encode: ay,
       toASCII: function (t) {
         return ny(t, function (e) {
-          return o8.test(e) ? "xn--" + ay(e) : e;
+          return oM.test(e) ? "xn--" + ay(e) : e;
         });
       },
       toUnicode: function (t) {
         return ny(t, function (e) {
-          return r8.test(e) ? sy(e.slice(4).toLowerCase()) : e;
+          return rM.test(e) ? sy(e.slice(4).toLowerCase()) : e;
         });
       },
     },
-    u8 = {
+    uM = {
       default: {
         options: {
           html: !1,
@@ -23025,14 +23055,14 @@ var RichTextEditor = (function (k, u) {
         },
       },
     },
-    d8 = /^(vbscript|javascript|file|data):/,
-    f8 = /^data:image\/(gif|png|jpeg|webp);/;
-  function p8(t) {
+    dM = /^(vbscript|javascript|file|data):/,
+    fM = /^data:image\/(gif|png|jpeg|webp);/;
+  function pM(t) {
     const e = t.trim().toLowerCase();
-    return d8.test(e) ? f8.test(e) : !0;
+    return dM.test(e) ? fM.test(e) : !0;
   }
   const cy = ["http:", "https:", "mailto:"];
-  function h8(t) {
+  function hM(t) {
     const e = mp(t, !0);
     if (e.hostname && (!e.protocol || cy.indexOf(e.protocol) >= 0))
       try {
@@ -23040,7 +23070,7 @@ var RichTextEditor = (function (k, u) {
       } catch {}
     return Vs(hp(e));
   }
-  function m8(t) {
+  function mM(t) {
     const e = mp(t, !0);
     if (e.hostname && (!e.protocol || cy.indexOf(e.protocol) >= 0))
       try {
@@ -23056,9 +23086,9 @@ var RichTextEditor = (function (k, u) {
       (this.core = new xp()),
       (this.renderer = new wi()),
       (this.linkify = new zt()),
-      (this.validateLink = p8),
-      (this.normalizeLink = h8),
-      (this.normalizeLinkText = m8),
+      (this.validateLink = pM),
+      (this.normalizeLink = hM),
+      (this.normalizeLinkText = mM),
       (this.utils = SS),
       (this.helpers = Ql({}, OS)),
       (this.options = {}),
@@ -23072,7 +23102,7 @@ var RichTextEditor = (function (k, u) {
       const e = this;
       if (_p(t)) {
         const n = t;
-        if (((t = u8[n]), !t))
+        if (((t = uM[n]), !t))
           throw new Error('Wrong `markdown-it` preset "' + n + '", check name');
       }
       if (!t) throw new Error("Wrong `markdown-it` preset, can't be empty");
@@ -23341,11 +23371,11 @@ var RichTextEditor = (function (k, u) {
       },
     },
   });
-  function g8(t, e) {
+  function gM(t, e) {
     if (t.isText && e.isText && _e.sameSet(t.marks, e.marks))
       return t.withText(t.text + e.text);
   }
-  class b8 {
+  class bM {
     constructor(e, n) {
       (this.schema = e),
         (this.tokenHandlers = n),
@@ -23366,7 +23396,7 @@ var RichTextEditor = (function (k, u) {
         o = r[r.length - 1],
         i = this.schema.text(e, n.marks),
         s;
-      o && (s = g8(o, i)) ? (r[r.length - 1] = s) : r.push(i);
+      o && (s = gM(o, i)) ? (r[r.length - 1] = s) : r.push(i);
     }
     openMark(e) {
       let n = this.top();
@@ -23420,7 +23450,7 @@ var RichTextEditor = (function (k, u) {
       : t;
   }
   function Dp() {}
-  function y8(t, e) {
+  function yM(t, e) {
     let n = Object.create(null);
     for (let r in e) {
       let o = e[r];
@@ -23467,10 +23497,10 @@ var RichTextEditor = (function (k, u) {
       (this.schema = e),
         (this.tokenizer = n),
         (this.tokens = r),
-        (this.tokenHandlers = y8(e, r));
+        (this.tokenHandlers = yM(e, r));
     }
     parse(e, n = {}) {
-      let r = new b8(this.schema, this.tokenHandlers),
+      let r = new bM(this.schema, this.tokenHandlers),
         o;
       r.parseTokens(this.tokenizer.parse(e, n));
       do o = r.closeNode();
@@ -23483,7 +23513,7 @@ var RichTextEditor = (function (k, u) {
       if (t[e].type != "list_item_open") return t[e].hidden;
     return !1;
   }
-  const _8 = new fy(uy, on("commonmark", { html: !1 }), {
+  const _M = new fy(uy, on("commonmark", { html: !1 }), {
       blockquote: { block: "blockquote" },
       paragraph: { block: "paragraph" },
       list_item: { block: "list_item" },
@@ -23529,7 +23559,7 @@ var RichTextEditor = (function (k, u) {
       },
       code_inline: { mark: "code", noCloseToken: !0 },
     }),
-    k8 = { open: "", close: "", mixable: !0 };
+    kM = { open: "", close: "", mixable: !0 };
   class hy {
     constructor(e, n, r = {}) {
       (this.nodes = e), (this.marks = n), (this.options = r);
@@ -23540,7 +23570,7 @@ var RichTextEditor = (function (k, u) {
       return r.renderContent(e), r.out;
     }
   }
-  const w8 = new hy(
+  const wM = new hy(
     {
       blockquote(t, e) {
         t.wrapBlock("> ", null, e, () => t.renderContent(e));
@@ -23620,7 +23650,7 @@ var RichTextEditor = (function (k, u) {
       },
       link: {
         open(t, e, n, r) {
-          return (t.inAutolink = x8(e, n, r)), t.inAutolink ? "<" : "[";
+          return (t.inAutolink = xM(e, n, r)), t.inAutolink ? "<" : "[";
         },
         close(t, e, n, r) {
           let { inAutolink: o } = t;
@@ -23658,7 +23688,7 @@ var RichTextEditor = (function (k, u) {
     for (let s = 0; s < o; s++) i += "`";
     return o > 0 && e < 0 && (i += " "), i;
   }
-  function x8(t, e, n) {
+  function xM(t, e, n) {
     if (t.attrs.title || !/^\w+:/.test(t.attrs.href)) return !1;
     let r = e.child(n);
     return !r.isText ||
@@ -23709,7 +23739,7 @@ var RichTextEditor = (function (k, u) {
           throw new Error(
             `Mark type \`${e}\` not supported by Markdown renderer`
           );
-        n = k8;
+        n = kM;
       }
       return n;
     }
@@ -23940,26 +23970,26 @@ var RichTextEditor = (function (k, u) {
       else throw new RangeError("Unsupported child node: " + e);
   }
   const Xs = "http://www.w3.org/2000/svg",
-    C8 = "http://www.w3.org/1999/xlink",
+    CM = "http://www.w3.org/1999/xlink",
     Lp = "ProseMirror-icon";
-  function v8(t) {
+  function vM(t) {
     let e = 0;
     for (let n = 0; n < t.length; n++) e = ((e << 5) - e + t.charCodeAt(n)) | 0;
     return e;
   }
-  function E8(t, e) {
+  function EM(t, e) {
     let n = (t.nodeType == 9 ? t : t.ownerDocument) || document,
       r = n.createElement("div");
     if (((r.className = Lp), e.path)) {
       let { path: o, width: i, height: s } = e,
-        a = "pm-icon-" + v8(o).toString(16);
-      n.getElementById(a) || A8(t, a, e);
+        a = "pm-icon-" + vM(o).toString(16);
+      n.getElementById(a) || AM(t, a, e);
       let l = r.appendChild(n.createElementNS(Xs, "svg"));
       (l.style.width = i / s + "em"),
         l
           .appendChild(n.createElementNS(Xs, "use"))
           .setAttributeNS(
-            C8,
+            CM,
             "href",
             /([^#]*)/.exec(n.location.toString())[1] + "#" + a
           );
@@ -23971,7 +24001,7 @@ var RichTextEditor = (function (k, u) {
     }
     return r;
   }
-  function A8(t, e, n) {
+  function AM(t, e, n) {
     let [r, o] =
         t.nodeType == 9 ? [t, t.body] : [t.ownerDocument || document, t],
       i = r.getElementById(Lp + "-collection");
@@ -23996,7 +24026,7 @@ var RichTextEditor = (function (k, u) {
         r = n.render
           ? n.render(e)
           : n.icon
-          ? E8(e.root, n.icon)
+          ? EM(e.root, n.icon)
           : n.label
           ? Vt("div", null, Zs(e, n.label))
           : null;
@@ -24040,7 +24070,7 @@ var RichTextEditor = (function (k, u) {
   function _y(t) {
     return Date.now() - 100 < Qs.time && Qs.node && t.contains(Qs.node);
   }
-  class S8 {
+  class SM {
     constructor(e, n = {}) {
       (this.options = n),
         (this.options = n || {}),
@@ -24115,7 +24145,7 @@ var RichTextEditor = (function (k, u) {
       return r;
     };
   }
-  class M8 {
+  class MM {
     constructor(e, n = {}) {
       (this.options = n), (this.content = Array.isArray(e) ? e : [e]);
     }
@@ -24170,7 +24200,7 @@ var RichTextEditor = (function (k, u) {
         n.appendChild(h), c.push(h), l.push(p);
       }
       l.length &&
-        (r.push(wy(l, c)), s < e.length - 1 && o.push(n.appendChild(T8())));
+        (r.push(wy(l, c)), s < e.length - 1 && o.push(n.appendChild(TM())));
     }
     function i(s) {
       let a = !1,
@@ -24185,7 +24215,7 @@ var RichTextEditor = (function (k, u) {
     }
     return { dom: n, update: i };
   }
-  function T8() {
+  function TM() {
     return Vt("span", { class: It + "separator" });
   }
   const vi = {
@@ -24246,37 +24276,37 @@ var RichTextEditor = (function (k, u) {
         path: "M0 448v256h256v-256h-128c0 0 0-128 128-128v-128c0 0-256 0-256 256zM640 320v-128c0 0-256 0-256 256v256h256v-256h-128c0 0 0-128 128-128z",
       },
     },
-    N8 = new Qr({
+    NM = new Qr({
       title: "Join with above block",
       run: Ll,
       select: (t) => Ll(t),
       icon: vi.join,
     }),
-    O8 = new Qr({
+    OM = new Qr({
       title: "Lift out of enclosing block",
       run: Il,
       select: (t) => Il(t),
       icon: vi.lift,
     }),
-    R8 = new Qr({
+    RM = new Qr({
       title: "Select parent node",
       run: Bl,
       select: (t) => Bl(t),
       icon: vi.selectParentNode,
     });
-  let D8 = new Qr({
+  let DM = new Qr({
       title: "Undo last change",
       run: Hs,
       enable: (t) => Hs(t),
       icon: vi.undo,
     }),
-    L8 = new Qr({
+    LM = new Qr({
       title: "Redo last undone change",
       run: zs,
       enable: (t) => zs(t),
       icon: vi.redo,
     });
-  function I8(t, e) {
+  function IM(t, e) {
     let n = {
       run(r, o) {
         return Pl(t, e.attrs)(r, o);
@@ -24288,7 +24318,7 @@ var RichTextEditor = (function (k, u) {
     for (let r in e) n[r] = e[r];
     return new Qr(n);
   }
-  function B8(t, e) {
+  function BM(t, e) {
     let n = $l(t, e.attrs),
       r = {
         run: n,
@@ -24309,21 +24339,21 @@ var RichTextEditor = (function (k, u) {
     n ? t.classList.add(e) : t.classList.remove(e);
   }
   const ac = "ProseMirror-menubar";
-  function P8() {
+  function PM() {
     if (typeof navigator > "u") return !1;
     let t = navigator.userAgent;
     return (
       !/Edge\/\d/.test(t) && /AppleWebKit/.test(t) && /Mobile\/\w+/.test(t)
     );
   }
-  function $8(t) {
+  function $M(t) {
     return new ie({
       view(e) {
-        return new F8(e, t);
+        return new FM(e, t);
       },
     });
   }
-  class F8 {
+  class FM {
     constructor(e, n) {
       (this.editorView = e),
         (this.options = n),
@@ -24342,10 +24372,10 @@ var RichTextEditor = (function (k, u) {
         ((this.contentUpdate = o),
         this.menu.appendChild(r),
         this.update(),
-        n.floating && !P8())
+        n.floating && !PM())
       ) {
         this.updateFloat();
-        let i = V8(this.wrapper);
+        let i = VM(this.wrapper);
         (this.scrollHandler = (s) => {
           let a = this.editorView.root;
           (a.body || a).contains(this.wrapper)
@@ -24374,11 +24404,11 @@ var RichTextEditor = (function (k, u) {
       let e = this.editorView.root.getSelection();
       if (!e.focusNode) return;
       let n = e.getRangeAt(0).getClientRects(),
-        r = n[H8(e) ? 0 : n.length - 1];
+        r = n[HM(e) ? 0 : n.length - 1];
       if (!r) return;
       let o = this.menu.getBoundingClientRect();
       if (r.top < o.bottom && r.bottom > o.top) {
-        let i = z8(this.wrapper);
+        let i = zM(this.wrapper);
         i && (i.scrollTop -= o.bottom - r.top);
       }
     }
@@ -24427,26 +24457,26 @@ var RichTextEditor = (function (k, u) {
         this.wrapper.parentNode.replaceChild(this.editorView.dom, this.wrapper);
     }
   }
-  function H8(t) {
+  function HM(t) {
     return t.anchorNode == t.focusNode
       ? t.anchorOffset > t.focusOffset
       : t.anchorNode.compareDocumentPosition(t.focusNode) ==
           Node.DOCUMENT_POSITION_FOLLOWING;
   }
-  function z8(t) {
+  function zM(t) {
     for (let e = t.parentNode; e; e = e.parentNode)
       if (e.scrollHeight > e.clientHeight) return e;
   }
-  function V8(t) {
+  function VM(t) {
     let e = [t.ownerDocument.defaultView || window];
     for (let n = t.parentNode; n; n = n.parentNode) e.push(n);
     return e;
   }
-  const U8 = ["p", 0],
-    j8 = ["blockquote", 0],
-    W8 = ["hr"],
-    q8 = ["pre", ["code", 0]],
-    K8 = ["br"],
+  const UM = ["p", 0],
+    jM = ["blockquote", 0],
+    WM = ["hr"],
+    qM = ["pre", ["code", 0]],
+    KM = ["br"],
     Cy = {
       doc: { content: "block+" },
       paragraph: {
@@ -24454,7 +24484,7 @@ var RichTextEditor = (function (k, u) {
         group: "block",
         parseDOM: [{ tag: "p" }],
         toDOM() {
-          return U8;
+          return UM;
         },
       },
       blockquote: {
@@ -24463,14 +24493,14 @@ var RichTextEditor = (function (k, u) {
         defining: !0,
         parseDOM: [{ tag: "blockquote" }],
         toDOM() {
-          return j8;
+          return jM;
         },
       },
       horizontal_rule: {
         group: "block",
         parseDOM: [{ tag: "hr" }],
         toDOM() {
-          return W8;
+          return WM;
         },
       },
       heading: {
@@ -24498,7 +24528,7 @@ var RichTextEditor = (function (k, u) {
         defining: !0,
         parseDOM: [{ tag: "pre", preserveWhitespace: "full" }],
         toDOM() {
-          return q8;
+          return qM;
         },
       },
       text: { group: "inline" },
@@ -24534,13 +24564,13 @@ var RichTextEditor = (function (k, u) {
         selectable: !1,
         parseDOM: [{ tag: "br" }],
         toDOM() {
-          return K8;
+          return KM;
         },
       },
     },
-    G8 = ["em", 0],
-    J8 = ["strong", 0],
-    Y8 = ["code", 0],
+    GM = ["em", 0],
+    JM = ["strong", 0],
+    YM = ["code", 0],
     vy = {
       link: {
         attrs: {
@@ -24572,7 +24602,7 @@ var RichTextEditor = (function (k, u) {
           { style: "font-style=normal", clearMark: (t) => t.type.name == "em" },
         ],
         toDOM() {
-          return G8;
+          return GM;
         },
       },
       strong: {
@@ -24589,19 +24619,19 @@ var RichTextEditor = (function (k, u) {
           },
         ],
         toDOM() {
-          return J8;
+          return JM;
         },
       },
       code: {
         parseDOM: [{ tag: "code" }],
         toDOM() {
-          return Y8;
+          return YM;
         },
       },
     },
-    X8 = new _s({ nodes: Cy, marks: vy }),
-    Z8 = ["ol", 0],
-    Q8 = ["ul", 0],
+    XM = new _s({ nodes: Cy, marks: vy }),
+    ZM = ["ol", 0],
+    QM = ["ul", 0],
     eT = ["li", 0],
     Ey = {
       attrs: { order: { default: 1, validate: "number" } },
@@ -24616,13 +24646,13 @@ var RichTextEditor = (function (k, u) {
         },
       ],
       toDOM(t) {
-        return t.attrs.order == 1 ? Z8 : ["ol", { start: t.attrs.order }, 0];
+        return t.attrs.order == 1 ? ZM : ["ol", { start: t.attrs.order }, 0];
       },
     },
     Ay = {
       parseDOM: [{ tag: "ul" }],
       toDOM() {
-        return Q8;
+        return QM;
       },
     },
     Sy = {
@@ -34536,7 +34566,7 @@ img.ProseMirror-separator {
   const XR = u.markRaw({ name: "mdi-plus-circle", render: YR }),
     ZR = {
       class:
-        "editor-header py-1 space-x-1 px-1 overflow-auto border-t shadow-sm bg-white text-center",
+        "editor-header py-1 space-x-1 px-3 overflow-auto border-t shadow-sm bg-white text-center",
     },
     QR = { class: "h-full inline-flex items-center" },
     e9 = { class: "p-1.5 rounded-md hover:bg-gray-100", tabindex: "-1" },
@@ -34583,39 +34613,43 @@ img.ProseMirror-separator {
           u.openBlock(),
           u.createElementBlock("div", ZR, [
             u.createElementVNode("div", QR, [
-              u.createVNode(u.unref(vo), null, {
-                popper: u.withCtx(() => [
-                  u.createElementVNode("div", t9, [
-                    (u.openBlock(!0),
-                    u.createElementBlock(
-                      u.Fragment,
-                      null,
-                      u.renderList(
-                        r(),
-                        (s, a) => (
-                          u.openBlock(),
-                          u.createBlock(
-                            u.resolveDynamicComponent(s.component),
-                            u.mergeProps({ ref_for: !0 }, s.props, {
-                              key: a,
-                              tabindex: "-1",
-                            }),
-                            null,
-                            16
+              u.createVNode(
+                u.unref(vo),
+                { triggers: ["click"], "popper-triggers": ["click"] },
+                {
+                  popper: u.withCtx(() => [
+                    u.createElementVNode("div", t9, [
+                      (u.openBlock(!0),
+                      u.createElementBlock(
+                        u.Fragment,
+                        null,
+                        u.renderList(
+                          r(),
+                          (s, a) => (
+                            u.openBlock(),
+                            u.createBlock(
+                              u.resolveDynamicComponent(s.component),
+                              u.mergeProps({ ref_for: !0 }, s.props, {
+                                key: a,
+                                tabindex: "-1",
+                              }),
+                              null,
+                              16
+                            )
                           )
-                        )
-                      ),
-                      128
-                    )),
+                        ),
+                        128
+                      )),
+                    ]),
                   ]),
-                ]),
-                default: u.withCtx(() => [
-                  u.createElementVNode("button", e9, [
-                    u.createVNode(u.unref(XR), { class: "text-[#4CCBA0]" }),
+                  default: u.withCtx(() => [
+                    u.createElementVNode("button", e9, [
+                      u.createVNode(u.unref(XR), { class: "text-[#4CCBA0]" }),
+                    ]),
                   ]),
-                ]),
-                _: 1,
-              }),
+                  _: 1,
+                }
+              ),
               i[0] ||
                 (i[0] = u.createElementVNode(
                   "div",
@@ -37298,7 +37332,7 @@ img.ProseMirror-separator {
             NODE: "/opt/homebrew/Cellar/node@22/22.14.0_1/bin/node",
             ANDROID_HOME: "/Users/ryanwang/Library/Android/sdk",
             WASMER_DIR: "/Users/ryanwang/.wasmer",
-            _P9K_TTY: "/dev/ttys005",
+            _P9K_TTY: "/dev/ttys016",
             npm_package_homepage:
               "https://github.com/halo-dev/halo/tree/main/ui/packages/editor#readme",
             npm_package_dependencies__tiptap_vue_3: "^2.11.2",
@@ -37315,13 +37349,13 @@ img.ProseMirror-separator {
             npm_package_scripts_lint:
               "eslint ./src --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
             npm_package_scripts_release: "release-it",
-            TERM_PROGRAM_VERSION: "0.48.7",
+            TERM_PROGRAM_VERSION: "0.48.8",
             npm_package_dependencies__tiptap_extension_dropcursor: "^2.11.2",
             npm_package_dependencies_floating_vue: "^5.2.2",
             npm_package_scripts_dev: "vite",
             MallocNanoZone: "0",
             ORIGINAL_XDG_CURRENT_DESKTOP: "undefined",
-            CURSOR_TRACE_ID: "f3aa1dd96f1a4d14ad3c22945b689fe9",
+            CURSOR_TRACE_ID: "6ea16c9e08334bc5b834d9cad3200341",
             ZDOTDIR: "/Users/ryanwang",
             npm_package_dependencies__tiptap_extension_document: "^2.11.2",
             npm_package_dependencies__tiptap_extension_highlight: "^2.11.2",
@@ -37338,6 +37372,7 @@ img.ProseMirror-separator {
               "vitest --environment jsdom --watch --ui",
             npm_package_dependencies__tiptap_pm: "^2.11.2",
             USER: "ryanwang",
+            http_proxy: "http://192.168.1.15:7890",
             DEVECO_SDK_HOME: "/Applications/DevEco-Studio.app/Contents/sdk",
             npm_package_description: "Default editor for Halo",
             LS_COLORS:
@@ -37353,8 +37388,10 @@ img.ProseMirror-separator {
             npm_package_dependencies__tiptap_extension_history: "^2.11.2",
             npm_config_strict_peer_dependencies: "",
             SSH_AUTH_SOCK:
-              "/private/tmp/com.apple.launchd.EWHtKwuaoy/Listeners",
+              "/private/tmp/com.apple.launchd.Vb3BgW8B2g/Listeners",
             __CF_USER_TEXT_ENCODING: "0x1F5:0x0:0x0",
+            ftp_proxy: "http://192.168.1.15:7890",
+            FTP_PROXY: "http://192.168.1.15:7890",
             npm_execpath:
               "/Users/ryanwang/.cache/node/corepack/v1/pnpm/9.15.0/bin/pnpm.cjs",
             PAGER: "less",
@@ -37364,6 +37401,8 @@ img.ProseMirror-separator {
             npm_package_dependencies__tiptap_extension_list_item: "^2.11.2",
             npm_package_dependencies_scroll_into_view_if_needed: "^3.1.0",
             npm_config_frozen_lockfile: "",
+            ALL_PROXY: "socks5://192.168.1.15:7890",
+            all_proxy: "socks5://192.168.1.15:7890",
             npm_package_dependencies__tiptap_extension_horizontal_rule:
               "^2.11.2",
             npm_package_dependencies__tiptap_extension_text_style: "^2.11.2",
@@ -37371,9 +37410,13 @@ img.ProseMirror-separator {
             PATH: "/Users/ryanwang/Workspace/github/ruibaby/halo-next/ui/packages/editor/node_modules/.bin:/Users/ryanwang/.cache/node/corepack/v1/pnpm/9.15.0/dist/node-gyp-bin:/Users/ryanwang/Workspace/github/ruibaby/halo-next/ui/node_modules/.bin:/Users/ryanwang/.codeium/windsurf/bin:/Users/ryanwang/.codeium/windsurf/bin:/Users/ryanwang/.wasmer/bin:/Users/ryanwang/.bun/bin:/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/toolchains:/Applications/DevEco-Studio.app/Contents/tools/hvigor/bin:/Applications/DevEco-Studio.app/Contents/tools/ohpm/bin:/Users/ryanwang/Workspace/sdk/flutter/bin/cache/dart-sdk/bin/:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/VMware Fusion.app/Contents/Public:/Users/ryanwang/Workspace/sdk/flutter/bin/cache/dart-sdk/bin/:/Users/ryanwang/.codeium/windsurf/bin:/Users/ryanwang/.sdkman/candidates/maven/current/bin:/Users/ryanwang/.sdkman/candidates/java/current/bin:/Users/ryanwang/.wasmer/bin:/Users/ryanwang/.bun/bin:/Users/ryanwang/Library/pnpm:/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/toolchains:/Applications/DevEco-Studio.app/Contents/tools/hvigor/bin:/Applications/DevEco-Studio.app/Contents/tools/ohpm/bin:/Users/ryanwang/.cargo/bin:/Users/ryanwang/.orbstack/bin:/Users/ryanwang/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/homebrew/opt/node@22/bin:/Users/ryanwang/Library/Python/3.9/bin:/Users/ryanwang/go/bin:/Users/ryanwang/Library/Android/sdk/cmdline-tools/latest/bin:/Users/ryanwang/Library/Android/sdk/platform-tools:/Users/ryanwang/.pub-cache/bin:/Users/ryanwang/.orbstack/bin:/Users/ryanwang/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/ryanwang/.cargo/bin:/opt/homebrew/opt/node@22/bin:/Users/ryanwang/Library/Python/3.9/bin:/Users/ryanwang/go/bin:/Users/ryanwang/Library/Android/sdk/cmdline-tools/latest/bin:/Users/ryanwang/Library/Android/sdk/platform-tools:/Users/ryanwang/.pub-cache/bin",
             MAVEN_HOME: "/Users/ryanwang/.sdkman/candidates/maven/current",
             npm_package_devDependencies_release_it: "^16.1.5",
+            rsync_proxy: "http://192.168.1.15:7890",
+            RSYNC_PROXY: "http://192.168.1.15:7890",
             npm_package_scripts_typecheck:
               "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+            LaunchInstanceID: "6E016C22-C4B8-4E51-9B92-B94BD83F83FF",
             npm_package_peerDependencies_vue: "^3.5.13",
+            npm_config_https_proxy: "http://192.168.1.15:7890",
             __CFBundleIdentifier: "com.todesktop.230313mzl4w4u92",
             USER_ZDOTDIR: "/Users/ryanwang",
             COREPACK_ENABLE_DOWNLOAD_PROMPT: "0",
@@ -37383,7 +37426,7 @@ img.ProseMirror-separator {
             PWD: "/Users/ryanwang/Workspace/github/ruibaby/halo-next/ui/packages/editor",
             npm_command: "run-script",
             JAVA_HOME: "/Users/ryanwang/.sdkman/candidates/java/current",
-            VSCODE_NONCE: "078999c2-62af-4aa8-a7f9-164286e175fd",
+            VSCODE_NONCE: "63880471-d9f8-4fd7-b2e6-e848a2c63d9d",
             npm_package_bugs_url: "https://github.com/halo-dev/halo/issues",
             npm_package_dependencies__tiptap_extension_bold: "^2.11.2",
             EDITOR: "nvim",
@@ -37407,6 +37450,8 @@ img.ProseMirror-separator {
             VSCODE_GIT_ASKPASS_EXTRA_ARGS: "",
             npm_package_dependencies__tiptap_extension_task_list: "^2.11.2",
             npm_package_dependencies_tippy_js: "^6.3.7",
+            https_proxy: "http://192.168.1.15:7890",
+            HTTPS_PROXY: "http://192.168.1.15:7890",
             npm_package_main: "./dist/rich-text-editor.iife.js",
             npm_package_dependencies__tiptap_extension_bullet_list: "^2.11.2",
             npm_package_devDependencies_vite_plugin_dts: "^4.2.2",
@@ -37425,7 +37470,9 @@ img.ProseMirror-separator {
               "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js",
             npm_package_dependencies__tiptap_extension_image: "^2.11.2",
             npm_package_dependencies__tiptap_extension_subscript: "^2.11.2",
+            no_proxy: "localhost,127.0.0.1,localaddress,.localdomain.com",
             npm_package_dependencies_github_markdown_css: "^5.2.0",
+            HTTP_PROXY: "http://192.168.1.15:7890",
             npm_package_dependencies__tiptap_extension_ordered_list: "^2.11.2",
             npm_package_dependencies__tiptap_extension_code_block: "^2.11.2",
             LOGNAME: "ryanwang",
@@ -37436,6 +37483,7 @@ img.ProseMirror-separator {
               "/var/folders/pl/2sj_41xn3nv98xvrfr7xyrl00000gn/T/vscode-git-506635f378.sock",
             npm_package_dependencies__tiptap_extension_table: "^2.11.2",
             npm_package_dependencies__tiptap_extension_underline: "^2.11.2",
+            npm_config_proxy: "http://192.168.1.15:7890",
             BUN_INSTALL: "/Users/ryanwang/.bun",
             npm_package_scripts_test_unit_watch:
               "vitest --environment jsdom --watch",
@@ -37448,10 +37496,11 @@ img.ProseMirror-separator {
               "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh",
             VSCODE_GIT_ASKPASS_NODE:
               "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)",
-            _P9K_SSH_TTY: "/dev/ttys005",
+            _P9K_SSH_TTY: "/dev/ttys016",
             npm_package_dependencies__tiptap_extension_blockquote: "^2.11.2",
             npm_package_files_0: "dist",
             npm_package_dependencies__tiptap_extension_table_row: "^2.11.2",
+            SECURITYSESSIONID: "186a2",
             OHOS_TOOL_HOME: "/Applications/DevEco-Studio.app/Contents",
             COLORTERM: "truecolor",
             npm_node_execpath:
@@ -51696,8 +51745,8 @@ img.ProseMirror-separator {
     (k.Decoration = Te),
     (k.DecorationSet = ue),
     (k.DocAttrStep = fi),
-    (k.Dropdown = S8),
-    (k.DropdownSubmenu = M8),
+    (k.Dropdown = SM),
+    (k.DropdownSubmenu = MM),
     (k.Editor = Mh),
     (k.EditorContent = $k),
     (k.EditorState = Io),
@@ -51820,7 +51869,7 @@ img.ProseMirror-separator {
     (k.allExtensions = gz),
     (k.autoJoin = xE),
     (k.baseKeymap = CE),
-    (k.blockTypeItem = B8),
+    (k.blockTypeItem = BM),
     (k.bulletList = Ay),
     (k.callOrReturn = re),
     (k.canJoin = An),
@@ -51844,8 +51893,8 @@ img.ProseMirror-separator {
     (k.createStyleTag = K_),
     (k.default = bz),
     (k.defaultBlockAt = T_),
-    (k.defaultMarkdownParser = _8),
-    (k.defaultMarkdownSerializer = w8),
+    (k.defaultMarkdownParser = _M),
+    (k.defaultMarkdownSerializer = wM),
     (k.deleteCellSelection = ta),
     (k.deleteColumn = Vy),
     (k.deleteNode = Yo),
@@ -51937,12 +51986,12 @@ img.ProseMirror-separator {
     (k.joinTextblockBackward = Fg),
     (k.joinTextblockForward = Hg),
     (k.joinUp = Ll),
-    (k.joinUpItem = N8),
+    (k.joinUpItem = NM),
     (k.keydownHandler = Ms),
     (k.keymap = Xg),
     (k.lift = Il),
     (k.liftEmptyBlock = Df),
-    (k.liftItem = O8),
+    (k.liftItem = OM),
     (k.liftListItem = Ny),
     (k.liftTarget = Lo),
     (k.listItem = Sy),
@@ -51951,7 +52000,7 @@ img.ProseMirror-separator {
     (k.markInputRule = no),
     (k.markPasteRule = yr),
     (k.marks = vy),
-    (k.menuBar = $8),
+    (k.menuBar = $M),
     (k.mergeAttributes = se),
     (k.mergeCells = qp),
     (k.mergeDeep = aa),
@@ -51977,7 +52026,7 @@ img.ProseMirror-separator {
     (k.receiveTransaction = pE),
     (k.redo = zs),
     (k.redoDepth = RA),
-    (k.redoItem = L8),
+    (k.redoItem = LM),
     (k.redoNoScroll = NA),
     (k.removeColSpan = eo),
     (k.removeColumn = zy),
@@ -51988,12 +52037,12 @@ img.ProseMirror-separator {
     (k.resolveFocusPosition = oh),
     (k.rewriteUnknownContent = PN),
     (k.rowIsHeader = Uy),
-    (k.schema = X8),
+    (k.schema = XM),
     (k.selectAll = Wg),
     (k.selectNodeBackward = vf),
     (k.selectNodeForward = Sf),
     (k.selectParentNode = Bl),
-    (k.selectParentNodeItem = R8),
+    (k.selectParentNodeItem = RM),
     (k.selectTextblockEnd = Bf),
     (k.selectTextblockStart = If),
     (k.selectedRect = an),
@@ -52029,13 +52078,13 @@ img.ProseMirror-separator {
     (k.undo = Hs),
     (k.undoDepth = OA),
     (k.undoInputRule = BA),
-    (k.undoItem = D8),
+    (k.undoItem = DM),
     (k.undoNoScroll = TA),
     (k.updateColumnsOnResize = pc),
     (k.useEditor = IR),
     (k.wrapIn = Pl),
     (k.wrapInList = My),
-    (k.wrapItem = I8),
+    (k.wrapItem = IM),
     (k.wrappingInputRule = Wo),
     Object.defineProperties(k, {
       __esModule: { value: !0 },
