@@ -72,16 +72,16 @@
     "@he-tree/vue": "^2.9.4",
     "@number-flow/vue": "^0.4.8",
     "@tanstack/vue-query": "^4.41.0",
-    "@uppy/core": "^3.11.3",
-    "@uppy/dashboard": "^3.8.3",
-    "@uppy/drag-drop": "^3.1.0",
-    "@uppy/file-input": "^3.1.2",
-    "@uppy/image-editor": "^2.4.6",
-    "@uppy/locales": "^3.5.3",
-    "@uppy/progress-bar": "^3.1.1",
-    "@uppy/status-bar": "^3.3.3",
-    "@uppy/vue": "^1.1.2",
-    "@uppy/xhr-upload": "3.6.0",
+    "@uppy/core": "^5.1.1",
+    "@uppy/dashboard": "^5.0.4",
+    "@uppy/drag-drop": "^5.0.2",
+    "@uppy/file-input": "^4.2.2",
+    "@uppy/image-editor": "^4.0.2",
+    "@uppy/locales": "^5.0.1",
+    "@uppy/progress-bar": "^4.3.2",
+    "@uppy/status-bar": "^5.0.2",
+    "@uppy/vue": "^3.1.0",
+    "@uppy/xhr-upload": "^5.0.2",
     "@vueuse/components": "^12.8.2",
     "@vueuse/core": "^12.8.2",
     "@vueuse/integrations": "^12.8.2",
@@ -175,13 +175,13 @@
     "vitest": "^3.2.4",
     "vue-tsc": "^3.1.4"
   },
-  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184",
+  "packageManager": "pnpm@10.12.4",
   "pnpm": {
     "overrides": {
-      "vite": "npm:rolldown-vite@7.2.5",
       "prosemirror-model": "1.25.1",
+      "prosemirror-transform": "1.10.4",
       "prosemirror-view": "1.40.0",
-      "prosemirror-transform": "1.10.4"
+      "vite": "npm:rolldown-vite@7.2.5"
     },
     "onlyBuiltDependencies": [
       "@nestjs/core",

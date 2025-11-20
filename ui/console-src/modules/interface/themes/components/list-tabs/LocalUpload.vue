@@ -4,9 +4,8 @@ import { useThemeStore } from "@console/stores/theme";
 import { consoleApiClient } from "@halo-dev/api-client";
 import { Dialog, Toast } from "@halo-dev/components";
 import { useQueryClient } from "@tanstack/vue-query";
-import type { ErrorResponse, UppyFile } from "@uppy/core";
-import type { Ref } from "vue";
-import { inject, ref } from "vue";
+import type { Body, Meta, UppyFile } from "@uppy/core";
+import { inject, ref, type Ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { THEME_ALREADY_EXISTS_TYPE } from "../../constants";
 import type { ThemeInstallationErrorResponse } from "../../types";
@@ -28,7 +27,7 @@ const onUploaded = () => {
   activeTabId.value = "installed";
 };
 
-const onError = (file: UppyFile, response: ErrorResponse) => {
+const onError = (file: UppyFile<Meta, Body>, response) => {
   const body = response.body as ThemeInstallationErrorResponse;
 
   if (body.type === THEME_ALREADY_EXISTS_TYPE) {

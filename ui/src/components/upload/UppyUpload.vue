@@ -3,30 +3,44 @@ import { i18n } from "@/locales";
 import type { ProblemDetail } from "@/setup/setupApiClient";
 import { createHTMLContentModal } from "@/utils/modal";
 import { Toast } from "@halo-dev/components";
-import type { Restrictions } from "@uppy/core";
-import Uppy, { type SuccessResponse } from "@uppy/core";
-import "@uppy/core/dist/style.css";
-import "@uppy/dashboard/dist/style.css";
+import type { Body, Meta, Restrictions } from "@uppy/core";
+import Uppy from "@uppy/core";
+import "@uppy/core/css/style.css";
+import "@uppy/dashboard/css/style.css";
 import ImageEditor from "@uppy/image-editor";
-import "@uppy/image-editor/dist/style.min.css";
+import "@uppy/image-editor/css/style.min.css";
 import en_US from "@uppy/locales/lib/en_US";
 import zh_CN from "@uppy/locales/lib/zh_CN";
 import zh_TW from "@uppy/locales/lib/zh_TW";
-import { Dashboard } from "@uppy/vue";
+import Dashboard from "@uppy/vue/dashboard";
 import XHRUpload from "@uppy/xhr-upload";
 import objectHash from "object-hash";
 import { computed, h, onUnmounted } from "vue";
 
 const props = withDefaults(
   defineProps<{
-    restrictions?: Restrictions;
-    meta?: Record<string, unknown>;
+    restrictions?: Partial<Restrictions>;
+    meta?: Meta;
     autoProceed?: boolean;
     allowedMetaFields?: string[];
     endpoint: string;
     name?: string;
     note?: string;
-    method?: "GET" | "POST" | "PUT" | "HEAD" | "get" | "post" | "put" | "head";
+    method?:
+      | "GET"
+      | "HEAD"
+      | "POST"
+      | "PUT"
+      | "DELETE"
+      | "OPTIONS"
+      | "PATCH"
+      | "delete"
+      | "get"
+      | "head"
+      | "options"
+      | "post"
+      | "put"
+      | string;
     disabled?: boolean;
     width?: string;
     height?: string;
@@ -48,7 +62,7 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  (event: "uploaded", response: SuccessResponse): void;
+  (event: "uploaded", response): void;
   (event: "error", file, response): void;
 }>();
 
@@ -61,8 +75,8 @@ const locales = {
 };
 
 const uppy = computed(() => {
-  return new Uppy({
-    locale: locales[i18n.global.locale.value] || locales["zh-CN"],
+  return new Uppy<Meta, Body>({
+    locale: locales[i18n.global.locale.value] || locales["en"],
     meta: props.meta,
     restrictions: props.restrictions,
     autoProceed: props.autoProceed,
@@ -76,44 +90,47 @@ const uppy = computed(() => {
       method: props.method,
       limit: 5,
       timeout: 0,
-      getResponseError: (responseText: string, response: unknown) => {
+      shouldRetry: () => false,
+      onAfterResponse(xhr) {
+        debugger;
+        if (xhr.status >= 200 && xhr.status < 300) {
+          return;
+        }
+
+        const { responseText, status, statusText } = xhr;
+
         try {
           const response = JSON.parse(responseText);
-          if (typeof response === "object" && response && response) {
+          if (response && typeof response === "object") {
             const { title, detail } = (response || {}) as ProblemDetail;
             const message = [title, detail].filter(Boolean).join(": ");
 
             if (message) {
               Toast.error(message, { duration: 5000 });
 
-              return new Error(message);
+              throw new Error(message);
             }
           }
         } catch (_) {
-          const responseBody = response as XMLHttpRequest;
-          const { status, statusText } = responseBody;
           const defaultMessage = [status, statusText].join(": ");
 
           // Catch error requests where the response is text/html,
           // which usually comes from a reverse proxy or WAF
           // fixme: Because there is no responseType in the response, we can only judge it in this way for now.
           const parser = new DOMParser();
-          const doc = parser.parseFromString(
-            responseBody.response,
-            "text/html"
-          );
+          const doc = parser.parseFromString(xhr.response, "text/html");
 
           if (
             Array.from(doc.body.childNodes).some((node) => node.nodeType === 1)
           ) {
             createHTMLContentModal({
-              uniqueId: objectHash(responseBody.response || ""),
-              title: responseBody.status.toString(),
+              uniqueId: objectHash(xhr.response || ""),
+              title: xhr.status.toString(),
               width: 700,
               height: "calc(100vh - 20px)",
               centered: true,
               content: h("iframe", {
-                srcdoc: responseBody.response,
+                srcdoc: xhr.response,
                 sandbox: "",
                 referrerpolicy: "no-referrer",
                 loading: "lazy",
@@ -124,13 +141,12 @@ const uppy = computed(() => {
               }),
             });
 
-            return new Error(defaultMessage);
+            throw new Error(defaultMessage);
           }
 
           Toast.error(defaultMessage, { duration: 5000 });
-          return new Error(defaultMessage);
+          throw new Error(defaultMessage);
         }
-        return new Error("Internal Server Error");
       },
     })
     .use(ImageEditor, {
@@ -157,7 +173,7 @@ const uppy = computed(() => {
     });
 });
 
-uppy.value.on("upload-success", (_, response: SuccessResponse) => {
+uppy.value.on("upload-success", (_, response) => {
   emit("uploaded", response);
 });
 
@@ -166,7 +182,7 @@ uppy.value.on("upload-error", (file, _, response) => {
 });
 
 onUnmounted(() => {
-  uppy.value.close({ reason: "unmount" });
+  uppy.value.destroy();
 });
 </script>
 
@@ -181,6 +197,11 @@ onUnmounted(() => {
       width,
       height,
       doneButtonHandler: doneButtonHandler,
+      locale: {
+        strings: {
+          save: $t('core.common.buttons.save'),
+        },
+      },
     }"
   />
 </template>
