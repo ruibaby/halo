@@ -1,3 +1,8 @@
+import { PluginKey } from "../../tiptap/pm";
 import { ExtensionOptions } from "../../types";
-declare const Text: import("@tiptap/core").Node<ExtensionOptions, any>;
-export default Text;
+export declare const TEXT_BUBBLE_MENU_KEY: PluginKey<any>;
+export type ExtensionTextOptions = ExtensionOptions;
+export declare const ExtensionText: import("@tiptap/core").Node<
+  ExtensionOptions,
+  any
+>;

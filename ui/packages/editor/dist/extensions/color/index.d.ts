@@ -1,7 +1,7 @@
-import { ExtensionOptions } from "../../types";
 import { ColorOptions } from "@tiptap/extension-color";
-declare const Color: import("@tiptap/core").Extension<
-  ColorOptions & ExtensionOptions,
+import { ExtensionOptions } from "../../types";
+export type ExtensionColorOptions = Partial<ColorOptions> & ExtensionOptions;
+export declare const ExtensionColor: import("@tiptap/core").Extension<
+  ExtensionColorOptions,
   any
 >;
-export default Color;

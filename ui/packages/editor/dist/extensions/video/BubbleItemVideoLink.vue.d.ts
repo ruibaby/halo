@@ -1,14 +1,6 @@
-import { Editor } from "../../tiptap/vue-3";
-import { Component } from "vue";
+import { BubbleItemComponentProps } from "../../types";
 declare const _default: import("vue").DefineComponent<
-  {
-    editor: Editor;
-    isActive: ({ editor }: { editor: Editor }) => boolean;
-    visible?: ({ editor }: { editor: Editor }) => boolean;
-    icon?: Component;
-    title?: string;
-    action?: ({ editor }: { editor: Editor }) => void;
-  },
+  BubbleItemComponentProps,
   {},
   {},
   {},
@@ -18,15 +10,7 @@ declare const _default: import("vue").DefineComponent<
   {},
   string,
   import("vue").PublicProps,
-  Readonly<{
-    editor: Editor;
-    isActive: ({ editor }: { editor: Editor }) => boolean;
-    visible?: ({ editor }: { editor: Editor }) => boolean;
-    icon?: Component;
-    title?: string;
-    action?: ({ editor }: { editor: Editor }) => void;
-  }> &
-    Readonly<{}>,
+  Readonly<BubbleItemComponentProps> & Readonly<{}>,
   {},
   {},
   {},
@@ -35,6 +19,6 @@ declare const _default: import("vue").DefineComponent<
   import("vue").ComponentProvideOptions,
   false,
   {},
-  any
+  HTMLDivElement
 >;
 export default _default;

@@ -1,7 +1,8 @@
-import { ExtensionOptions } from "../../types";
 import { BlockquoteOptions } from "@tiptap/extension-blockquote";
-declare const Blockquote: import("@tiptap/core").Node<
-  ExtensionOptions & BlockquoteOptions,
+import { ExtensionOptions } from "../../types";
+export type ExtensionBlockquoteOptions = Partial<BlockquoteOptions> &
+  ExtensionOptions;
+export declare const ExtensionBlockquote: import("@tiptap/core").Node<
+  ExtensionBlockquoteOptions,
   any
 >;
-export default Blockquote;

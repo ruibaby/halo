@@ -1,14 +1,6 @@
-import { ToolbarItem } from "../../types";
-import { Component } from "vue";
+import { ToolbarItemComponentProps } from "../../types";
 declare const _default: import("vue").DefineComponent<
-  {
-    isActive?: boolean;
-    disabled?: boolean;
-    title?: string;
-    action?: () => void;
-    icon?: Component;
-    children?: ToolbarItem[];
-  },
+  ToolbarItemComponentProps,
   {},
   {},
   {},
@@ -18,23 +10,8 @@ declare const _default: import("vue").DefineComponent<
   {},
   string,
   import("vue").PublicProps,
-  Readonly<{
-    isActive?: boolean;
-    disabled?: boolean;
-    title?: string;
-    action?: () => void;
-    icon?: Component;
-    children?: ToolbarItem[];
-  }> &
-    Readonly<{}>,
-  {
-    title: string;
-    children: ToolbarItem[];
-    icon: Component;
-    isActive: boolean;
-    action: () => void;
-    disabled: boolean;
-  },
+  Readonly<ToolbarItemComponentProps> & Readonly<{}>,
+  {},
   {},
   {},
   {},
@@ -42,6 +19,6 @@ declare const _default: import("vue").DefineComponent<
   import("vue").ComponentProvideOptions,
   false,
   {},
-  any
+  HTMLButtonElement
 >;
 export default _default;

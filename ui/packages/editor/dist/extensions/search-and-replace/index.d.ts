@@ -1,6 +1,6 @@
 import { Extension } from "../../tiptap/vue-3";
 import { ExtensionOptions } from "../../types";
-declare module "@/tiptap" {
+declare module "../../tiptap" {
   interface Commands<ReturnType> {
     searchAndReplace: {
       /**
@@ -30,5 +30,7 @@ declare module "@/tiptap" {
     };
   }
 }
-declare const SearchAndReplace: Extension<ExtensionOptions, any>;
-export default SearchAndReplace;
+export declare const ExtensionSearchAndReplace: Extension<
+  ExtensionOptions,
+  any
+>;

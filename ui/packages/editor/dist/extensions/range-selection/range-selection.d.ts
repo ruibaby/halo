@@ -1,9 +1,9 @@
 import {
   EditorState,
+  Mappable,
   Node,
   ResolvedPos,
   Selection,
-  Mappable,
 } from "../../tiptap/pm";
 /**
  * The RangeSelection class represents a selection range within a document.

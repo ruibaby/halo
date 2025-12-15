@@ -1,7 +1,9 @@
-import { ExtensionOptions } from "../../types";
 import { TableOptions } from "@tiptap/extension-table";
-declare const Table: import("@tiptap/core").Node<
-  ExtensionOptions & TableOptions,
+import { PluginKey } from "../../tiptap/pm";
+import { ExtensionOptions } from "../../types";
+export declare const TABLE_BUBBLE_MENU_KEY: PluginKey<any>;
+export type ExtensionTableOptions = ExtensionOptions & Partial<TableOptions>;
+export declare const ExtensionTable: import("@tiptap/core").Node<
+  ExtensionTableOptions,
   any
 >;
-export default Table;

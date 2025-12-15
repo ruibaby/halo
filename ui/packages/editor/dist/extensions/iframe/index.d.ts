@@ -1,11 +1,11 @@
-import { Node } from "../../tiptap/vue-3";
+import { Node, PluginKey } from "../../tiptap";
 import { ExtensionOptions } from "../../types";
-declare module "@/tiptap" {
+declare module "../../tiptap" {
   interface Commands<ReturnType> {
     iframe: {
       setIframe: (options: { src: string }) => ReturnType;
     };
   }
 }
-declare const Iframe: Node<ExtensionOptions, any>;
-export default Iframe;
+export declare const IFRAME_BUBBLE_MENU_KEY: PluginKey<any>;
+export declare const ExtensionIframe: Node<ExtensionOptions, any>;

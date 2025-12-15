@@ -1,7 +1,8 @@
-import { ExtensionOptions } from "../../types";
 import { UnderlineOptions } from "@tiptap/extension-underline";
-declare const Underline: import("@tiptap/core").Mark<
-  ExtensionOptions & UnderlineOptions,
+import { ExtensionOptions } from "../../types";
+export type ExtensionUnderlineOptions = ExtensionOptions &
+  Partial<UnderlineOptions>;
+export declare const ExtensionUnderline: import("@tiptap/core").Mark<
+  ExtensionUnderlineOptions,
   any
 >;
-export default Underline;

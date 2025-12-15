@@ -2,7 +2,7 @@
 import { VueEditor } from "@/tiptap";
 import { type AnyExtension } from "@/tiptap/vue-3";
 import type { ToolbarItemType, ToolboxItemType } from "@/types";
-import { Dropdown as VDropdown } from "floating-vue";
+import { VDropdown } from "@halo-dev/components";
 import MingcuteAddCircleFill from "~icons/mingcute/add-circle-fill";
 
 const props = defineProps({

@@ -1,7 +1,8 @@
+import { OrderedListOptions } from "@tiptap/extension-list";
 import { ExtensionOptions } from "../../types";
-import { OrderedListOptions } from "@tiptap/extension-ordered-list";
-declare const OrderedList: import("@tiptap/core").Node<
-  ExtensionOptions & OrderedListOptions,
+export type ExtensionOrderedListOptions = Partial<OrderedListOptions> &
+  ExtensionOptions;
+export declare const ExtensionOrderedList: import("@tiptap/core").Node<
+  ExtensionOrderedListOptions,
   any
 >;
-export default OrderedList;

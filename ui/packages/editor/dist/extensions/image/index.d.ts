@@ -1,7 +1,17 @@
-import { ExtensionOptions } from "../../types";
+import { Attachment } from "@halo-dev/api-client";
 import { ImageOptions } from "@tiptap/extension-image";
-declare const Image: import("@tiptap/core").Node<
-  ExtensionOptions & ImageOptions,
+import { AxiosRequestConfig } from "axios";
+import { PluginKey } from "../../tiptap";
+import { ExtensionOptions } from "../../types";
+export declare const IMAGE_BUBBLE_MENU_KEY: PluginKey<any>;
+export type ExtensionImageOptions = ExtensionOptions &
+  Partial<ImageOptions> & {
+    uploadImage?: (
+      file: File,
+      options?: AxiosRequestConfig
+    ) => Promise<Attachment>;
+  };
+export declare const ExtensionImage: import("@tiptap/core").Node<
+  ExtensionImageOptions,
   any
 >;
-export default Image;

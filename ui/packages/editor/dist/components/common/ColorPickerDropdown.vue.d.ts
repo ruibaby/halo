@@ -1,16 +1,18 @@
+type __VLS_Props = {
+  modelValue?: string;
+};
 declare function __VLS_template(): {
+  attrs: Partial<{}>;
   slots: {
     default?(_: {}): any;
     prefix?(_: {}): any;
   };
   refs: {};
-  attrs: Partial<{}>;
+  rootEl: any;
 };
 type __VLS_TemplateResult = ReturnType<typeof __VLS_template>;
 declare const __VLS_component: import("vue").DefineComponent<
-  {
-    modelValue?: string;
-  },
+  __VLS_Props,
   {},
   {},
   {},
@@ -22,9 +24,7 @@ declare const __VLS_component: import("vue").DefineComponent<
   },
   string,
   import("vue").PublicProps,
-  Readonly<{
-    modelValue?: string;
-  }> &
+  Readonly<__VLS_Props> &
     Readonly<{
       "onUpdate:modelValue"?: ((value?: string | undefined) => any) | undefined;
     }>,

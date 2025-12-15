@@ -1,12 +1,6 @@
-import { Component } from "vue";
+import { ToolbarItemComponentProps } from "../../types";
 declare const _default: import("vue").DefineComponent<
-  {
-    isActive?: boolean;
-    disabled?: boolean;
-    title?: string;
-    action?: () => void;
-    icon?: Component;
-  },
+  ToolbarItemComponentProps,
   {},
   {},
   {},
@@ -16,21 +10,8 @@ declare const _default: import("vue").DefineComponent<
   {},
   string,
   import("vue").PublicProps,
-  Readonly<{
-    isActive?: boolean;
-    disabled?: boolean;
-    title?: string;
-    action?: () => void;
-    icon?: Component;
-  }> &
-    Readonly<{}>,
-  {
-    title: string;
-    icon: Component;
-    isActive: boolean;
-    action: () => void;
-    disabled: boolean;
-  },
+  Readonly<ToolbarItemComponentProps> & Readonly<{}>,
+  {},
   {},
   {},
   {},
@@ -38,6 +19,6 @@ declare const _default: import("vue").DefineComponent<
   import("vue").ComponentProvideOptions,
   false,
   {},
-  any
+  HTMLDivElement
 >;
 export default _default;

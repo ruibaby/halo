@@ -1,7 +1,7 @@
-import { ExtensionOptions } from "../../types";
 import { CodeOptions } from "@tiptap/extension-code";
-declare const Code: import("@tiptap/core").Mark<
-  ExtensionOptions & CodeOptions,
+import { ExtensionOptions } from "../../types";
+export type ExtensionCodeOptions = Partial<CodeOptions> & ExtensionOptions;
+export declare const ExtensionCode: import("@tiptap/core").Mark<
+  ExtensionCodeOptions,
   any
 >;
-export default Code;

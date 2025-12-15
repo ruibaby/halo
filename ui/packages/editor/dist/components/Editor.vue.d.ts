@@ -1,17 +1,18 @@
-import { Editor } from "../tiptap/vue-3";
 import { CSSProperties, PropType } from "vue";
+import { VueEditor } from "../tiptap";
 declare function __VLS_template(): {
+  attrs: Partial<{}>;
   slots: {
     content?(_: {}): any;
   };
   refs: {};
-  attrs: Partial<{}>;
+  rootEl: any;
 };
 type __VLS_TemplateResult = ReturnType<typeof __VLS_template>;
 declare const __VLS_component: import("vue").DefineComponent<
   import("vue").ExtractPropTypes<{
     editor: {
-      type: PropType<Editor>;
+      type: PropType<VueEditor>;
       required: true;
     };
     contentStyles: {
@@ -37,7 +38,7 @@ declare const __VLS_component: import("vue").DefineComponent<
   Readonly<
     import("vue").ExtractPropTypes<{
       editor: {
-        type: PropType<Editor>;
+        type: PropType<VueEditor>;
         required: true;
       };
       contentStyles: {

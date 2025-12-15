@@ -1,7 +1,8 @@
+import { BulletListOptions } from "@tiptap/extension-list";
 import { ExtensionOptions } from "../../types";
-import { BulletListOptions } from "@tiptap/extension-bullet-list";
-declare const BulletList: import("@tiptap/core").Node<
-  ExtensionOptions & BulletListOptions,
+export type ExtensionBulletListOptions = Partial<BulletListOptions> &
+  ExtensionOptions;
+export declare const ExtensionBulletList: import("@tiptap/core").Node<
+  ExtensionOptions,
   any
 >;
-export default BulletList;

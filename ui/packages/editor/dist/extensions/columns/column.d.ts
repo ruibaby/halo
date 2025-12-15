@@ -1,3 +1,7 @@
 import { Node } from "../../tiptap/vue-3";
-declare const Column: Node<any, any>;
-export default Column;
+export type ExtensionColumnOptions = {
+  HTMLAttributes: {
+    class: string;
+  };
+};
+export declare const ExtensionColumn: Node<ExtensionColumnOptions, any>;

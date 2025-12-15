@@ -1,10 +1,10 @@
 import {
-  EditorState,
-  Selection,
-  Transaction,
   CellSelection,
+  EditorState,
   Node,
+  Selection,
   TableMap,
+  Transaction,
 } from "../../tiptap/pm";
 export declare const selectTable: (tr: Transaction) => Transaction;
 export declare const selectColumn: (

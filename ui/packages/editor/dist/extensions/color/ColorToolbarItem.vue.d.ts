@@ -1,14 +1,6 @@
-import { Editor } from "../../tiptap/vue-3";
-import { Component } from "vue";
+import { ToolbarItemComponentProps } from "../../types";
 declare const _default: import("vue").DefineComponent<
-  {
-    editor?: Editor;
-    isActive?: boolean;
-    disabled?: boolean;
-    title?: string;
-    action?: () => void;
-    icon?: Component;
-  },
+  ToolbarItemComponentProps,
   {},
   {},
   {},
@@ -18,23 +10,8 @@ declare const _default: import("vue").DefineComponent<
   {},
   string,
   import("vue").PublicProps,
-  Readonly<{
-    editor?: Editor;
-    isActive?: boolean;
-    disabled?: boolean;
-    title?: string;
-    action?: () => void;
-    icon?: Component;
-  }> &
-    Readonly<{}>,
-  {
-    title: string;
-    editor: Editor;
-    icon: Component;
-    isActive: boolean;
-    action: () => void;
-    disabled: boolean;
-  },
+  Readonly<ToolbarItemComponentProps> & Readonly<{}>,
+  {},
   {},
   {},
   {},

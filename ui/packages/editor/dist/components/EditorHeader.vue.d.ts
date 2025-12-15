@@ -1,8 +1,8 @@
-import { Editor } from "../tiptap/vue-3";
+import { VueEditor } from "../tiptap";
 declare const _default: import("vue").DefineComponent<
   import("vue").ExtractPropTypes<{
     editor: {
-      type: typeof Editor;
+      type: typeof VueEditor;
       required: true;
     };
   }>,
@@ -18,7 +18,7 @@ declare const _default: import("vue").DefineComponent<
   Readonly<
     import("vue").ExtractPropTypes<{
       editor: {
-        type: typeof Editor;
+        type: typeof VueEditor;
         required: true;
       };
     }>
@@ -32,6 +32,6 @@ declare const _default: import("vue").DefineComponent<
   import("vue").ComponentProvideOptions,
   true,
   {},
-  any
+  HTMLDivElement
 >;
 export default _default;

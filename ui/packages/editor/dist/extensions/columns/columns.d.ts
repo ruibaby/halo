@@ -1,5 +1,7 @@
-import { Node } from "../../tiptap/vue-3";
-declare module "@/tiptap" {
+import { Node } from "../../tiptap";
+import { PluginKey } from "../../tiptap/pm";
+import { ExtensionOptions } from "../../types";
+declare module "../../tiptap" {
   interface Commands<ReturnType> {
     columns: {
       insertColumns: (attrs?: { cols: number }) => ReturnType;
@@ -9,5 +11,10 @@ declare module "@/tiptap" {
     };
   }
 }
-declare const Columns: Node<any, any>;
-export default Columns;
+export declare const COLUMNS_BUBBLE_MENU_KEY: PluginKey<any>;
+export interface ExtensionColumnsOptions extends ExtensionOptions {
+  HTMLAttributes: {
+    class: string;
+  };
+}
+export declare const ExtensionColumns: Node<ExtensionColumnsOptions, any>;

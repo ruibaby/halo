@@ -1,5 +1,6 @@
 import { Extension, KeyboardShortcutCommand } from "../../tiptap";
-declare module "@/tiptap" {
+import { ExtensionOptions } from "../../types";
+declare module "../../tiptap" {
   interface Commands<ReturnType> {
     indent: {
       indent: () => ReturnType;
@@ -7,7 +8,7 @@ declare module "@/tiptap" {
     };
   }
 }
-type IndentOptions = {
+export interface ExtensionIndentOptions extends ExtensionOptions {
   names: Array<string>;
   indentRange: number;
   minIndentLevel: number;
@@ -15,11 +16,10 @@ type IndentOptions = {
   defaultIndentLevel: number;
   HTMLAttributes: Record<string, any>;
   firstLineIndent: boolean;
-};
-declare const Indent: Extension<IndentOptions, never>;
+}
+export declare const ExtensionIndent: Extension<ExtensionIndentOptions, any>;
 export declare const clamp: (val: number, min: number, max: number) => number;
 export declare const getIndent: () => KeyboardShortcutCommand;
 export declare const getOutdent: (
   outdentOnlyAtHead: boolean
 ) => KeyboardShortcutCommand;
-export default Indent;

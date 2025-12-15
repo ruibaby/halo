@@ -1,5 +1,5 @@
-import { Transaction, ResolvedPos } from "../tiptap/pm";
-import { Editor } from "../tiptap/vue-3";
+import { Editor } from "../tiptap";
+import { ResolvedPos, Transaction } from "../tiptap/pm";
 export declare const deleteNodeByPos: (
   $pos: ResolvedPos
 ) => (tr: Transaction) => boolean;

@@ -1,5 +1,6 @@
-import { EditorState } from "../../tiptap/pm";
-declare module "@/tiptap" {
+import { EditorState, PluginKey } from "../../tiptap/pm";
+import { ExtensionOptions } from "../../types";
+declare module "../../tiptap" {
   interface Commands<ReturnType> {
     codeIndent: {
       codeIndent: () => ReturnType;
@@ -7,7 +8,7 @@ declare module "@/tiptap" {
     };
   }
 }
-export interface Option {
+interface Option {
   label: string;
   value: string;
 }
@@ -66,8 +67,9 @@ export interface ExtensionCodeBlockOptions extends CodeBlockOptions {
         value: string;
       }>);
 }
-declare const _default: import("@tiptap/core").Node<
-  ExtensionCodeBlockOptions,
+export declare const CODE_BLOCK_BUBBLE_MENU_KEY: PluginKey<any>;
+export declare const ExtensionCodeBlock: import("@tiptap/core").Node<
+  ExtensionOptions & Partial<ExtensionCodeBlockOptions>,
   any
 >;
-export default _default;
+export {};

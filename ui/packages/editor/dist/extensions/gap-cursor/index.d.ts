@@ -1,12 +1,4 @@
-import {
-  Dispatch,
-  EditorState,
-  EditorView,
-  ResolvedPos,
-  Transaction,
-} from "../../tiptap";
 import { Extension, ParentConfig } from "../../tiptap/core";
-import { Command } from "../../tiptap/pm";
 declare module "@tiptap/core" {
   interface NodeConfig<Options, Storage> {
     allowGapCursor?:
@@ -33,31 +25,4 @@ declare module "@tiptap/core" {
  *  - Backspace on an empty line
  *  - Tab key
  */
-declare const GapCursor: Extension<any, any>;
-export declare function handleBackspaceAtStart(
-  pos: number,
-  state: EditorState,
-  dispatch: Dispatch
-): boolean;
-export declare function handleInlineContent(
-  $beforePos: ResolvedPos,
-  state: EditorState,
-  dispatch: Dispatch
-): boolean;
-/**
- * Handles arrow key navigation for GapCursor
- *
- * This function determines the direction (vertical or horizontal) and
- * the movement (positive or negative) based on the axis and direction parameters.
- *
- * @param {("vert" | "horiz")} axis - The axis of movement, either vertical ("vert") or horizontal ("horiz").
- * @param {number} dir - The direction of movement, positive (1) or negative (-1).
- */
-export declare function arrow(axis: "vert" | "horiz", dir: number): Command;
-export declare const arrowGapCursor: (
-  dir: number,
-  dirStr: any,
-  state: EditorState,
-  view?: EditorView
-) => (tr: Transaction) => ResolvedPos | undefined;
-export default GapCursor;
+export declare const ExtensionGapCursor: Extension<any, any>;

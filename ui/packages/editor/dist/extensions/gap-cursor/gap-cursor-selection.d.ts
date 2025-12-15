@@ -1,5 +1,5 @@
 import { PMNode } from "../../tiptap";
-import { ResolvedPos, Selection, Slice, Mappable } from "../../tiptap/pm";
+import { Mappable, ResolvedPos, Selection, Slice } from "../../tiptap/pm";
 declare class GapCursorSelection extends Selection {
   private start;
   constructor($pos: ResolvedPos);

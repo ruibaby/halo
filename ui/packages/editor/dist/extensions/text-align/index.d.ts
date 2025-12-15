@@ -1,7 +1,8 @@
-import { ExtensionOptions } from "../../types";
 import { TextAlignOptions } from "@tiptap/extension-text-align";
-declare const TextAlign: import("@tiptap/core").Extension<
-  ExtensionOptions & TextAlignOptions,
+import { ExtensionOptions } from "../../types";
+export type ExtensionTextAlignOptions = ExtensionOptions &
+  Partial<TextAlignOptions>;
+export declare const ExtensionTextAlign: import("@tiptap/core").Extension<
+  ExtensionTextAlignOptions,
   any
 >;
-export default TextAlign;

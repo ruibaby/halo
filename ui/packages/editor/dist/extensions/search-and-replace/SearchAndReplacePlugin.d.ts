@@ -1,9 +1,10 @@
-import { PMNode, Selection } from "../../tiptap";
+import { PMNode } from "../../tiptap";
 import {
   Decoration,
   EditorView,
   Plugin,
   PluginKey,
+  Selection,
   Transaction,
 } from "../../tiptap/pm";
 import { Editor } from "../../tiptap/vue-3";
@@ -25,6 +26,7 @@ export declare class SearchAndReplacePluginView {
   constructor({ view, editor, element }: SearchAndReplacePluginViewProps);
   update(): boolean;
   destroy(): boolean;
+  private findEditorEntryElement;
 }
 export interface TextNodesWithPosition {
   text: string;

@@ -1,7 +1,7 @@
-import { ExtensionOptions } from "../../types";
 import { BoldOptions } from "@tiptap/extension-bold";
-declare const Bold: import("@tiptap/core").Mark<
-  ExtensionOptions & BoldOptions,
+import { ExtensionOptions } from "../../types";
+export type ExtensionBoldOptions = Partial<BoldOptions> & ExtensionOptions;
+export declare const ExtensionBold: import("@tiptap/core").Mark<
+  ExtensionBoldOptions,
   any
 >;
-export default Bold;

@@ -1,6 +1,8 @@
-import { Extension } from "../../tiptap/vue-3";
-export interface NodeSelectedOptions {
+import { Extension } from "../../tiptap";
+export interface ExtensionNodeSelectedOptions {
   className: string;
 }
-declare const NodeSelected: Extension<NodeSelectedOptions, any>;
-export default NodeSelected;
+export declare const ExtensionNodeSelected: Extension<
+  ExtensionNodeSelectedOptions,
+  any
+>;

@@ -1,10 +1,10 @@
-import { ListKeymapOptions } from "@tiptap/extension-list-keymap";
+import { ListKeymapOptions } from "@tiptap/extension-list";
+export type ExtensionListKeymapOptions = Partial<ListKeymapOptions>;
 /**
- *  Optimize the listKeymap extension until the issue with @tiptap/extension-list-keymap is resolved.
+ *  Optimize the listKeymap extension until the issue with @tiptap/extension-list is resolved.
  *  https://github.com/ueberdosis/tiptap/issues/4395
  */
-declare const ExtensionListKeymap: import("@tiptap/core").Extension<
-  ListKeymapOptions,
+export declare const ExtensionListKeymap: import("@tiptap/core").Extension<
+  Partial<ListKeymapOptions>,
   any
 >;
-export default ExtensionListKeymap;

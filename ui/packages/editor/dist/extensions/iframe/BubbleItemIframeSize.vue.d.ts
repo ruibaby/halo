@@ -1,8 +1,6 @@
-import { Editor } from "../../tiptap/vue-3";
+import { BubbleItemComponentProps } from "../../types";
 declare const _default: import("vue").DefineComponent<
-  {
-    editor: Editor;
-  },
+  BubbleItemComponentProps,
   {},
   {},
   {},
@@ -12,10 +10,7 @@ declare const _default: import("vue").DefineComponent<
   {},
   string,
   import("vue").PublicProps,
-  Readonly<{
-    editor: Editor;
-  }> &
-    Readonly<{}>,
+  Readonly<BubbleItemComponentProps> & Readonly<{}>,
   {},
   {},
   {},

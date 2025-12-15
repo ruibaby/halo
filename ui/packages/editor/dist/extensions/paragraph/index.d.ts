@@ -1,8 +1,10 @@
-import { EditorState, ResolvedPos, Dispatch } from "../../tiptap";
-import { ExtensionOptions } from "../../types";
 import { ParagraphOptions } from "@tiptap/extension-paragraph";
-declare const Paragraph: import("@tiptap/core").Node<
-  ExtensionOptions & ParagraphOptions,
+import { Dispatch, EditorState, ResolvedPos } from "../../tiptap";
+import { ExtensionOptions } from "../../types";
+export type ExtensionParagraphOptions = ExtensionOptions &
+  Partial<ParagraphOptions>;
+export declare const ExtensionParagraph: import("@tiptap/core").Node<
+  ExtensionParagraphOptions,
   any
 >;
 export declare function deleteCurrentNodeAndSetSelection(
@@ -17,4 +19,3 @@ export declare function handleDeletePreviousNode(
   state: EditorState,
   dispatch: Dispatch
 ): boolean;
-export default Paragraph;

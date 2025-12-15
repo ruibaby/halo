@@ -2,18 +2,15 @@ export interface Option {
   label: string;
   value: string;
 }
-declare let __VLS_typeProps: {
+type __VLS_Props = {
   container?: any;
   containerClass?: string;
   options: Option[];
   filterSort?: (options: Option[], query: string) => number;
 };
-declare const __VLS_defaults: {
-  modelValue: string;
-};
 type __VLS_PublicProps = {
-  modelValue?: (typeof __VLS_defaults)["modelValue"];
-} & typeof __VLS_typeProps;
+  modelValue?: string;
+} & __VLS_Props;
 declare const _default: import("vue").DefineComponent<
   __VLS_PublicProps,
   {},
@@ -23,7 +20,7 @@ declare const _default: import("vue").DefineComponent<
   import("vue").ComponentOptionsMixin,
   import("vue").ComponentOptionsMixin,
   {
-    "update:modelValue": (modelValue: string) => any;
+    "update:modelValue": (value: string) => any;
   } & {
     select: () => any;
   },
@@ -32,7 +29,7 @@ declare const _default: import("vue").DefineComponent<
   Readonly<__VLS_PublicProps> &
     Readonly<{
       onSelect?: (() => any) | undefined;
-      "onUpdate:modelValue"?: ((modelValue: string) => any) | undefined;
+      "onUpdate:modelValue"?: ((value: string) => any) | undefined;
     }>,
   {},
   {},
@@ -41,7 +38,9 @@ declare const _default: import("vue").DefineComponent<
   string,
   import("vue").ComponentProvideOptions,
   false,
-  {},
+  {
+    inputRef: HTMLInputElement;
+  },
   any
 >;
 export default _default;

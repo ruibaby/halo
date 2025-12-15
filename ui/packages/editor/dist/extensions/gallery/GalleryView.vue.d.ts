@@ -1,5 +1,6 @@
+import { NodeViewProps } from "../../tiptap";
 declare const _default: import("vue").DefineComponent<
-  {},
+  NodeViewProps,
   {},
   {},
   {},
@@ -9,14 +10,14 @@ declare const _default: import("vue").DefineComponent<
   {},
   string,
   import("vue").PublicProps,
-  Readonly<{}> & Readonly<{}>,
+  Readonly<NodeViewProps> & Readonly<{}>,
   {},
   {},
   {},
   {},
   string,
   import("vue").ComponentProvideOptions,
-  true,
+  false,
   {},
   any
 >;

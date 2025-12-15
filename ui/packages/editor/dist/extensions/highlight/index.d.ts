@@ -1,7 +1,8 @@
-import { ExtensionOptions } from "../../types";
 import { HighlightOptions } from "@tiptap/extension-highlight";
-declare const Highlight: import("@tiptap/core").Mark<
-  ExtensionOptions & HighlightOptions,
+import { ExtensionOptions } from "../../types";
+export type ExtensionHighlightOptions = ExtensionOptions &
+  Partial<HighlightOptions>;
+export declare const ExtensionHighlight: import("@tiptap/core").Mark<
+  ExtensionHighlightOptions,
   any
 >;
-export default Highlight;

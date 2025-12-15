@@ -1,7 +1,7 @@
-import { ExtensionOptions } from "../../types";
 import { StrikeOptions } from "@tiptap/extension-strike";
-declare const Strike: import("@tiptap/core").Mark<
-  ExtensionOptions & StrikeOptions,
+import { ExtensionOptions } from "../../types";
+export type ExtensionStrikeOptions = ExtensionOptions & Partial<StrikeOptions>;
+export declare const ExtensionStrike: import("@tiptap/core").Mark<
+  ExtensionStrikeOptions,
   any
 >;
-export default Strike;

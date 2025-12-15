@@ -1,5 +1,6 @@
-import { Editor, PluginKey } from "../../tiptap";
 import { PropType } from "vue";
+import { Editor } from "../../tiptap";
+import { PluginKey } from "../../tiptap/pm";
 import { SearchAndReplacePluginState } from "./SearchAndReplacePlugin";
 declare const _default: import("vue").DefineComponent<
   import("vue").ExtractPropTypes<{
@@ -51,7 +52,9 @@ declare const _default: import("vue").DefineComponent<
   string,
   import("vue").ComponentProvideOptions,
   true,
-  {},
+  {
+    searchInput: HTMLInputElement;
+  },
   any
 >;
 export default _default;

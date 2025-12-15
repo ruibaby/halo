@@ -1,5 +1,6 @@
 import { Extension } from "../../tiptap";
-declare module "@/tiptap" {
+import { ExtensionOptions } from "../../types";
+declare module "../../tiptap" {
   interface Commands<ReturnType> {
     formatBrush: {
       copyFormatBrush: () => ReturnType;
@@ -7,9 +8,11 @@ declare module "@/tiptap" {
     };
   }
 }
-export interface FormatBrushStore {
+export interface ExtensionFormatBrushStore {
   formatBrush: boolean;
   formatBrushMarks: any[];
 }
-declare const formatBrush: Extension<any, FormatBrushStore>;
-export default formatBrush;
+export declare const ExtensionFormatBrush: Extension<
+  ExtensionOptions,
+  ExtensionFormatBrushStore
+>;

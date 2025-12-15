@@ -102,3 +102,4 @@ coverage
 storybook-static
 tsconfig.tsbuildinfo
 .tgz
+!ui/packages/editor/dist

@@ -1,7 +1,8 @@
-import { ExtensionOptions } from "../../types";
 import { SubscriptExtensionOptions } from "@tiptap/extension-subscript";
-declare const Subscript: import("@tiptap/core").Mark<
-  ExtensionOptions & SubscriptExtensionOptions,
+import { ExtensionOptions } from "../../types";
+export type ExtensionSubscriptOptions = Partial<SubscriptExtensionOptions> &
+  ExtensionOptions;
+export declare const ExtensionSubscript: import("@tiptap/core").Mark<
+  ExtensionSubscriptOptions,
   any
 >;
-export default Subscript;

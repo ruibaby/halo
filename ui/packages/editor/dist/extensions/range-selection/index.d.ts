@@ -21,5 +21,5 @@ declare module "@tiptap/core" {
         }) => boolean | null);
   }
 }
-declare const ExtensionRangeSelection: Extension<any, any>;
-export { ExtensionRangeSelection, RangeSelection };
+export declare const ExtensionRangeSelection: Extension<any, any>;
+export { RangeSelection };

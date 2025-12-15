@@ -1,5 +1,6 @@
+import { BubbleItemComponentProps } from "../../types";
 declare const _default: import("vue").DefineComponent<
-  {},
+  BubbleItemComponentProps,
   {},
   {},
   {},
@@ -9,14 +10,14 @@ declare const _default: import("vue").DefineComponent<
   {},
   string,
   import("vue").PublicProps,
-  Readonly<{}> & Readonly<{}>,
+  Readonly<BubbleItemComponentProps> & Readonly<{}>,
   {},
   {},
   {},
   {},
   string,
   import("vue").ComponentProvideOptions,
-  true,
+  false,
   {},
   any
 >;

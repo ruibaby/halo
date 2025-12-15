@@ -1,38 +1,37 @@
-import { Editor } from "../../tiptap/vue-3";
+type __VLS_Props = {
+  disabled?: boolean;
+  isActive?: boolean;
+};
 declare function __VLS_template(): {
+  attrs: Partial<{}>;
   slots: {
-    content?(_: {}): any;
-    actions?(_: {}): any;
+    icon?(_: {}): any;
+    default?(_: {}): any;
   };
   refs: {};
-  attrs: Partial<{}>;
+  rootEl: HTMLDivElement;
 };
 type __VLS_TemplateResult = ReturnType<typeof __VLS_template>;
 declare const __VLS_component: import("vue").DefineComponent<
-  {
-    selected: boolean;
-    editor: Editor;
-    getPos: () => number;
-    deleteNode: () => void;
+  __VLS_Props,
+  {},
+  {},
+  {},
+  {},
+  import("vue").ComponentOptionsMixin,
+  import("vue").ComponentOptionsMixin,
+  {} & {
+    click: (e: MouseEvent) => any;
   },
-  {},
-  {},
-  {},
-  {},
-  import("vue").ComponentOptionsMixin,
-  import("vue").ComponentOptionsMixin,
-  {},
   string,
   import("vue").PublicProps,
-  Readonly<{
-    selected: boolean;
-    editor: Editor;
-    getPos: () => number;
-    deleteNode: () => void;
-  }> &
-    Readonly<{}>,
+  Readonly<__VLS_Props> &
+    Readonly<{
+      onClick?: ((e: MouseEvent) => any) | undefined;
+    }>,
   {
-    selected: boolean;
+    disabled: boolean;
+    isActive: boolean;
   },
   {},
   {},
@@ -41,7 +40,7 @@ declare const __VLS_component: import("vue").DefineComponent<
   import("vue").ComponentProvideOptions,
   false,
   {},
-  any
+  HTMLDivElement
 >;
 declare const _default: __VLS_WithTemplateSlots<
   typeof __VLS_component,

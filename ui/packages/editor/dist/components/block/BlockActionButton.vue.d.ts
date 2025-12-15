@@ -1,16 +1,21 @@
+type __VLS_Props = {
+  tooltip?: string;
+  selected?: boolean;
+  disabled?: boolean;
+  isActive?: boolean;
+  visible?: boolean;
+};
 declare function __VLS_template(): {
+  attrs: Partial<{}>;
   slots: {
     icon?(_: {}): any;
   };
   refs: {};
-  attrs: Partial<{}>;
+  rootEl: any;
 };
 type __VLS_TemplateResult = ReturnType<typeof __VLS_template>;
 declare const __VLS_component: import("vue").DefineComponent<
-  {
-    tooltip?: string;
-    selected?: boolean;
-  },
+  __VLS_Props,
   {},
   {},
   {},
@@ -20,14 +25,13 @@ declare const __VLS_component: import("vue").DefineComponent<
   {},
   string,
   import("vue").PublicProps,
-  Readonly<{
-    tooltip?: string;
-    selected?: boolean;
-  }> &
-    Readonly<{}>,
+  Readonly<__VLS_Props> & Readonly<{}>,
   {
     tooltip: string;
     selected: boolean;
+    disabled: boolean;
+    isActive: boolean;
+    visible: boolean;
   },
   {},
   {},

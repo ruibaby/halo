@@ -1,30 +1,22 @@
+import { BubbleItemComponentProps } from "../../types";
 declare const _default: import("vue").DefineComponent<
+  BubbleItemComponentProps,
+  {},
+  {},
+  {},
+  {},
+  import("vue").ComponentOptionsMixin,
+  import("vue").ComponentOptionsMixin,
   {
-    tooltip?: string;
-    modelValue?: string;
-  },
-  {},
-  {},
-  {},
-  {},
-  import("vue").ComponentOptionsMixin,
-  import("vue").ComponentOptionsMixin,
-  {} & {
-    "update:modelValue": (value: string) => any;
+    close: (...args: any[]) => void;
   },
   string,
   import("vue").PublicProps,
-  Readonly<{
-    tooltip?: string;
-    modelValue?: string;
-  }> &
+  Readonly<BubbleItemComponentProps> &
     Readonly<{
-      "onUpdate:modelValue"?: ((value: string) => any) | undefined;
+      onClose?: ((...args: any[]) => any) | undefined;
     }>,
-  {
-    tooltip: string;
-    modelValue: string;
-  },
+  {},
   {},
   {},
   {},

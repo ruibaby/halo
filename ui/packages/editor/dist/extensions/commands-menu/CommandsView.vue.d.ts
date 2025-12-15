@@ -1,14 +1,14 @@
-import { CommandMenuItem } from "../../types";
 import { PropType } from "vue";
+import { CommandMenuItemType } from "../../types";
 declare function onKeyDown({ event }: { event: KeyboardEvent }): boolean;
 declare const _default: import("vue").DefineComponent<
   import("vue").ExtractPropTypes<{
     items: {
-      type: PropType<CommandMenuItem[]>;
+      type: PropType<CommandMenuItemType[]>;
       required: true;
     };
     command: {
-      type: PropType<(item: CommandMenuItem) => void>;
+      type: PropType<(item: CommandMenuItemType) => void>;
       required: true;
     };
   }>,
@@ -26,11 +26,11 @@ declare const _default: import("vue").DefineComponent<
   Readonly<
     import("vue").ExtractPropTypes<{
       items: {
-        type: PropType<CommandMenuItem[]>;
+        type: PropType<CommandMenuItemType[]>;
         required: true;
       };
       command: {
-        type: PropType<(item: CommandMenuItem) => void>;
+        type: PropType<(item: CommandMenuItemType) => void>;
         required: true;
       };
     }>
@@ -44,6 +44,6 @@ declare const _default: import("vue").DefineComponent<
   import("vue").ComponentProvideOptions,
   true,
   {},
-  any
+  HTMLDivElement
 >;
 export default _default;

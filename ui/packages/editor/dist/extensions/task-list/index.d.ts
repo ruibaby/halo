@@ -1,7 +1,8 @@
+import { TaskListOptions } from "@tiptap/extension-list";
 import { ExtensionOptions } from "../../types";
-import { TaskListOptions } from "@tiptap/extension-task-list";
-declare const TaskList: import("@tiptap/core").Node<
-  ExtensionOptions & TaskListOptions,
+export type ExtensionTaskListOptions = Partial<TaskListOptions> &
+  ExtensionOptions;
+export declare const ExtensionTaskList: import("@tiptap/core").Node<
+  ExtensionTaskListOptions,
   any
 >;
-export default TaskList;

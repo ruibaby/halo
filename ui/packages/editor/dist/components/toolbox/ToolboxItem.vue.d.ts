@@ -1,13 +1,6 @@
-import { Editor } from "../../tiptap/vue-3";
-import { Component } from "vue";
+import { ToolboxItemComponentProps } from "../../types";
 declare const _default: import("vue").DefineComponent<
-  {
-    editor?: Editor;
-    title?: string;
-    description?: string;
-    action?: () => void;
-    icon?: Component;
-  },
+  ToolboxItemComponentProps,
   {},
   {},
   {},
@@ -17,21 +10,8 @@ declare const _default: import("vue").DefineComponent<
   {},
   string,
   import("vue").PublicProps,
-  Readonly<{
-    editor?: Editor;
-    title?: string;
-    description?: string;
-    action?: () => void;
-    icon?: Component;
-  }> &
-    Readonly<{}>,
-  {
-    title: string;
-    editor: Editor;
-    icon: Component;
-    action: () => void;
-    description: string;
-  },
+  Readonly<ToolboxItemComponentProps> & Readonly<{}>,
+  {},
   {},
   {},
   {},
@@ -39,6 +19,6 @@ declare const _default: import("vue").DefineComponent<
   import("vue").ComponentProvideOptions,
   false,
   {},
-  any
+  HTMLDivElement
 >;
 export default _default;

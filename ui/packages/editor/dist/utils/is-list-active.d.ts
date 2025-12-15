@@ -1,4 +1,4 @@
-import { CoreEditor } from "../tiptap";
+import { Editor } from "../tiptap";
 /**
  * Check if a list is active
  *
@@ -9,4 +9,4 @@ import { CoreEditor } from "../tiptap";
  * const isActive = isListActive(editor.state);
  * ```
  **/
-export declare const isListActive: (editor: CoreEditor) => boolean;
+export declare const isListActive: (editor: Editor) => boolean;
