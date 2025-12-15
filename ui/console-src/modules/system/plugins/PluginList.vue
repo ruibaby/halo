@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { usePermission } from "@/utils/permission";
 import {
   PluginStatusPhaseEnum,
   consoleApiClient,
@@ -16,10 +15,12 @@ import {
   VDropdown,
   VDropdownItem,
   VEmpty,
+  VEntityContainer,
   VLoading,
   VPageHeader,
   VSpace,
 } from "@halo-dev/components";
+import { utils } from "@halo-dev/ui-shared";
 import { useQuery } from "@tanstack/vue-query";
 import { useRouteQuery } from "@vueuse/router";
 import type { Ref } from "vue";
@@ -30,20 +31,12 @@ import PluginListItem from "./components/PluginListItem.vue";
 import { usePluginBatchOperations } from "./composables/use-plugin";
 
 const { t } = useI18n();
-const { currentUserHasPermission } = usePermission();
 
 const pluginInstallationModalVisible = ref(false);
 
 const keyword = useRouteQuery<string>("keyword", "");
 
-const selectedEnabledValue = useRouteQuery<
-  string | undefined,
-  boolean | undefined
->("enabled", undefined, {
-  transform: (value) => {
-    return value ? value === "true" : undefined;
-  },
-});
+const selectedEnabledValue = useRouteQuery<string | undefined>("enabled");
 const selectedSortValue = useRouteQuery<string | undefined>("sort");
 
 const hasFilters = computed(() => {
@@ -64,7 +57,9 @@ const { data, isLoading, isFetching, refetch } = useQuery<Plugin[]>({
       page: 0,
       size: 0,
       keyword: keyword.value,
-      enabled: selectedEnabledValue.value,
+      enabled: selectedEnabledValue.value
+        ? JSON.parse(selectedEnabledValue.value)
+        : undefined,
       sort: [selectedSortValue.value].filter(Boolean) as string[],
     });
 
@@ -151,40 +146,38 @@ onMounted(() => {
   <PluginInstallationModal
     v-if="
       pluginInstallationModalVisible &&
-      currentUserHasPermission(['system:plugins:manage'])
+      utils.permission.has(['system:plugins:manage'])
     "
     @close="pluginInstallationModalVisible = false"
   />
 
   <VPageHeader :title="$t('core.plugin.title')">
     <template #icon>
-      <IconPlug class="mr-2 self-center" />
+      <IconPlug />
     </template>
     <template #actions>
-      <VSpace>
-        <HasPermission :permissions="['*']">
-          <VButton
-            size="sm"
-            @click="$router.push({ name: 'PluginExtensionPointSettings' })"
-          >
-            <template #icon>
-              <IconSettings class="h-full w-full" />
-            </template>
-            {{ $t("core.plugin.actions.extension-point-settings") }}
-          </VButton>
-        </HasPermission>
-
+      <HasPermission :permissions="['*']">
         <VButton
-          v-permission="['system:plugins:manage']"
-          type="secondary"
-          @click="pluginInstallationModalVisible = true"
+          size="sm"
+          @click="$router.push({ name: 'PluginExtensionPointSettings' })"
         >
           <template #icon>
-            <IconAddCircle class="h-full w-full" />
+            <IconSettings />
           </template>
-          {{ $t("core.common.buttons.install") }}
+          {{ $t("core.plugin.actions.extension-point-settings") }}
         </VButton>
-      </VSpace>
+      </HasPermission>
+
+      <VButton
+        v-permission="['system:plugins:manage']"
+        type="secondary"
+        @click="pluginInstallationModalVisible = true"
+      >
+        <template #icon>
+          <IconAddCircle />
+        </template>
+        {{ $t("core.common.buttons.install") }}
+      </VButton>
     </template>
   </VPageHeader>
 
@@ -253,11 +246,11 @@ onMounted(() => {
                   },
                   {
                     label: t('core.plugin.filters.status.items.active'),
-                    value: true,
+                    value: 'true',
                   },
                   {
                     label: t('core.plugin.filters.status.items.inactive'),
-                    value: false,
+                    value: 'false',
                   },
                 ]"
               />
@@ -313,7 +306,7 @@ onMounted(() => {
                 @click="pluginInstallationModalVisible = true"
               >
                 <template #icon>
-                  <IconAddCircle class="h-full w-full" />
+                  <IconAddCircle />
                 </template>
                 {{ $t("core.plugin.empty.actions.install") }}
               </VButton>
@@ -323,17 +316,14 @@ onMounted(() => {
       </Transition>
 
       <Transition v-else appear name="fade">
-        <ul
-          class="box-border h-full w-full divide-y divide-gray-100"
-          role="list"
-        >
-          <li v-for="plugin in data" :key="plugin.metadata.name">
-            <PluginListItem
-              :plugin="plugin"
-              :is-selected="selectedNames.includes(plugin.metadata.name)"
-            />
-          </li>
-        </ul>
+        <VEntityContainer>
+          <PluginListItem
+            v-for="plugin in data"
+            :key="plugin.metadata.name"
+            :plugin="plugin"
+            :is-selected="selectedNames.includes(plugin.metadata.name)"
+          />
+        </VEntityContainer>
       </Transition>
 
       <template #footer>

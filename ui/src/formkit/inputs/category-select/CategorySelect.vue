@@ -1,22 +1,22 @@
 <script lang="ts" setup>
-import HasPermission from "@/components/permission/HasPermission.vue";
-import { usePermission } from "@/utils/permission";
 import { usePostCategory } from "@console/modules/contents/posts/categories/composables/use-post-category";
-import type { CategoryTree } from "@console/modules/contents/posts/categories/utils";
-import { convertTreeToCategories } from "@console/modules/contents/posts/categories/utils";
+import {
+  convertTreeToCategories,
+  type CategoryTreeNode,
+} from "@console/modules/contents/posts/categories/utils";
 import type { FormKitFrameworkContext } from "@formkit/core";
 import type { Category } from "@halo-dev/api-client";
 import { coreApiClient } from "@halo-dev/api-client";
 import { IconArrowRight } from "@halo-dev/components";
+import { utils } from "@halo-dev/ui-shared";
 import { onClickOutside } from "@vueuse/core";
 import Fuse from "fuse.js";
+import ShortUniqueId from "short-unique-id";
 import { slugify } from "transliteration";
 import { computed, provide, ref, watch, type PropType, type Ref } from "vue";
 import CategoryListItem from "./components/CategoryListItem.vue";
 import CategoryTag from "./components/CategoryTag.vue";
 import SearchResultListItem from "./components/SearchResultListItem.vue";
-
-const { currentUserHasPermission } = usePermission();
 
 const props = defineProps({
   context: {
@@ -38,11 +38,11 @@ const multiple = computed(() => {
 
 const { categories, categoriesTree, handleFetchCategories } = usePostCategory();
 
-provide<Ref<CategoryTree[]>>("categoriesTree", categoriesTree);
+provide<Ref<CategoryTreeNode[]>>("categoriesTree", categoriesTree);
 
-const selectedCategory = ref<Category | CategoryTree>();
+const selectedCategory = ref<Category | CategoryTreeNode>();
 
-provide<Ref<Category | CategoryTree | undefined>>(
+provide<Ref<Category | CategoryTreeNode | undefined>>(
   "selectedCategory",
   selectedCategory
 );
@@ -109,19 +109,19 @@ const selectedCategories = computed(() => {
   return [category].filter(Boolean) as Category[];
 });
 
-const isSelected = (category: CategoryTree | Category) => {
+const isSelected = (category: CategoryTreeNode | Category) => {
   if (multiple.value) {
     return (props.context._value || []).includes(category.metadata.name);
   }
   return props.context._value === category.metadata.name;
 };
 
-provide<(category: CategoryTree | Category) => boolean>(
+provide<(category: CategoryTreeNode | Category) => boolean>(
   "isSelected",
   isSelected
 );
 
-const handleSelect = (category: CategoryTree | Category) => {
+const handleSelect = (category: CategoryTreeNode | Category) => {
   if (multiple.value) {
     const currentValue = props.context._value || [];
     if (currentValue.includes(category.metadata.name)) {
@@ -210,16 +210,30 @@ const scrollToSelected = () => {
   }
 };
 
+const uid = new ShortUniqueId();
+
 const handleCreateCategory = async () => {
-  if (!currentUserHasPermission(["system:posts:manage"])) {
+  if (!utils.permission.has(["system:posts:manage"])) {
     return;
+  }
+
+  let slug = slugify(text.value, { trim: true });
+
+  // Check if slug is unique, if not, add -1 to the slug
+  const { data: categoriesWithSameSlug } =
+    await coreApiClient.content.category.listCategory({
+      fieldSelector: [`spec.slug=${slug}`],
+    });
+
+  if (categoriesWithSameSlug.total) {
+    slug = `${slug}-${uid.randomUUID(8)}`;
   }
 
   const { data } = await coreApiClient.content.category.createCategory({
     category: {
       spec: {
         displayName: text.value,
-        slug: slugify(text.value, { trim: true }),
+        slug,
         description: "",
         cover: "",
         template: "",

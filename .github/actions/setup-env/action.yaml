@@ -5,17 +5,17 @@ inputs:
   node-version:
     description: Node.js version.
     required: false
-    default: "20"
+    default: "22"
 
   pnpm-version:
     description: pnpm version.
     required: false
-    default: "9"
+    default: "10"
 
   java-version:
     description: Java version.
     required: false
-    default: "17"
+    default: "21"
 
 runs:
   using: "composite"

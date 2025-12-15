@@ -1,12 +1,10 @@
 <script lang="ts" setup>
 import StatusDotField from "@/components/entity-fields/StatusDotField.vue";
-import HasPermission from "@/components/permission/HasPermission.vue";
 import PostContributorList from "@/components/user/PostContributorList.vue";
 import { postLabels } from "@/constants/labels";
-import { formatDatetime } from "@/utils/date";
 import PostTag from "@console/modules/contents/posts/tags/components/PostTag.vue";
 import type { ListedPost } from "@halo-dev/api-client";
-import { ucApiClient } from "@halo-dev/api-client";
+import { GetThumbnailByUriSizeEnum, ucApiClient } from "@halo-dev/api-client";
 import {
   Dialog,
   IconExternalLinkLine,
@@ -21,6 +19,7 @@ import {
   VSpace,
   VStatusDot,
 } from "@halo-dev/components";
+import { utils } from "@halo-dev/ui-shared";
 import { useQueryClient } from "@tanstack/vue-query";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
@@ -121,13 +120,28 @@ function handleDelete() {
 <template>
   <VEntity>
     <template #start>
+      <VEntityField v-if="post.post.spec.cover">
+        <template #description>
+          <div class="aspect-h-2 aspect-w-3 w-20 overflow-hidden rounded-md">
+            <img
+              class="h-full w-full object-cover"
+              :src="
+                utils.attachment.getThumbnailUrl(
+                  post.post.spec.cover,
+                  GetThumbnailByUriSizeEnum.S
+                )
+              "
+            />
+          </div>
+        </template>
+      </VEntityField>
       <VEntityField
         :title="post.post.spec.title"
         :route="{
           name: 'PostEditor',
           query: { name: post.post.metadata.name },
         }"
-        width="27rem"
+        max-width="30rem"
       >
         <template #extra>
           <VSpace class="mt-1 sm:mt-0">
@@ -145,7 +159,7 @@ function handleDelete() {
             <a
               target="_blank"
               :href="externalUrl"
-              class="hidden text-gray-600 transition-all hover:text-gray-900 group-hover:inline-block"
+              class="text-gray-600 opacity-0 transition-all hover:text-gray-900 group-hover:opacity-100"
             >
               <IconExternalLinkLine class="h-3.5 w-3.5" />
             </a>
@@ -238,8 +252,11 @@ function handleDelete() {
       <VEntityField v-if="post.post.spec.publishTime">
         <template #description>
           <div class="inline-flex items-center space-x-2">
-            <span class="entity-field-description">
-              {{ formatDatetime(post.post.spec.publishTime) }}
+            <span
+              v-tooltip="utils.date.format(post.post.spec.publishTime)"
+              class="entity-field-description"
+            >
+              {{ utils.date.timeAgo(post.post.spec.publishTime) }}
             </span>
             <IconTimerLine
               v-if="

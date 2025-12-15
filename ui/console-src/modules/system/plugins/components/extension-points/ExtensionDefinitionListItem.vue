@@ -12,7 +12,6 @@ import {
 } from "@halo-dev/components";
 import { useQuery } from "@tanstack/vue-query";
 import { computed, ref } from "vue";
-import PluginDetailModal from "../PluginDetailModal.vue";
 
 const props = withDefaults(
   defineProps<{ extensionDefinition: ExtensionDefinition }>(),
@@ -66,8 +65,8 @@ const pluginDetailModalVisible = ref(false);
         :description="extensionDefinition.spec.description"
       ></VEntityField>
     </template>
-    <template v-if="matchedPlugin" #end>
-      <VEntityField>
+    <template #end>
+      <VEntityField v-if="matchedPlugin">
         <template #description>
           <div
             class="cursor-pointer rounded p-1 text-gray-600 transition-all hover:text-blue-600 group-hover:bg-gray-200/60"
@@ -77,6 +76,7 @@ const pluginDetailModalVisible = ref(false);
           </div>
         </template>
       </VEntityField>
+      <slot name="end" />
     </template>
   </VEntity>
 </template>

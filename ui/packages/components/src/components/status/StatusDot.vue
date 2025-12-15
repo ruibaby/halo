@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed } from "vue";
-import type { State } from "./interface";
+import type { StatusDotState } from "./types";
 
 const props = withDefaults(
   defineProps<{
-    state?: State;
+    state?: StatusDotState;
     animate?: boolean;
     text?: string;
   }>(),
@@ -40,7 +40,7 @@ const classes = computed(() => {
   }
 
   .status-dot-text {
-    @apply text-gray-500 text-xs;
+    @apply whitespace-nowrap text-xs text-gray-500;
   }
 
   &.status-dot-animate {

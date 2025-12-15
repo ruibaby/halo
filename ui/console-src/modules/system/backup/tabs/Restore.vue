@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { formatDatetime } from "@/utils/date";
 import type { BackupFile } from "@halo-dev/api-client";
 import { consoleApiClient } from "@halo-dev/api-client";
 import {
@@ -9,11 +8,13 @@ import {
   VButton,
   VEmpty,
   VEntity,
+  VEntityContainer,
   VEntityField,
   VLoading,
   VTabItem,
   VTabs,
 } from "@halo-dev/components";
+import { utils } from "@halo-dev/ui-shared";
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import axios from "axios";
 import prettyBytes from "pretty-bytes";
@@ -186,44 +187,41 @@ useQuery({
           :label="$t('core.backup.restore.tabs.backup.label')"
         >
           <VLoading v-if="isLoadingBackupFiles" />
-          <ul
-            v-else-if="backupFiles?.length"
-            class="box-border h-full w-full divide-y divide-gray-100 overflow-hidden rounded-base border"
-            role="list"
-          >
-            <li v-for="backupFile in backupFiles" :key="backupFile.filename">
-              <VEntity>
-                <template #start>
-                  <VEntityField
-                    :title="backupFile.filename"
-                    :description="prettyBytes(backupFile.size || 0)"
-                  >
-                  </VEntityField>
-                </template>
-                <template #end>
-                  <VEntityField v-if="backupFile.lastModifiedTime">
-                    <template #description>
-                      <span class="truncate text-xs tabular-nums text-gray-500">
-                        {{ formatDatetime(backupFile.lastModifiedTime) }}
-                      </span>
-                    </template>
-                  </VEntityField>
-                  <VEntityField v-permission="['system:migrations:manage']">
-                    <template #description>
-                      <VButton
-                        size="sm"
-                        @click="handleRestoreFromBackup(backupFile)"
-                      >
-                        {{
-                          $t("core.backup.operations.restore_by_backup.button")
-                        }}
-                      </VButton>
-                    </template>
-                  </VEntityField>
-                </template>
-              </VEntity>
-            </li>
-          </ul>
+          <VEntityContainer v-else-if="backupFiles?.length">
+            <VEntity
+              v-for="backupFile in backupFiles"
+              :key="backupFile.filename"
+            >
+              <template #start>
+                <VEntityField
+                  :title="backupFile.filename"
+                  :description="prettyBytes(backupFile.size || 0)"
+                >
+                </VEntityField>
+              </template>
+              <template #end>
+                <VEntityField v-if="backupFile.lastModifiedTime">
+                  <template #description>
+                    <span class="truncate text-xs tabular-nums text-gray-500">
+                      {{ utils.date.format(backupFile.lastModifiedTime) }}
+                    </span>
+                  </template>
+                </VEntityField>
+                <VEntityField v-permission="['system:migrations:manage']">
+                  <template #description>
+                    <VButton
+                      size="sm"
+                      @click="handleRestoreFromBackup(backupFile)"
+                    >
+                      {{
+                        $t("core.backup.operations.restore_by_backup.button")
+                      }}
+                    </VButton>
+                  </template>
+                </VEntityField>
+              </template>
+            </VEntity>
+          </VEntityContainer>
 
           <VEmpty
             v-else

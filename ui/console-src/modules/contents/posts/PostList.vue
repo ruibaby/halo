@@ -16,6 +16,7 @@ import {
   VButton,
   VCard,
   VEmpty,
+  VEntityContainer,
   VLoading,
   VPageHeader,
   VPagination,
@@ -23,6 +24,7 @@ import {
 } from "@halo-dev/components";
 import { useQuery } from "@tanstack/vue-query";
 import { useRouteQuery } from "@vueuse/router";
+import { chunk } from "es-toolkit";
 import type { Ref } from "vue";
 import { computed, provide, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
@@ -266,13 +268,18 @@ const handleDeleteInBatch = async () => {
     confirmText: t("core.common.buttons.confirm"),
     cancelText: t("core.common.buttons.cancel"),
     onConfirm: async () => {
-      await Promise.all(
-        selectedPostNames.value.map((name) => {
-          return consoleApiClient.content.post.recyclePost({
-            name,
-          });
-        })
-      );
+      const chunks = chunk(selectedPostNames.value, 5);
+
+      for (const chunk of chunks) {
+        await Promise.all(
+          chunk.map((name) => {
+            return consoleApiClient.content.post.recyclePost({
+              name,
+            });
+          })
+        );
+      }
+
       await refetch();
       selectedPostNames.value = [];
 
@@ -288,9 +295,14 @@ const handlePublishInBatch = async () => {
     confirmText: t("core.common.buttons.confirm"),
     cancelText: t("core.common.buttons.cancel"),
     onConfirm: async () => {
-      for (const i in selectedPostNames.value) {
-        const name = selectedPostNames.value[i];
-        await consoleApiClient.content.post.publishPost({ name });
+      const chunks = chunk(selectedPostNames.value, 5);
+
+      for (const chunk of chunks) {
+        await Promise.all(
+          chunk.map((name) => {
+            return consoleApiClient.content.post.publishPost({ name });
+          })
+        );
       }
 
       await refetch();
@@ -308,9 +320,14 @@ const handleCancelPublishInBatch = async () => {
     confirmText: t("core.common.buttons.confirm"),
     cancelText: t("core.common.buttons.cancel"),
     onConfirm: async () => {
-      for (const i in selectedPostNames.value) {
-        const name = selectedPostNames.value[i];
-        await consoleApiClient.content.post.unpublishPost({ name });
+      const chunks = chunk(selectedPostNames.value, 5);
+
+      for (const chunk of chunks) {
+        await Promise.all(
+          chunk.map((name) => {
+            return consoleApiClient.content.post.unpublishPost({ name });
+          })
+        );
       }
 
       await refetch();
@@ -367,31 +384,29 @@ watch(
   />
   <VPageHeader :title="$t('core.post.title')">
     <template #icon>
-      <IconBookRead class="mr-2 self-center" />
+      <IconBookRead />
     </template>
     <template #actions>
-      <VSpace>
-        <VButton :route="{ name: 'Categories' }" size="sm">
-          {{ $t("core.post.actions.categories") }}
-        </VButton>
-        <VButton :route="{ name: 'Tags' }" size="sm">
-          {{ $t("core.post.actions.tags") }}
-        </VButton>
-        <VButton :route="{ name: 'DeletedPosts' }" size="sm">
-          {{ $t("core.post.actions.recycle_bin") }}
-        </VButton>
+      <VButton :route="{ name: 'Categories' }" size="sm">
+        {{ $t("core.post.actions.categories") }}
+      </VButton>
+      <VButton :route="{ name: 'Tags' }" size="sm">
+        {{ $t("core.post.actions.tags") }}
+      </VButton>
+      <VButton :route="{ name: 'DeletedPosts' }" size="sm">
+        {{ $t("core.post.actions.recycle_bin") }}
+      </VButton>
 
-        <VButton
-          v-permission="['system:posts:manage']"
-          :route="{ name: 'PostEditor' }"
-          type="secondary"
-        >
-          <template #icon>
-            <IconAddCircle class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.new") }}
-        </VButton>
-      </VSpace>
+      <VButton
+        v-permission="['system:posts:manage']"
+        :route="{ name: 'PostEditor' }"
+        type="secondary"
+      >
+        <template #icon>
+          <IconAddCircle />
+        </template>
+        {{ $t("core.common.buttons.new") }}
+      </VButton>
     </template>
   </VPageHeader>
 
@@ -566,7 +581,7 @@ watch(
                 type="secondary"
               >
                 <template #icon>
-                  <IconAddCircle class="h-full w-full" />
+                  <IconAddCircle />
                 </template>
                 {{ $t("core.common.buttons.new") }}
               </VButton>
@@ -575,18 +590,15 @@ watch(
         </VEmpty>
       </Transition>
       <Transition v-else appear name="fade">
-        <ul
-          class="box-border h-full w-full divide-y divide-gray-100"
-          role="list"
-        >
-          <li v-for="post in posts" :key="post.post.metadata.name">
-            <PostListItem
-              :post="post"
-              :is-selected="checkSelection(post.post)"
-              @open-setting-modal="handleOpenSettingModal"
-            />
-          </li>
-        </ul>
+        <VEntityContainer>
+          <PostListItem
+            v-for="post in posts"
+            :key="post.post.metadata.name"
+            :post="post"
+            :is-selected="checkSelection(post.post)"
+            @open-setting-modal="handleOpenSettingModal"
+          />
+        </VEntityContainer>
       </Transition>
 
       <template #footer>

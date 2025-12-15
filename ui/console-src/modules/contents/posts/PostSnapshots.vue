@@ -10,7 +10,6 @@ import {
   VCard,
   VLoading,
   VPageHeader,
-  VSpace,
 } from "@halo-dev/components";
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
 import { useRouteQuery } from "@vueuse/router";
@@ -82,6 +81,7 @@ function handleCleanup() {
     description: t("core.post_snapshots.operations.cleanup.description"),
     confirmText: t("core.common.buttons.confirm"),
     cancelText: t("core.common.buttons.cancel"),
+    confirmType: "danger",
     async onConfirm() {
       const { releaseSnapshot, baseSnapshot, headSnapshot } =
         post.value?.spec || {};
@@ -117,17 +117,15 @@ function handleCleanup() {
 <template>
   <VPageHeader :title="post?.spec.title">
     <template #icon>
-      <IconHistoryLine class="mr-2 self-center" />
+      <IconHistoryLine />
     </template>
     <template #actions>
-      <VSpace>
-        <VButton size="sm" @click="$router.back()">
-          {{ $t("core.common.buttons.back") }}
-        </VButton>
-        <VButton size="sm" type="danger" @click="handleCleanup">
-          {{ $t("core.post_snapshots.operations.cleanup.button") }}
-        </VButton>
-      </VSpace>
+      <VButton size="sm" @click="$router.back()">
+        {{ $t("core.common.buttons.back") }}
+      </VButton>
+      <VButton size="sm" type="danger" @click="handleCleanup">
+        {{ $t("core.post_snapshots.operations.cleanup.button") }}
+      </VButton>
     </template>
   </VPageHeader>
 

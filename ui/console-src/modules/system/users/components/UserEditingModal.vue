@@ -1,19 +1,12 @@
 <script lang="ts" setup>
-// core libs
+import SubmitButton from "@/components/button/SubmitButton.vue";
+import type AnnotationsForm from "@/components/form/AnnotationsForm.vue";
 import type { User } from "@halo-dev/api-client";
 import { coreApiClient } from "@halo-dev/api-client";
-import { nextTick, ref } from "vue";
-
-// components
-import SubmitButton from "@/components/button/SubmitButton.vue";
 import { Toast, VButton, VModal, VSpace } from "@halo-dev/components";
-
-// libs
-import { cloneDeep } from "lodash-es";
-
-// hooks
-import AnnotationsForm from "@/components/form/AnnotationsForm.vue";
 import { useQueryClient } from "@tanstack/vue-query";
+import { cloneDeep } from "es-toolkit";
+import { nextTick, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
@@ -124,6 +117,8 @@ const handleUpdateUser = async () => {
               :label="$t('core.user.editing_modal.fields.bio.label')"
               type="textarea"
               name="bio"
+              auto-height
+              :max-auto-height="200"
               validation="length:0,2048"
             ></FormKit>
           </div>

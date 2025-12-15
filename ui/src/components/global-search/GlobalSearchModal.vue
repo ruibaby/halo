@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { usePermission } from "@/utils/permission";
 import { useThemeStore } from "@console/stores/theme";
 import { consoleApiClient, coreApiClient } from "@halo-dev/api-client";
 import {
@@ -10,10 +9,9 @@ import {
   IconPalette,
   IconSettings,
   IconUserSettings,
-  VEntity,
-  VEntityField,
   VModal,
 } from "@halo-dev/components";
+import { utils } from "@halo-dev/ui-shared";
 import { useEventListener } from "@vueuse/core";
 import Fuse from "fuse.js";
 import { storeToRefs } from "pinia";
@@ -25,7 +23,6 @@ const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
 
-const { currentUserHasPermission } = usePermission();
 const { activatedTheme } = storeToRefs(useThemeStore());
 
 const emit = defineEmits<{
@@ -78,27 +75,31 @@ const handleBuildSearchIndex = () => {
     });
   });
 
-  if (currentUserHasPermission(["system:users:view"])) {
-    coreApiClient.user.listUser().then((response) => {
-      response.data.items.forEach((user) => {
-        fuse.add({
-          title: user.spec.displayName,
-          icon: {
-            component: markRaw(IconUserSettings),
-          },
-          group: t("core.components.global_search.groups.user"),
-          route: {
-            name: "UserDetail",
-            params: {
-              name: user.metadata.name,
+  if (utils.permission.has(["system:users:view"])) {
+    coreApiClient.user
+      .listUser({
+        labelSelector: ["!halo.run/hidden-user"],
+      })
+      .then((response) => {
+        response.data.items.forEach((user) => {
+          fuse.add({
+            title: user.spec.displayName,
+            icon: {
+              component: markRaw(IconUserSettings),
             },
-          },
+            group: t("core.components.global_search.groups.user"),
+            route: {
+              name: "UserDetail",
+              params: {
+                name: user.metadata.name,
+              },
+            },
+          });
         });
       });
-    });
   }
 
-  if (currentUserHasPermission(["system:plugins:view"])) {
+  if (utils.permission.has(["system:plugins:view"])) {
     coreApiClient.plugin.plugin.listPlugin().then((response) => {
       response.data.items.forEach((plugin) => {
         fuse.add({
@@ -118,7 +119,7 @@ const handleBuildSearchIndex = () => {
     });
   }
 
-  if (currentUserHasPermission(["system:posts:view"])) {
+  if (utils.permission.has(["system:posts:view"])) {
     coreApiClient.content.post.listPost().then((response) => {
       response.data.items.forEach((post) => {
         fuse.add({
@@ -182,7 +183,7 @@ const handleBuildSearchIndex = () => {
       });
   }
 
-  if (currentUserHasPermission(["system:singlepages:view"])) {
+  if (utils.permission.has(["system:singlepages:view"])) {
     coreApiClient.content.singlePage.listSinglePage().then((response) => {
       response.data.items.forEach((singlePage) => {
         fuse.add({
@@ -202,7 +203,7 @@ const handleBuildSearchIndex = () => {
     });
   }
 
-  if (currentUserHasPermission(["system:attachments:view"])) {
+  if (utils.permission.has(["system:attachments:view"])) {
     coreApiClient.storage.attachment.listAttachment().then((response) => {
       response.data.items.forEach((attachment) => {
         fuse.add({
@@ -223,8 +224,10 @@ const handleBuildSearchIndex = () => {
   }
 
   if (
-    currentUserHasPermission(["system:settings:view"]) &&
-    currentUserHasPermission(["system:configmaps:view"])
+    utils.permission.has(
+      ["system:settings:view", "system:configmaps:view"],
+      false
+    )
   ) {
     coreApiClient.setting.getSetting({ name: "system" }).then((response) => {
       response.data.spec.forms.forEach((form) => {
@@ -245,7 +248,7 @@ const handleBuildSearchIndex = () => {
     });
   }
 
-  if (currentUserHasPermission(["system:themes:view"])) {
+  if (utils.permission.has(["system:themes:view"])) {
     consoleApiClient.theme.theme
       .fetchThemeSetting({ name: "-" })
       .then(({ data: themeSettings }) => {
@@ -369,7 +372,7 @@ useEventListener("keydown", handleKeydown);
       </div>
       <ul
         v-if="searchResults.length > 0"
-        class="box-border flex h-full w-full flex-col gap-0.5"
+        class="box-border flex h-full w-full flex-col gap-1"
         role="list"
       >
         <li
@@ -378,33 +381,29 @@ useEventListener("keydown", handleKeydown);
           :key="itemIndex"
           @click="handleRoute(item)"
         >
-          <VEntity
-            class="rounded-md px-2 py-2.5 hover:bg-gray-100"
+          <div
+            class="flex cursor-pointer items-center rounded-md px-2 py-2.5 hover:bg-gray-100"
             :class="{ 'bg-gray-100': selectedIndex === itemIndex }"
           >
-            <template #start>
-              <VEntityField>
-                <template #description>
-                  <div class="h-5 w-5 rounded border p-0.5">
-                    <component
-                      :is="item.icon.component"
-                      v-if="'component' in item.icon"
-                      class="h-full w-full"
-                    />
-                    <img
-                      v-if="'src' in item.icon"
-                      :src="item.icon.src"
-                      class="h-full w-full object-cover"
-                    />
-                  </div>
-                </template>
-              </VEntityField>
-              <VEntityField :title="item.title"></VEntityField>
-            </template>
-            <template #end>
-              <VEntityField :description="item.group"></VEntityField>
-            </template>
-          </VEntity>
+            <div class="inline-flex flex-1 items-center gap-3">
+              <div class="h-5 w-5 rounded border p-0.5">
+                <component
+                  :is="item.icon.component"
+                  v-if="'component' in item.icon"
+                  class="h-full w-full"
+                />
+                <img
+                  v-if="'src' in item.icon"
+                  :src="item.icon.src"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+              <span class="text-sm font-medium">{{ item.title }}</span>
+            </div>
+            <div class="flex-none flex-shrink-0 text-xs text-gray-500">
+              {{ item.group }}
+            </div>
+          </div>
         </li>
       </ul>
     </div>

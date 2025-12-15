@@ -9,6 +9,7 @@ core:
         system: System
         tool: Tool
       items:
+        home: Home
         dashboard: Dashboard
         posts: Posts
         single_pages: Pages
@@ -50,10 +51,11 @@ core:
     title: Dashboard
     actions:
       setting: Setting
-      done: Done
-      add_widget: Add Widget
     widgets:
-      modal_title: Widgets
+      common_form:
+        fields:
+          enable_animation:
+            label: Enable animation
       groups:
         post: Post
         page: Page
@@ -69,13 +71,15 @@ core:
           title: Recent Posts
           visits: "{visits} Visits"
           comments: "{comments} Comments"
-          publishTime: Publish Time {publishTime}
+          empty:
+            title: No published posts
+          comments-with-pending: " ({count} pending comments)"
         notification:
           title: Notifications
           empty:
             title: No unread notifications
-        quicklink:
-          title: Quick Link
+        quickaction:
+          title: Quick Action
           actions:
             user_center:
               title: User Center
@@ -100,12 +104,70 @@ core:
                 This operation will recreate search engine indexes for all
                 published posts.
               success_message: Refresh search engine index successfully.
+          config:
+            fields:
+              enabled_items:
+                label: Enabled Items
         user_stats:
           title: Users
         comment_stats:
           title: Comments
+        pending_comments:
+          title: Pending Comments
+          empty:
+            title: No pending comments
         views_stats:
           title: Visits
+        iframe:
+          title: Iframe
+          empty:
+            title: Please enter the URL in the configuration
+          config:
+            fields:
+              title:
+                label: Title
+        stack:
+          title: Widget Stack
+          operations:
+            add_widget:
+              button: Add Widget
+          config_modal:
+            title: Widget Stack Config
+            fields:
+              auto_play:
+                label: Auto play
+              auto_play_interval:
+                label: Auto play interval
+              widgets:
+                label: Widgets
+            toast:
+              nest_warning: You cannot add a stack widget to a stack widget
+  dashboard_designer:
+    title: Edit Dashboard
+    actions:
+      add_widget: Add Widget
+    widgets_modal:
+      title: Widgets
+    config_modal:
+      title: Widget Config
+    breakpoints:
+      lg: Desktop
+      md: Tablet (Horizontal)
+      sm: Tablet
+      xs: Mobile
+    operations:
+      back:
+        title: Layout not saved
+        description: >-
+          The current layout has not been saved, if you leave, the current
+          layout will be lost, do you want to continue?
+        confirm_text: Leave
+      change_breakpoint:
+        tips_not_saved: Please save the current layout first
+      copy_from_layout:
+        button: Copy from layout
+      open_widgets_hub:
+        button: Widgets Hub
   post:
     title: Posts
     actions:
@@ -177,6 +239,7 @@ core:
         pinned: Pinned
         schedule_publish:
           tooltip: Schedule publish
+        comments-with-pending: " ({count} pending comments)"
     settings:
       title: Settings
       groups:
@@ -222,6 +285,7 @@ core:
             create_time_asc: Earliest Created
             display_name_desc: Descending order by tag name
             display_name_asc: Ascending order by tag name
+            post_desc: Most Posts
     batch_setting_modal:
       title: Post batch settings
       fields:
@@ -342,7 +406,10 @@ core:
           help: Theme adaptation is required to support
         description:
           label: Description
-          help: Theme adaptation is required to support
+          help: >-
+            The description will be automatically added to the page's meta
+            description tag for SEO; other display purposes require theme
+            adaptation
         prevent_parent_post_cascade_query:
           label: Prevent Parent Post Cascade Query
           help: >-
@@ -411,6 +478,7 @@ core:
       fields:
         visits: "{visits} Visits"
         comments: "{comments} Comments"
+        comments-with-pending: " ({count} pending comments)"
     settings:
       title: Settings
       groups:
@@ -472,6 +540,9 @@ core:
       title: There are no replies currently.
       message: You can try refreshing or creating a new reply.
       new: New Reply
+    text:
+      commented_on: commented on
+      replied_below: "replied:"
     operations:
       delete_comment:
         title: Delete comment
@@ -493,10 +564,16 @@ core:
           review?
       delete_reply:
         title: Delete reply
-      approve_reply:
-        button: Approve
+      review:
+        button: Review
       reply:
         button: Reply
+      approve:
+        button: Approve
+      reply_and_approve:
+        button: Reply and approve
+      cancel_approve:
+        button: Cancel approve
     filters:
       status:
         items:
@@ -518,6 +595,7 @@ core:
         reply_count: "{count} Replies"
         has_new_replies: New replies
         pending_review: Pending review
+        private: Private
     subject_refs:
       post: Post
       page: Page
@@ -530,11 +608,28 @@ core:
       operations:
         submit:
           toast_success: Reply successfully
+    detail_modal:
+      fields:
+        owner: Commentator
+        creation_time: Comment time
+        commented_on: Commented on
+        new_reply: New reply
+        user_agent: User agent
+    comment_detail_modal:
+      title: Comment detail
+      fields:
+        content: Comment content
+    reply_detail_modal:
+      title: Reply detail
+      fields:
+        original_comment: Original comment
+        content: Reply content
   attachment:
     title: Attachments
     common:
       text:
         ungrouped: Ungrouped
+        original: Original
     actions:
       storage_policies: Storage Policies
     empty:
@@ -592,11 +687,15 @@ core:
         owner: Owner
         creation_time: Creation time
         permalink: Permalink
+      display_name_form:
+        help: Custom attachment name, only for display in the management interface, does not affect the file name and access link itself
       preview:
-        click_to_exit: Click to exit preview
         video_not_support: The current browser does not support video playback.
         audio_not_support: The current browser does not support audio playback.
         not_support: This file does not support preview.
+    permalink_list:
+      relative: Relative path
+      absolute: Absolute path
     group_editing_modal:
       titles:
         create: Create attachment group
@@ -651,6 +750,18 @@ core:
       fields:
         display_name:
           label: Display name
+        config:
+          label: Policy configuration
+        hidden:
+          label: Hide on upload screen
+          help: >-
+            If enabled, this storage policy will not be visible on the upload
+            screen
+        priority:
+          label: Display priority on upload screen
+          help: >-
+            Set the display priority on the upload screen. The higher the
+            number, the closer it appears to the top of the list
       toast:
         policy_name_exists: Storage policy name already exists
     upload_modal:
@@ -664,6 +775,15 @@ core:
             title: No storage policy
             description: Before uploading, a new storage policy needs to be created.
           not_select: Please select a storage policy first.
+      upload_options:
+        local_upload: Upload
+        download: Download from url
+      download_form:
+        fields:
+          url:
+            label: URL
+        toast:
+          success: Downloaded successfully
     select_modal:
       title: Select attachment
       providers:
@@ -888,6 +1008,9 @@ core:
     title: Plugins
     tabs:
       detail: Detail
+    list:
+      fields:
+        system_reserved: System Reserved
     empty:
       title: There are no installed plugins currently.
       message: >-
@@ -969,6 +1092,7 @@ core:
         repo: Source Repository
         load_location: Storage Location
         issues: Issues feedback
+        creation_time: Installation Time
       operations:
         view_conditions:
           button: View recent conditions
@@ -995,6 +1119,9 @@ core:
       extension-definition:
         empty:
           title: There is currently no extension point implemented
+        operation:
+          use:
+            button: Use
     actions:
       extension-point-settings: Extension settings
   user:
@@ -1020,12 +1147,24 @@ core:
         title: Grant permission
       enable:
         title: Enable
-        description: Are you sure you want to enable this user?
+        description: >-
+          Are you sure you want to enable this user? Once enabled, the user will
+          be able to log back into the system.
+      enable_in_batch:
+        title: Enable
+        description: >-
+          Are you sure you want to enable the selected users? Once enabled,
+          these users will be able to log back into the system.
       disable:
         title: Disable
         description: >-
-          Are you sure you want to disable this user? This user will not be able
-          to log in after being disabled
+          Are you sure you want to disable this user? Once disabled, the user
+          will no longer be able to log in.
+      disable_in_batch:
+        title: Disable
+        description: >-
+          Are you sure you want to disable the selected users? Once disabled,
+          these users will no longer be able to log in.
     filters:
       role:
         label: Role
@@ -1094,7 +1233,6 @@ core:
         roles: Roles
         bio: Bio
         creation_time: Creation time
-        identity_authentication: Identity authentication
         email_verified:
           tooltip: Verified
         email_not_verified:
@@ -1183,7 +1321,7 @@ core:
       detail: Detail
       notification-preferences: Notification Preferences
       pat: Personal Access Tokens
-      2fa: 2FA
+      authentication: Authentication
       devices: Devices
     actions:
       update_profile:
@@ -1198,13 +1336,6 @@ core:
         roles: Roles
         bio: Bio
         creation_time: Creation time
-        identity_authentication: Identity authentication
-      operations:
-        bind:
-          button: Bind
-        unbind:
-          button: Unbind
-          title: Unbind the login method for {display_name}
       email_not_set:
         description: >-
           Your email address has not been set yet. Click the button below to set
@@ -1217,6 +1348,14 @@ core:
         title: Verify email
       email_verified:
         tooltip: Verified
+    auth_providers:
+      title: Auth providers
+      operations:
+        bind:
+          button: Bind
+        unbind:
+          button: Unbind
+          title: Unbind the login method for {display_name}
     2fa:
       operations:
         enable:
@@ -1430,8 +1569,8 @@ core:
     fields:
       external_url: External url
       start_time: Start time
-      timezone: System Timezone
-      locale: System Locale
+      timezone: Operating system Timezone
+      locale: Operating system Locale
       version: Version
       build_time: Build time
       database: Database
@@ -1454,6 +1593,16 @@ core:
         The external access url detected is inconsistent with the current access
         url, which may cause some links to fail to redirect properly. Please
         check the external access url settings.
+    external_url_form:
+      operations:
+        save:
+          title: Modify external url
+          description: >-
+            Modifying the external access address requires restarting the Halo
+            service. It will automatically restart after the modification is
+            completed. Do you want to continue?
+      tips:
+        restarting: Modification completed, waiting for restart...
   backup:
     title: Backup and Restore
     tabs:
@@ -1638,22 +1787,18 @@ core:
         placeholder:
           options:
             placeholder: Enter / to select input type.
-        upload:
-          error: Upload failed
-          click_retry: Click to retry
-          loading: Loading
-          attachment:
-            title: Attachment Library
-          permalink:
-            title: Input Link
-            placeholder: Input link and press Enter to confirm
-          operations:
-            replace:
-              button: Replace
       toolbox:
         attachment: Attachment
         show_hide_sidebar: Show/Hide Sidebar
       title_placeholder: Please enter the title
+      cover:
+        options:
+          add: Add Cover
+          change: Change Cover
+          upload: Upload
+          attachment: Select from attachment library
+        toast:
+          upload_failed: "Failed to upload cover image: {message}"
     global_search:
       placeholder: Enter keywords to search
       no_results: No search results
@@ -1720,6 +1865,8 @@ core:
     content_cache:
       toast_recovered: Recovered unsaved content from cache
   formkit:
+    color:
+      placeholder: Select color
     select:
       no_data: No data
     category_select:
@@ -1760,6 +1907,22 @@ core:
       fullscreen:
         exit: Exit fullscreen
         enter: Enter fullscreen to edit
+    iconify:
+      placeholder: Select icon
+      tabs:
+        collections: Collections
+        search: Search
+      collection_search_placeholder: Search icon collections
+      search_placeholder: Search icons
+      no_results: No results found, please try again
+      option_size: Size
+      option_color: Color
+      copyright: Icon data from {url}
+    array:
+      empty_text: No items
+      image_tooltip: View image:{value}
+      item_modal:
+        title: Edit item
   common:
     buttons:
       save: Save
@@ -1804,6 +1967,7 @@ core:
       disable: Disable
       enable: Enable
       continue: Continue
+      retry: Retry
     radio:
       "yes": "Yes"
       "no": "No"
@@ -1877,12 +2041,17 @@ core:
       tip: Tip
       warning: Warning
       system_protection: System protection
+      all: All
+      detail: Detail
     tooltips:
       unpublished_content_tip: There is content that has been saved but not yet published.
       publishing: Publishing
       recovering: Recovering
     fields:
       post_count: "{count} Posts"
+    form:
+      validation:
+        slug_unique: The current slug already exists
   uc_post:
     creation_modal:
       title: Create post

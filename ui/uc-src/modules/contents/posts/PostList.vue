@@ -8,6 +8,7 @@ import {
   VButton,
   VCard,
   VEmpty,
+  VEntityContainer,
   VLoading,
   VPageHeader,
   VPagination,
@@ -103,12 +104,12 @@ const {
 <template>
   <VPageHeader :title="$t('core.uc_post.title')">
     <template #icon>
-      <IconBookRead class="mr-2 self-center" />
+      <IconBookRead />
     </template>
     <template #actions>
       <VButton :route="{ name: 'PostEditor' }" type="secondary">
         <template #icon>
-          <IconAddCircle class="h-full w-full" />
+          <IconAddCircle />
         </template>
         {{ $t("core.common.buttons.new") }}
       </VButton>
@@ -178,7 +179,7 @@ const {
                 type="secondary"
               >
                 <template #icon>
-                  <IconAddCircle class="h-full w-full" />
+                  <IconAddCircle />
                 </template>
                 {{ $t("core.common.buttons.new") }}
               </VButton>
@@ -187,14 +188,13 @@ const {
         </VEmpty>
       </Transition>
       <Transition v-else appear name="fade">
-        <ul
-          class="box-border h-full w-full divide-y divide-gray-100"
-          role="list"
-        >
-          <li v-for="post in posts.items" :key="post.post.metadata.name">
-            <PostListItem :post="post" />
-          </li>
-        </ul>
+        <VEntityContainer>
+          <PostListItem
+            v-for="post in posts.items"
+            :key="post.post.metadata.name"
+            :post="post"
+          />
+        </VEntityContainer>
       </Transition>
 
       <template #footer>

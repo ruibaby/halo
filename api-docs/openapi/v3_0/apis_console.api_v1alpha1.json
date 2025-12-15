@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Halo",
-    "version": "2.20.11-SNAPSHOT"
+    "version": "2.22.0-SNAPSHOT"
   },
   "servers": [
     {
@@ -441,17 +441,6 @@
         ]
       }
     },
-    "/apis/api.console.halo.run/v1alpha1/indices/post": {
-      "post": {
-        "deprecated": true,
-        "description": "Build or rebuild post indices for full text search. This method is deprecated, please use POST /indices/-/rebuild instead.",
-        "operationId": "BuildPostIndices",
-        "responses": {},
-        "tags": [
-          "IndicesV1alpha1Console"
-        ]
-      }
-    },
     "/apis/api.console.halo.run/v1alpha1/notifiers/{name}/sender-config": {
       "get": {
         "description": "Fetch sender config of notifier",
@@ -701,77 +690,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/Plugin"
-                }
-              }
-            },
-            "description": "default response"
-          }
-        },
-        "tags": [
-          "PluginV1alpha1Console"
-        ]
-      }
-    },
-    "/apis/api.console.halo.run/v1alpha1/plugins/{name}/config": {
-      "get": {
-        "description": "Fetch configMap of plugin by configured configMapName. it is deprecated since 2.20.0",
-        "operationId": "fetchPluginConfig",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConfigMap"
-                }
-              }
-            },
-            "description": "default response"
-          }
-        },
-        "tags": [
-          "PluginV1alpha1Console"
-        ]
-      },
-      "put": {
-        "deprecated": true,
-        "description": "Update the configMap of plugin setting, it is deprecated since 2.20.0",
-        "operationId": "updatePluginConfig",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ConfigMap"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConfigMap"
                 }
               }
             },
@@ -1546,7 +1464,7 @@
     },
     "/apis/api.console.halo.run/v1alpha1/posts/{name}/unpublish": {
       "put": {
-        "description": "Publish a post.",
+        "description": "UnPublish a post.",
         "operationId": "UnpublishPost",
         "parameters": [
           {
@@ -2408,78 +2326,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/Theme"
-                }
-              }
-            },
-            "description": "default response"
-          }
-        },
-        "tags": [
-          "ThemeV1alpha1Console"
-        ]
-      }
-    },
-    "/apis/api.console.halo.run/v1alpha1/themes/{name}/config": {
-      "get": {
-        "deprecated": true,
-        "description": "Fetch configMap of theme by configured configMapName. It is deprecated.",
-        "operationId": "fetchThemeConfig",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConfigMap"
-                }
-              }
-            },
-            "description": "default response"
-          }
-        },
-        "tags": [
-          "ThemeV1alpha1Console"
-        ]
-      },
-      "put": {
-        "deprecated": true,
-        "description": "Update the configMap of theme setting. It is deprecated.",
-        "operationId": "updateThemeConfig",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ConfigMap"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConfigMap"
                 }
               }
             },
@@ -3438,6 +3284,89 @@
           "UserV1alpha1Console"
         ]
       }
+    },
+    "/apis/console.api.storage.halo.run/v1alpha1/policies/{name}/configs/{group}": {
+      "get": {
+        "description": "Get policy config by group",
+        "operationId": "getPolicyConfigByGroup",
+        "parameters": [
+          {
+            "description": "Name of the policy",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Name of the group",
+            "in": "path",
+            "name": "group",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonNode"
+                }
+              }
+            },
+            "description": "default response"
+          }
+        },
+        "tags": [
+          "PolicyAlpha1Console"
+        ]
+      },
+      "put": {
+        "description": "Update policy config by group",
+        "operationId": "updatePolicyConfigByGroup",
+        "parameters": [
+          {
+            "description": "Name of the policy",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Name of the group",
+            "in": "path",
+            "name": "group",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonNode"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "PolicyAlpha1Console"
+        ]
+      }
     }
   },
   "components": {
@@ -3628,7 +3557,8 @@
           "spec": {
             "$ref": "#/components/schemas/AuthProviderSpec"
           }
-        }
+        },
+        "description": "Auth provider extension."
       },
       "AuthProviderSpec": {
         "required": [
@@ -3640,6 +3570,7 @@
         "properties": {
           "authType": {
             "type": "string",
+            "description": "Auth type: form or oauth2.",
             "enum": [
               "FORM",
               "OAUTH2"
@@ -3704,17 +3635,21 @@
         "type": "object",
         "properties": {
           "filename": {
-            "type": "string"
+            "type": "string",
+            "description": "Filename of backup file."
           },
           "lastModifiedTime": {
             "type": "string",
+            "description": "Last modified time of backup file.",
             "format": "date-time"
           },
           "size": {
             "type": "integer",
+            "description": "Size of backup file.",
             "format": "int64"
           }
-        }
+        },
+        "description": "Backup file."
       },
       "Category": {
         "required": [
@@ -3767,14 +3702,17 @@
             "type": "string"
           },
           "hideFromList": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "\u003cp\u003eWhether to hide the category from the category list.\u003c/p\u003e\n \u003cp\u003eWhen set to true, the category including its subcategories and related posts will\n not be displayed in the category list, but it can still be accessed by permalink.\u003c/p\u003e\n \u003cp\u003eLimitation: It only takes effect on the theme-side categorized list and it only\n allows to be set to true on the first level(root node) of categories.\u003c/p\u003e"
           },
           "postTemplate": {
             "maxLength": 255,
-            "type": "string"
+            "type": "string",
+            "description": "\u003cp\u003eUsed to specify the template for the posts associated with the category.\u003c/p\u003e\n \u003cp\u003eThe priority is not as high as that of the post.\u003c/p\u003e\n \u003cp\u003eIf the post also specifies a template, the post\u0027s template will prevail.\u003c/p\u003e"
           },
           "preventParentPostCascadeQuery": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "\u003cp\u003eif a category is queried for related posts, the default behavior is to\n query all posts under the category including its subcategories, but if this field is\n set to true, cascade query behavior will be terminated here.\u003c/p\u003e\n \u003cp\u003eFor example, if a category has subcategories A and B, and A has subcategories C and\n D and C marked this field as true, when querying posts under A category,all posts under A\n and B will be queried, but C and D will not be queried.\u003c/p\u003e"
           },
           "priority": {
             "type": "integer",
@@ -3799,10 +3737,12 @@
           },
           "postCount": {
             "type": "integer",
+            "description": "包括当前和其下所有层级的文章数量 (depth\u003dmax).",
             "format": "int32"
           },
           "visiblePostCount": {
             "type": "integer",
+            "description": "包括当前和其下所有层级的已发布且公开的文章数量 (depth\u003dmax).",
             "format": "int32"
           }
         }
@@ -3868,18 +3808,23 @@
         "type": "object",
         "properties": {
           "avatar": {
-            "type": "string"
+            "type": "string",
+            "description": "avatar for comment owner"
           },
           "displayName": {
-            "type": "string"
+            "type": "string",
+            "description": "display name for comment owner"
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "email for comment owner"
           },
           "website": {
-            "type": "string"
+            "type": "string",
+            "description": "website for comment owner"
           }
-        }
+        },
+        "description": "\u003cp\u003eThe creator info of the comment.\u003c/p\u003e\n This {@link CommentEmailOwner CommentEmailOwner} is only applicable to the user who is allowed to comment\n without logging in."
       },
       "CommentOwner": {
         "required": [
@@ -3923,6 +3868,10 @@
             "minLength": 1,
             "type": "string"
           },
+          "hidden": {
+            "type": "boolean",
+            "default": false
+          },
           "owner": {
             "$ref": "#/components/schemas/CommentEmailOwner"
           },
@@ -3933,7 +3882,8 @@
           "subjectRef": {
             "$ref": "#/components/schemas/Ref"
           }
-        }
+        },
+        "description": "Request parameter object for {@link Comment Comment}."
       },
       "CommentSpec": {
         "required": [
@@ -3967,6 +3917,7 @@
           },
           "creationTime": {
             "type": "string",
+            "description": "The user-defined creation time default is \u003ccode\u003emetadata.creationTimestamp\u003c/code\u003e.",
             "format": "date-time"
           },
           "hidden": {
@@ -4011,7 +3962,8 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "description": "comment stats value object."
       },
       "CommentStatus": {
         "type": "object",
@@ -4051,19 +4003,23 @@
         "properties": {
           "lastTransitionTime": {
             "type": "string",
+            "description": "Last time the condition transitioned from one status to another.",
             "format": "date-time"
           },
           "message": {
             "maxLength": 32768,
-            "type": "string"
+            "type": "string",
+            "description": "Human-readable message indicating details about last transition.\n This may be an empty string."
           },
           "reason": {
             "maxLength": 1024,
             "pattern": "^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$",
-            "type": "string"
+            "type": "string",
+            "description": "Unique, one-word, CamelCase reason for the condition\u0027s last transition."
           },
           "status": {
             "type": "string",
+            "description": "Status is the status of the condition. Can be True, False, Unknown.",
             "enum": [
               "TRUE",
               "FALSE",
@@ -4073,9 +4029,11 @@
           "type": {
             "maxLength": 316,
             "pattern": "^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$",
-            "type": "string"
+            "type": "string",
+            "description": "type of condition in CamelCase or in foo.example.com/CamelCase.\n example: Ready, Initialized.\n maxLength: 316."
           }
-        }
+        },
+        "description": "EqualsAndHashCode 排除了lastTransitionTime否则失败时，lastTransitionTime 会被更新\n 导致 equals 为 false，一直被加入队列."
       },
       "ConfigMap": {
         "required": [
@@ -4100,7 +4058,8 @@
           "metadata": {
             "$ref": "#/components/schemas/Metadata"
           }
-        }
+        },
+        "description": "\u003cp\u003eConfigMap holds configuration data to consume.\u003c/p\u003e"
       },
       "ConfigMapRef": {
         "required": [
@@ -4115,6 +4074,11 @@
         }
       },
       "Content": {
+        "required": [
+          "content",
+          "raw",
+          "rawType"
+        ],
         "type": "object",
         "properties": {
           "content": {
@@ -4129,6 +4093,11 @@
         }
       },
       "ContentUpdateParam": {
+        "required": [
+          "content",
+          "raw",
+          "rawType"
+        ],
         "type": "object",
         "properties": {
           "content": {
@@ -4175,7 +4144,8 @@
           "name": {
             "type": "string"
           }
-        }
+        },
+        "description": "Contributor from user."
       },
       "CopyOperation": {
         "required": [
@@ -4276,27 +4246,27 @@
         "properties": {
           "approvedComments": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "comments": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "posts": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "upvotes": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "users": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "visits": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           }
         }
       },
@@ -4322,7 +4292,8 @@
         "type": "object",
         "properties": {
           "displayName": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets email display name."
           },
           "enable": {
             "type": "boolean"
@@ -4341,7 +4312,8 @@
             "format": "int32"
           },
           "sender": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets email sender address."
           },
           "username": {
             "type": "string"
@@ -4355,6 +4327,7 @@
         "type": "object",
         "properties": {
           "email": {
+            "minLength": 1,
             "type": "string"
           }
         }
@@ -4391,7 +4364,8 @@
           "metadata": {
             "$ref": "#/components/schemas/Metadata"
           }
-        }
+        },
+        "description": "Extension is an interface which represents an Extension. It contains setters and getters of\n GroupVersionKind and Metadata."
       },
       "GrantRequest": {
         "type": "object",
@@ -4450,6 +4424,9 @@
           }
         }
       },
+      "JsonNode": {
+        "type": "object"
+      },
       "JsonPatch": {
         "minItems": 1,
         "uniqueItems": true,
@@ -4487,7 +4464,8 @@
           "url": {
             "type": "string"
           }
-        }
+        },
+        "description": "Common data objects for license."
       },
       "ListedAuthProvider": {
         "required": [
@@ -4546,7 +4524,8 @@
           "website": {
             "type": "string"
           }
-        }
+        },
+        "description": "A listed value object for {@link run.halo.app.core.extension.AuthProvider run.halo.app.core.extension.AuthProvider}."
       },
       "ListedComment": {
         "required": [
@@ -4944,33 +4923,6 @@
         },
         "description": "A chunk of items."
       },
-      "LoginHistory": {
-        "required": [
-          "loginAt",
-          "sourceIp",
-          "successful",
-          "userAgent"
-        ],
-        "type": "object",
-        "properties": {
-          "loginAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "reason": {
-            "type": "string"
-          },
-          "sourceIp": {
-            "type": "string"
-          },
-          "successful": {
-            "type": "boolean"
-          },
-          "userAgent": {
-            "type": "string"
-          }
-        }
-      },
       "Metadata": {
         "required": [
           "name"
@@ -4981,15 +4933,18 @@
             "type": "object",
             "additionalProperties": {
               "type": "string"
-            }
+            },
+            "description": "Annotations are like key-value format."
           },
           "creationTimestamp": {
             "type": "string",
+            "description": "Creation timestamp of the Extension.",
             "format": "date-time",
             "nullable": true
           },
           "deletionTimestamp": {
             "type": "string",
+            "description": "Deletion timestamp of the Extension.",
             "format": "date-time",
             "nullable": true
           },
@@ -5010,7 +4965,8 @@
             "type": "object",
             "additionalProperties": {
               "type": "string"
-            }
+            },
+            "description": "Labels are like key-value format."
           },
           "name": {
             "type": "string",
@@ -5018,10 +4974,12 @@
           },
           "version": {
             "type": "integer",
+            "description": "Current version of the Extension. It will be bumped up every update.",
             "format": "int64",
             "nullable": true
           }
-        }
+        },
+        "description": "Metadata of Extension."
       },
       "MoveOperation": {
         "required": [
@@ -5069,7 +5027,8 @@
           "name": {
             "type": "string"
           }
-        }
+        },
+        "description": "Comment owner info."
       },
       "Plugin": {
         "required": [
@@ -5095,7 +5054,8 @@
           "status": {
             "$ref": "#/components/schemas/PluginStatus"
           }
-        }
+        },
+        "description": "A custom resource for Plugin."
       },
       "PluginAuthor": {
         "required": [
@@ -5240,10 +5200,6 @@
           "logo": {
             "type": "string"
           },
-          "pluginClass": {
-            "type": "string",
-            "deprecated": true
-          },
           "pluginDependencies": {
             "type": "object",
             "additionalProperties": {
@@ -5254,14 +5210,16 @@
             "type": "string"
           },
           "requires": {
-            "type": "string"
+            "type": "string",
+            "description": "SemVer format."
           },
           "settingName": {
             "type": "string"
           },
           "version": {
             "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
-            "type": "string"
+            "type": "string",
+            "description": "plugin version."
           }
         }
       },
@@ -5331,35 +5289,41 @@
         "properties": {
           "apiGroups": {
             "type": "array",
+            "description": "APIGroups is the name of the APIGroup that contains the resources.\n If multiple API groups are specified, any action requested against one of the enumerated\n resources in any API group will be allowed.",
             "items": {
               "type": "string"
             }
           },
           "nonResourceURLs": {
             "type": "array",
+            "description": "NonResourceURLs is a set of partial urls that a user should have access to.\n *s are allowed, but only as the full, final step in the path\n If an action is not a resource API request, then the URL is split on \u0027/\u0027 and is checked\n against the NonResourceURLs to look for a match.\n Since non-resource URLs are not namespaced, this field is only applicable for\n ClusterRoles referenced from a ClusterRoleBinding.\n Rules can either apply to API resources (such as \"pods\" or \"secrets\") or non-resource\n URL paths (such as \"/api\"),  but not both.",
             "items": {
               "type": "string"
             }
           },
           "resourceNames": {
             "type": "array",
+            "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set\n means that everything is allowed.",
             "items": {
               "type": "string"
             }
           },
           "resources": {
             "type": "array",
+            "description": "Resources is a list of resources this rule applies to.  \u0027*\u0027 represents all resources in\n the specified apiGroups.\n \u0027*\u0026#47;foo\u0027 represents the subresource \u0027foo\u0027 for all resources in the specified\n apiGroups.",
             "items": {
               "type": "string"
             }
           },
           "verbs": {
             "type": "array",
+            "description": "about who the rule applies to or which namespace the rule applies to.",
             "items": {
               "type": "string"
             }
           }
-        }
+        },
+        "description": "PolicyRule holds information that describes a policy rule, but does not contain information\n about whom the rule applies to or which namespace the rule applies to."
       },
       "Post": {
         "required": [
@@ -5385,10 +5349,12 @@
           "status": {
             "$ref": "#/components/schemas/PostStatus"
           }
-        }
+        },
+        "description": "\u003cp\u003ePost extension.\u003c/p\u003e"
       },
       "PostRequest": {
         "required": [
+          "content",
           "post"
         ],
         "type": "object",
@@ -5399,7 +5365,8 @@
           "post": {
             "$ref": "#/components/schemas/Post"
           }
-        }
+        },
+        "description": "Post and content data for creating and updating post."
       },
       "PostSpec": {
         "required": [
@@ -5471,7 +5438,8 @@
             "format": "date-time"
           },
           "releaseSnapshot": {
-            "type": "string"
+            "type": "string",
+            "description": "文章引用到的已发布的内容，用于主题端显示."
           },
           "slug": {
             "minLength": 1,
@@ -5492,12 +5460,12 @@
           },
           "visible": {
             "type": "string",
-            "default": "PUBLIC",
             "enum": [
               "PUBLIC",
               "INTERNAL",
               "PRIVATE"
-            ]
+            ],
+            "default": "PUBLIC"
           }
         }
       },
@@ -5529,7 +5497,8 @@
             "type": "string"
           },
           "hideFromList": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "see {@link Category.CategorySpec#isHideFromList Category.CategorySpec#isHideFromList()}."
           },
           "inProgress": {
             "type": "boolean"
@@ -5663,6 +5632,10 @@
             "minLength": 1,
             "type": "string"
           },
+          "hidden": {
+            "type": "boolean",
+            "default": false
+          },
           "owner": {
             "$ref": "#/components/schemas/CommentEmailOwner"
           },
@@ -5673,7 +5646,8 @@
             "minLength": 1,
             "type": "string"
           }
-        }
+        },
+        "description": "A request parameter object for {@link Reply Reply}."
       },
       "ReplySpec": {
         "required": [
@@ -5711,6 +5685,7 @@
           },
           "creationTime": {
             "type": "string",
+            "description": "The user-defined creation time default is \u003ccode\u003emetadata.creationTimestamp\u003c/code\u003e.",
             "format": "date-time"
           },
           "hidden": {
@@ -5845,7 +5820,8 @@
           "spec": {
             "$ref": "#/components/schemas/SettingSpec"
           }
-        }
+        },
+        "description": "{@link Setting Setting} is a custom extension to generate forms based on configuration."
       },
       "SettingForm": {
         "minLength": 1,
@@ -5925,7 +5901,8 @@
           "status": {
             "$ref": "#/components/schemas/SinglePageStatus"
           }
-        }
+        },
+        "description": "\u003cp\u003eSingle page extension.\u003c/p\u003e"
       },
       "SinglePageRequest": {
         "required": [
@@ -5940,7 +5917,8 @@
           "page": {
             "$ref": "#/components/schemas/SinglePage"
           }
-        }
+        },
+        "description": "A request parameter for {@link SinglePage SinglePage}."
       },
       "SinglePageSpec": {
         "required": [
@@ -6006,7 +5984,8 @@
             "format": "date-time"
           },
           "releaseSnapshot": {
-            "type": "string"
+            "type": "string",
+            "description": "引用到的已发布的内容，用于主题端显示."
           },
           "slug": {
             "minLength": 1,
@@ -6021,12 +6000,12 @@
           },
           "visible": {
             "type": "string",
-            "default": "PUBLIC",
             "enum": [
               "PUBLIC",
               "INTERNAL",
               "PRIVATE"
-            ]
+            ],
+            "default": "PUBLIC"
           }
         }
       },
@@ -6058,7 +6037,8 @@
             "type": "string"
           },
           "hideFromList": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "see {@link Category.CategorySpec#isHideFromList Category.CategorySpec#isHideFromList()}."
           },
           "inProgress": {
             "type": "boolean"
@@ -6098,7 +6078,8 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "description": "Stats value object."
       },
       "Tag": {
         "required": [
@@ -6195,7 +6176,8 @@
         "properties": {
           "color": {
             "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
-            "type": "string"
+            "type": "string",
+            "description": "Color regex explanation.\n \u003cpre\u003e\n ^                 # start of the line\n #                 # start with a number sign `#`\n (                 # start of (group 1)\n   [a-fA-F0-9]{6}  # support z-f, A-F and 0-9, with a length of 6\n   |               # or\n   [a-fA-F0-9]{3}  # support z-f, A-F and 0-9, with a length of 3\n )                 # end of (group 1)\n $                 # end of the line\n \u003c/pre\u003e"
           },
           "cover": {
             "type": "string"
@@ -6251,7 +6233,8 @@
           "screenshot": {
             "type": "string"
           }
-        }
+        },
+        "description": "Type used to describe custom template page."
       },
       "TestOperation": {
         "required": [
@@ -6302,7 +6285,8 @@
           "status": {
             "$ref": "#/components/schemas/ThemeStatus"
           }
-        }
+        },
+        "description": "\u003cp\u003eTheme extension.\u003c/p\u003e"
       },
       "ThemeInstallRequest": {
         "type": "object"
@@ -6369,8 +6353,7 @@
       "ThemeSpec": {
         "required": [
           "author",
-          "displayName",
-          "version"
+          "displayName"
         ],
         "type": "object",
         "properties": {
@@ -6408,11 +6391,6 @@
           "repo": {
             "type": "string"
           },
-          "require": {
-            "type": "string",
-            "description": "Deprecated, use `requires` instead.",
-            "deprecated": true
-          },
           "requires": {
             "type": "string"
           },
@@ -6421,10 +6399,6 @@
           },
           "version": {
             "type": "string"
-          },
-          "website": {
-            "type": "string",
-            "deprecated": true
           }
         }
       },
@@ -6487,13 +6461,16 @@
         "type": "object",
         "properties": {
           "filename": {
-            "type": "string"
+            "type": "string",
+            "description": "Custom file name"
           },
           "groupName": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the group to which the attachment belongs"
           },
           "policyName": {
-            "type": "string"
+            "type": "string",
+            "description": "Storage policy name"
           },
           "url": {
             "type": "string",
@@ -6525,7 +6502,8 @@
           "status": {
             "$ref": "#/components/schemas/UserStatus"
           }
-        }
+        },
+        "description": "The extension represents user details of Halo."
       },
       "UserEndpoint.ListedUserList": {
         "required": [
@@ -6664,16 +6642,6 @@
       "UserStatus": {
         "type": "object",
         "properties": {
-          "lastLoginAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "loginHistories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LoginHistory"
-            }
-          },
           "permalink": {
             "type": "string"
           }

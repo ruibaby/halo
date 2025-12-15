@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { useFetchRole } from "@/composables/use-role";
 import { rbacAnnotations } from "@/constants/annotations";
-import { useUserStore } from "@/stores/user";
-import { usePermission } from "@/utils/permission";
 import type { ListedUser, User } from "@halo-dev/api-client";
 import { consoleApiClient, coreApiClient } from "@halo-dev/api-client";
 import {
@@ -16,19 +14,21 @@ import {
   VButton,
   VCard,
   VEmpty,
+  VEntityContainer,
   VLoading,
   VPageHeader,
   VPagination,
   VSpace,
 } from "@halo-dev/components";
+import { stores, utils } from "@halo-dev/ui-shared";
 import { useQuery } from "@tanstack/vue-query";
 import { useRouteQuery } from "@vueuse/router";
+import { chunk } from "es-toolkit";
 import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import UserCreationModal from "./components/UserCreationModal.vue";
 import UserListItem from "./components/UserListItem.vue";
 
-const { currentUserHasPermission } = usePermission();
 const { t } = useI18n();
 
 const checkedAll = ref(false);
@@ -37,7 +37,7 @@ const creationModal = ref<boolean>(false);
 const selectedUserNames = ref<string[]>([]);
 const keyword = useRouteQuery<string>("keyword", "");
 
-const userStore = useUserStore();
+const { currentUser } = stores.currentUser();
 
 const ANONYMOUSUSER_NAME = "anonymousUser";
 const DELETEDUSER_NAME = "ghost";
@@ -120,7 +120,7 @@ const handleDeleteInBatch = async () => {
     cancelText: t("core.common.buttons.cancel"),
     onConfirm: async () => {
       const userNamesToDelete = selectedUserNames.value.filter(
-        (name) => name != userStore.currentUser?.metadata.name
+        (name) => name != currentUser?.user.metadata.name
       );
       await Promise.all(
         userNamesToDelete.map((name) => {
@@ -136,11 +136,62 @@ const handleDeleteInBatch = async () => {
   });
 };
 
+function handleEnableOrDisableInBatch(operation: "enable" | "disable") {
+  const operations = {
+    enable: {
+      title: t("core.user.operations.enable_in_batch.title"),
+      description: t("core.user.operations.enable_in_batch.description"),
+      request: (name: string) =>
+        consoleApiClient.user.enableUser({ username: name }),
+      condition: (user: User) => user.spec.disabled,
+      message: t("core.common.toast.enable_success"),
+    },
+    disable: {
+      title: t("core.user.operations.disable_in_batch.title"),
+      description: t("core.user.operations.disable_in_batch.description"),
+      request: (name: string) =>
+        consoleApiClient.user.disableUser({ username: name }),
+      condition: (user: User) => !user.spec.disabled,
+      message: t("core.common.toast.disable_success"),
+    },
+  };
+
+  const operationConfig = operations[operation];
+
+  Dialog.warning({
+    title: operationConfig.title,
+    description: operationConfig.description,
+    confirmType: "danger",
+    confirmText: t("core.common.buttons.confirm"),
+    cancelText: t("core.common.buttons.cancel"),
+    onConfirm: async () => {
+      const filteredUserNames = selectedUserNames.value.filter((name) => {
+        if (name === currentUser?.user.metadata.name) return false;
+        const user = users.value?.find((u) => u.user.metadata.name === name);
+        return user && operationConfig.condition(user.user);
+      });
+
+      const chunks = chunk(filteredUserNames, 5);
+
+      for (const chunk of chunks) {
+        await Promise.all(chunk.map((name) => operationConfig.request(name)));
+      }
+
+      await refetch();
+
+      selectedUserNames.value.length = 0;
+      checkedAll.value = false;
+
+      Toast.success(operationConfig.message);
+    },
+  });
+}
+
 watch(selectedUserNames, (newValue) => {
   checkedAll.value =
     newValue.length ===
     users.value?.filter(
-      (user) => user.user.metadata.name !== userStore.currentUser?.metadata.name
+      (user) => user.user.metadata.name !== currentUser?.user.metadata.name
     ).length;
 });
 
@@ -155,9 +206,7 @@ const handleCheckAllChange = (e: Event) => {
     selectedUserNames.value =
       users.value
         ?.filter((user) => {
-          return (
-            user.user.metadata.name !== userStore.currentUser?.metadata.name
-          );
+          return user.user.metadata.name !== currentUser?.user.metadata.name;
         })
         .map((user) => {
           return user.user.metadata.name;
@@ -186,40 +235,38 @@ function onCreationModalClose() {
 
   <VPageHeader :title="$t('core.user.title')">
     <template #icon>
-      <IconUserSettings class="mr-2 self-center" />
+      <IconUserSettings />
     </template>
     <template #actions>
-      <VSpace>
-        <VButton
-          v-permission="['system:roles:view']"
-          :route="{ name: 'Roles' }"
-          size="sm"
-          type="default"
-        >
+      <VButton
+        v-permission="['system:roles:view']"
+        :route="{ name: 'Roles' }"
+        size="sm"
+        type="default"
+      >
+        <template #icon>
+          <IconShieldUser />
+        </template>
+        {{ $t("core.user.actions.roles") }}
+      </VButton>
+      <HasPermission :permissions="['*']">
+        <VButton :route="{ name: 'AuthProviders' }" size="sm" type="default">
           <template #icon>
-            <IconShieldUser class="h-full w-full" />
+            <IconLockPasswordLine />
           </template>
-          {{ $t("core.user.actions.roles") }}
+          {{ $t("core.user.actions.identity_authentication") }}
         </VButton>
-        <HasPermission :permissions="['*']">
-          <VButton :route="{ name: 'AuthProviders' }" size="sm" type="default">
-            <template #icon>
-              <IconLockPasswordLine class="h-full w-full" />
-            </template>
-            {{ $t("core.user.actions.identity_authentication") }}
-          </VButton>
-        </HasPermission>
-        <VButton
-          v-permission="['system:users:manage']"
-          type="secondary"
-          @click="creationModal = true"
-        >
-          <template #icon>
-            <IconAddCircle class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.new") }}
-        </VButton>
-      </VSpace>
+      </HasPermission>
+      <VButton
+        v-permission="['system:users:manage']"
+        type="secondary"
+        @click="creationModal = true"
+      >
+        <template #icon>
+          <IconAddCircle />
+        </template>
+        {{ $t("core.common.buttons.new") }}
+      </VButton>
     </template>
   </VPageHeader>
 
@@ -243,6 +290,12 @@ function onCreationModalClose() {
             <div class="flex w-full flex-1 items-center sm:w-auto">
               <SearchInput v-if="!selectedUserNames.length" v-model="keyword" />
               <VSpace v-else>
+                <VButton @click="handleEnableOrDisableInBatch('disable')">
+                  {{ $t("core.common.buttons.disable") }}
+                </VButton>
+                <VButton @click="handleEnableOrDisableInBatch('enable')">
+                  {{ $t("core.common.buttons.enable") }}
+                </VButton>
                 <VButton type="danger" @click="handleDeleteInBatch">
                   {{ $t("core.common.buttons.delete") }}
                 </VButton>
@@ -325,7 +378,7 @@ function onCreationModalClose() {
                 @click="creationModal = true"
               >
                 <template #icon>
-                  <IconAddCircle class="h-full w-full" />
+                  <IconAddCircle />
                 </template>
                 {{ $t("core.common.buttons.new") }}
               </VButton>
@@ -335,30 +388,29 @@ function onCreationModalClose() {
       </Transition>
 
       <Transition v-else appear name="fade">
-        <ul
-          class="box-border h-full w-full divide-y divide-gray-100"
-          role="list"
-        >
-          <li v-for="(user, index) in users" :key="index">
-            <UserListItem :user="user" :is-selected="checkSelection(user.user)">
-              <template
-                v-if="currentUserHasPermission(['system:users:manage'])"
-                #checkbox
-              >
-                <input
-                  v-model="selectedUserNames"
-                  :value="user.user.metadata.name"
-                  name="user-checkbox"
-                  type="checkbox"
-                  :disabled="
-                    user.user.metadata.name ===
-                    userStore.currentUser?.metadata.name
-                  "
-                />
-              </template>
-            </UserListItem>
-          </li>
-        </ul>
+        <VEntityContainer>
+          <UserListItem
+            v-for="user in users"
+            :key="user.user.metadata.name"
+            :user="user"
+            :is-selected="checkSelection(user.user)"
+          >
+            <template
+              v-if="utils.permission.has(['system:users:manage'])"
+              #checkbox
+            >
+              <input
+                v-model="selectedUserNames"
+                :value="user.user.metadata.name"
+                name="user-checkbox"
+                type="checkbox"
+                :disabled="
+                  user.user.metadata.name === currentUser?.user.metadata.name
+                "
+              />
+            </template>
+          </UserListItem>
+        </VEntityContainer>
       </Transition>
 
       <template #footer>

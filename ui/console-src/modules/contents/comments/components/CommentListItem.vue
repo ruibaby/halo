@@ -1,53 +1,37 @@
 <script lang="ts" setup>
 import EntityDropdownItems from "@/components/entity/EntityDropdownItems.vue";
-import { usePluginModuleStore } from "@/stores/plugin";
-import { formatDatetime } from "@/utils/date";
-import { usePermission } from "@/utils/permission";
 import { useOperationItemExtensionPoint } from "@console/composables/use-operation-extension-points";
-import type {
-  Extension,
-  ListedComment,
-  ListedReply,
-  Post,
-  SinglePage,
-} from "@halo-dev/api-client";
+import type { ListedComment, ListedReply } from "@halo-dev/api-client";
 import { consoleApiClient, coreApiClient } from "@halo-dev/api-client";
 import {
   Dialog,
   IconAddCircle,
   IconExternalLinkLine,
   Toast,
-  VAvatar,
   VButton,
+  VDropdownDivider,
   VDropdownItem,
   VEmpty,
   VEntity,
+  VEntityContainer,
   VEntityField,
   VLoading,
   VSpace,
   VStatusDot,
   VTag,
 } from "@halo-dev/components";
-import type {
-  CommentSubjectRefProvider,
-  CommentSubjectRefResult,
-  OperationItem,
-} from "@halo-dev/console-shared";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import {
-  computed,
-  markRaw,
-  onMounted,
-  provide,
-  ref,
-  type Ref,
-  toRefs,
-} from "vue";
+import { utils, type OperationItem } from "@halo-dev/ui-shared";
+import { useQuery, useQueryClient } from "@tanstack/vue-query";
+import { computed, markRaw, provide, ref, toRefs, type Ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useCommentLastReadTimeMutate } from "../composables/use-comment-last-readtime-mutate";
+import { useContentProviderExtensionPoint } from "../composables/use-content-provider-extension-point";
+import { useSubjectRef } from "../composables/use-subject-ref";
+import CommentDetailModal from "./CommentDetailModal.vue";
+import OwnerButton from "./OwnerButton.vue";
 import ReplyCreationModal from "./ReplyCreationModal.vue";
 import ReplyListItem from "./ReplyListItem.vue";
 
-const { currentUserHasPermission } = usePermission();
 const { t } = useI18n();
 const queryClient = useQueryClient();
 
@@ -66,8 +50,16 @@ const { comment } = toRefs(props);
 const hoveredReply = ref<ListedReply>();
 const showReplies = ref(false);
 const replyModal = ref(false);
+const detailModalVisible = ref(false);
 
 provide<Ref<ListedReply | undefined>>("hoveredReply", hoveredReply);
+
+const creationTime = computed(() => {
+  return (
+    props.comment?.comment.spec.creationTime ||
+    props.comment?.comment.metadata.creationTimestamp
+  );
+});
 
 const handleDelete = async () => {
   Dialog.warning({
@@ -86,7 +78,7 @@ const handleDelete = async () => {
       } catch (error) {
         console.error("Failed to delete comment", error);
       } finally {
-        queryClient.invalidateQueries({ queryKey: ["comments"] });
+        queryClient.invalidateQueries({ queryKey: ["core:comments"] });
       }
     },
   });
@@ -102,25 +94,30 @@ const handleApproveReplyInBatch = async () => {
         const repliesToUpdate = replies.value?.filter((reply) => {
           return !reply.reply.spec.approved;
         });
-        const promises = repliesToUpdate?.map((reply) => {
-          return coreApiClient.content.reply.patchReply({
-            name: reply.reply.metadata.name,
-            jsonPatchInner: [
-              {
-                op: "add",
-                path: "/spec/approved",
-                value: true,
-              },
-              {
-                op: "add",
-                path: "/spec/approvedTime",
-                // TODO: 暂时由前端设置发布时间。see https://github.com/halo-dev/halo/pull/2746
-                value: new Date().toISOString(),
-              },
-            ],
-          });
-        });
-        await Promise.all(promises || []);
+
+        if (!repliesToUpdate?.length) {
+          return;
+        }
+
+        await Promise.all(
+          repliesToUpdate?.map((reply) => {
+            return coreApiClient.content.reply.patchReply({
+              name: reply.reply.metadata.name,
+              jsonPatchInner: [
+                {
+                  op: "add",
+                  path: "/spec/approved",
+                  value: true,
+                },
+                {
+                  op: "add",
+                  path: "/spec/approvedTime",
+                  value: new Date().toISOString(),
+                },
+              ],
+            });
+          })
+        );
 
         Toast.success(t("core.common.toast.operation_success"));
       } catch (e) {
@@ -132,32 +129,27 @@ const handleApproveReplyInBatch = async () => {
   });
 };
 
-const handleApprove = async () => {
-  try {
-    await coreApiClient.content.comment.patchComment({
-      name: props.comment.comment.metadata.name,
-      jsonPatchInner: [
-        {
-          op: "add",
-          path: "/spec/approved",
-          value: true,
-        },
-        {
-          op: "add",
-          path: "/spec/approvedTime",
-          // TODO: 暂时由前端设置发布时间。see https://github.com/halo-dev/halo/pull/2746
-          value: new Date().toISOString(),
-        },
-      ],
-    });
+async function handleCancelApprove() {
+  await coreApiClient.content.comment.patchComment({
+    name: props.comment.comment.metadata.name,
+    jsonPatchInner: [
+      {
+        op: "add",
+        path: "/spec/approved",
+        value: false,
+      },
+      {
+        op: "add",
+        path: "/spec/approvedTime",
+        value: "",
+      },
+    ],
+  });
 
-    Toast.success(t("core.common.toast.operation_success"));
-  } catch (error) {
-    console.error("Failed to approve comment", error);
-  } finally {
-    queryClient.invalidateQueries({ queryKey: ["comments"] });
-  }
-};
+  Toast.success(t("core.common.toast.operation_success"));
+
+  queryClient.invalidateQueries({ queryKey: ["core:comments"] });
+}
 
 const {
   data: replies,
@@ -165,7 +157,7 @@ const {
   refetch,
 } = useQuery<ListedReply[]>({
   queryKey: [
-    "comment-replies",
+    "core:comment-replies",
     props.comment.comment.metadata.name,
     showReplies,
   ],
@@ -178,154 +170,82 @@ const {
     return data.items;
   },
   refetchInterval(data) {
-    const deletingReplies = data?.filter(
+    const hasDeletingReplies = data?.some(
       (reply) => !!reply.reply.metadata.deletionTimestamp
     );
-    return deletingReplies?.length ? 1000 : false;
+    return hasDeletingReplies ? 1000 : false;
   },
   enabled: computed(() => showReplies.value),
 });
 
-const { mutateAsync: updateCommentLastReadTimeMutate } = useMutation({
-  mutationKey: ["update-comment-last-read-time"],
-  mutationFn: async () => {
-    return coreApiClient.content.comment.patchComment(
-      {
-        name: props.comment.comment.metadata.name,
-        jsonPatchInner: [
-          {
-            op: "add",
-            path: "/spec/lastReadTime",
-            value: new Date().toISOString(),
-          },
-        ],
-      },
-      {
-        mute: true,
-      }
-    );
-  },
-  retry: 3,
-});
+const { mutate: updateCommentLastReadTimeMutate } =
+  useCommentLastReadTimeMutate(props.comment);
 
 const handleToggleShowReplies = async () => {
   showReplies.value = !showReplies.value;
 
-  if (props.comment.comment.status?.unreadReplyCount) {
-    await updateCommentLastReadTimeMutate();
+  if (props.comment.comment.status?.unreadReplyCount && showReplies.value) {
+    updateCommentLastReadTimeMutate();
   }
-
-  queryClient.invalidateQueries({ queryKey: ["comments"] });
 };
 
 const onReplyCreationModalClose = () => {
-  queryClient.invalidateQueries({ queryKey: ["comments"] });
-
   if (showReplies.value) {
     refetch();
   }
 
+  queryClient.invalidateQueries({ queryKey: ["core:comments"] });
+  updateCommentLastReadTimeMutate();
   replyModal.value = false;
+  detailModalVisible.value = false;
 };
 
-// Subject ref processing
-const SubjectRefProviders = ref<CommentSubjectRefProvider[]>([
-  {
-    kind: "Post",
-    group: "content.halo.run",
-    resolve: (subject: Extension): CommentSubjectRefResult => {
-      const post = subject as Post;
-      return {
-        label: t("core.comment.subject_refs.post"),
-        title: post.spec.title,
-        externalUrl: post.status?.permalink,
-        route: {
-          name: "PostEditor",
-          query: {
-            name: post.metadata.name,
-          },
-        },
-      };
-    },
-  },
-  {
-    kind: "SinglePage",
-    group: "content.halo.run",
-    resolve: (subject: Extension): CommentSubjectRefResult => {
-      const singlePage = subject as SinglePage;
-      return {
-        label: t("core.comment.subject_refs.page"),
-        title: singlePage.spec.title,
-        externalUrl: singlePage.status?.permalink,
-        route: {
-          name: "SinglePageEditor",
-          query: {
-            name: singlePage.metadata.name,
-          },
-        },
-      };
-    },
-  },
-]);
+const { subjectRefResult } = useSubjectRef(props.comment);
 
-const { pluginModules } = usePluginModuleStore();
-
-onMounted(() => {
-  for (const pluginModule of pluginModules) {
-    const callbackFunction =
-      pluginModule?.extensionPoints?.["comment:subject-ref:create"];
-
-    if (typeof callbackFunction !== "function") {
-      continue;
-    }
-
-    const providers = callbackFunction();
-
-    SubjectRefProviders.value.push(...providers);
-  }
-});
-
-const subjectRefResult = computed(() => {
-  const { subject } = props.comment;
-  if (!subject) {
-    return {
-      label: t("core.comment.subject_refs.unknown"),
-      title: t("core.comment.subject_refs.unknown"),
-    };
-  }
-  const subjectRef = SubjectRefProviders.value.find(
-    (provider) =>
-      provider.kind === subject.kind &&
-      subject.apiVersion.startsWith(provider.group)
-  );
-  if (!subjectRef) {
-    return {
-      label: t("core.comment.subject_refs.unknown"),
-      title: t("core.comment.subject_refs.unknown"),
-    };
-  }
-  return subjectRef.resolve(subject);
-});
-
-const { operationItems } = useOperationItemExtensionPoint<ListedComment>(
+const { data: operationItems } = useOperationItemExtensionPoint<ListedComment>(
   "comment:list-item:operation:create",
   comment,
   computed((): OperationItem<ListedComment>[] => [
     {
       priority: 0,
       component: markRaw(VDropdownItem),
-      label: t("core.comment.operations.approve_comment_in_batch.button"),
-      action: handleApprove,
+      label: t("core.comment.operations.review.button"),
+      action: () => {
+        detailModalVisible.value = true;
+      },
       hidden: props.comment?.comment.spec.approved,
     },
     {
       priority: 10,
       component: markRaw(VDropdownItem),
+      label: t("core.common.text.detail"),
+      hidden: !props.comment?.comment.spec.approved,
+      action: () => {
+        detailModalVisible.value = true;
+      },
+    },
+    {
+      priority: 20,
+      component: markRaw(VDropdownItem),
       label: t("core.comment.operations.approve_applies_in_batch.button"),
       action: handleApproveReplyInBatch,
     },
     {
-      priority: 20,
+      priority: 30,
+      component: markRaw(VDropdownDivider),
+    },
+    {
+      priority: 40,
+      component: markRaw(VDropdownItem),
+      props: {
+        type: "danger",
+      },
+      label: t("core.comment.operations.cancel_approve.button"),
+      hidden: !props.comment?.comment.spec.approved,
+      action: handleCancelApprove,
+    },
+    {
+      priority: 50,
       component: markRaw(VDropdownItem),
       props: {
         type: "danger",
@@ -335,6 +255,8 @@ const { operationItems } = useOperationItemExtensionPoint<ListedComment>(
     },
   ])
 );
+
+const { data: contentProvider } = useContentProviderExtensionPoint();
 </script>
 
 <template>
@@ -343,43 +265,37 @@ const { operationItems } = useOperationItemExtensionPoint<ListedComment>(
     :comment="comment"
     @close="onReplyCreationModalClose"
   />
-  <VEntity :is-selected="isSelected" :class="{ 'hover:bg-white': showReplies }">
-    <template v-if="showReplies" #prepend>
-      <div class="absolute inset-y-0 left-0 w-[1px] bg-black/50"></div>
-      <div class="absolute inset-y-0 right-0 w-[1px] bg-black/50"></div>
-      <div class="absolute inset-x-0 top-0 h-[1px] bg-black/50"></div>
-      <div class="absolute inset-x-0 bottom-0 h-[1px] bg-black/50"></div>
-    </template>
+  <CommentDetailModal
+    v-if="detailModalVisible"
+    :comment="comment"
+    @close="onReplyCreationModalClose"
+  />
+  <VEntity :is-selected="isSelected">
     <template
-      v-if="currentUserHasPermission(['system:comments:manage'])"
+      v-if="utils.permission.has(['system:comments:manage']) && $slots.checkbox"
       #checkbox
     >
       <slot name="checkbox" />
     </template>
     <template #start>
-      <VEntityField>
-        <template #description>
-          <VAvatar
-            circle
-            :src="comment?.owner.avatar"
-            :alt="comment?.owner.displayName"
-            size="md"
-          ></VAvatar>
-        </template>
-      </VEntityField>
-      <VEntityField
-        class="w-28 min-w-[7rem]"
-        :title="comment?.owner?.displayName"
-        :description="comment?.owner?.email"
-      ></VEntityField>
-      <VEntityField width="100%">
+      <VEntityField width="100%" max-width="100%">
         <template #description>
           <div class="flex flex-col gap-2">
             <div class="mb-1 flex items-center gap-2">
-              <VTag>{{ subjectRefResult.label }}</VTag>
+              <OwnerButton
+                :owner="comment?.owner"
+                @click="detailModalVisible = true"
+              />
+              <VTag v-if="comment.comment.spec.hidden">
+                {{ $t("core.comment.list.fields.private") }}
+              </VTag>
+              <span class="whitespace-nowrap text-sm text-gray-900">
+                {{ $t("core.comment.text.commented_on") }}
+              </span>
               <RouterLink
+                v-tooltip="`${subjectRefResult.label}`"
                 :to="subjectRefResult.route || $route"
-                class="line-clamp-2 inline-block text-sm font-medium text-gray-900 hover:text-gray-600"
+                class="inline-block max-w-md truncate text-sm font-medium text-gray-900 hover:text-gray-600"
               >
                 {{ subjectRefResult.title }}
               </RouterLink>
@@ -387,17 +303,18 @@ const { operationItems } = useOperationItemExtensionPoint<ListedComment>(
                 v-if="subjectRefResult.externalUrl"
                 :href="subjectRefResult.externalUrl"
                 target="_blank"
-                class="hidden text-gray-600 hover:text-gray-900 group-hover:block"
+                class="invisible text-gray-600 hover:text-gray-900 group-hover:visible"
               >
                 <IconExternalLinkLine class="h-3.5 w-3.5" />
               </a>
             </div>
-            <div class="break-all text-sm text-gray-900">
-              {{ comment?.comment?.spec.content }}
-            </div>
+            <component
+              :is="contentProvider?.component"
+              :content="comment?.comment?.spec.content"
+            />
             <div class="flex items-center gap-3 text-xs">
               <span
-                class="select-none text-gray-700 hover:text-gray-900"
+                class="cursor-pointer select-none text-gray-700 hover:text-gray-900"
                 @click="handleToggleShowReplies"
               >
                 {{
@@ -412,12 +329,14 @@ const { operationItems } = useOperationItemExtensionPoint<ListedComment>(
                 state="success"
                 animate
               />
-              <span
-                class="select-none text-gray-700 hover:text-gray-900"
-                @click="replyModal = true"
-              >
-                {{ $t("core.comment.operations.reply.button") }}
-              </span>
+              <HasPermission :permissions="['system:comments:manage']">
+                <span
+                  class="cursor-pointer select-none text-gray-700 hover:text-gray-900"
+                  @click="replyModal = true"
+                >
+                  {{ $t("core.comment.operations.reply.button") }}
+                </span>
+              </HasPermission>
             </div>
           </div>
         </template>
@@ -426,13 +345,11 @@ const { operationItems } = useOperationItemExtensionPoint<ListedComment>(
     <template #end>
       <VEntityField v-if="!comment?.comment.spec.approved">
         <template #description>
-          <VStatusDot state="success">
-            <template #text>
-              <span class="text-xs text-gray-500">
-                {{ $t("core.comment.list.fields.pending_review") }}
-              </span>
-            </template>
-          </VStatusDot>
+          <VStatusDot
+            state="warning"
+            animate
+            :text="$t('core.comment.list.fields.pending_review')"
+          />
         </template>
       </VEntityField>
       <VEntityField v-if="comment?.comment?.metadata.deletionTimestamp">
@@ -444,31 +361,23 @@ const { operationItems } = useOperationItemExtensionPoint<ListedComment>(
           />
         </template>
       </VEntityField>
-      <VEntityField>
-        <template #description>
-          <span class="truncate text-xs tabular-nums text-gray-500">
-            {{
-              formatDatetime(
-                comment?.comment.spec.creationTime ||
-                  comment?.comment.metadata.creationTimestamp
-              )
-            }}
-          </span>
-        </template>
-      </VEntityField>
+      <VEntityField
+        v-tooltip="utils.date.format(creationTime)"
+        :description="utils.date.timeAgo(creationTime)"
+      />
     </template>
     <template
-      v-if="currentUserHasPermission(['system:comments:manage'])"
+      v-if="utils.permission.has(['system:comments:manage'])"
       #dropdownItems
     >
-      <EntityDropdownItems :dropdown-items="operationItems" :item="comment" />
+      <EntityDropdownItems
+        :dropdown-items="operationItems || []"
+        :item="comment"
+      />
     </template>
 
     <template v-if="showReplies" #footer>
-      <!-- Replies -->
-      <div
-        class="ml-8 mt-3 divide-y divide-gray-100 rounded-base border-t border-gray-100 pt-3"
-      >
+      <div class="pl-8">
         <VLoading v-if="isLoading" />
         <Transition v-else-if="!replies?.length" appear name="fade">
           <VEmpty
@@ -480,27 +389,28 @@ const { operationItems } = useOperationItemExtensionPoint<ListedComment>(
                 <VButton @click="refetch()">
                   {{ $t("core.common.buttons.refresh") }}
                 </VButton>
-                <VButton type="secondary" @click="replyModal = true">
-                  <template #icon>
-                    <IconAddCircle class="h-full w-full" />
-                  </template>
-                  {{ $t("core.comment.reply_empty.new") }}
-                </VButton>
+                <HasPermission :permissions="['system:comments:manage']">
+                  <VButton type="secondary" @click="replyModal = true">
+                    <template #icon>
+                      <IconAddCircle />
+                    </template>
+                    {{ $t("core.comment.reply_empty.new") }}
+                  </VButton>
+                </HasPermission>
               </VSpace>
             </template>
           </VEmpty>
         </Transition>
         <Transition v-else appear name="fade">
-          <div>
+          <VEntityContainer>
             <ReplyListItem
               v-for="reply in replies"
               :key="reply.reply.metadata.name"
-              :class="{ 'hover:bg-white': showReplies }"
               :reply="reply"
               :comment="comment"
               :replies="replies"
             ></ReplyListItem>
-          </div>
+          </VEntityContainer>
         </Transition>
       </div>
     </template>

@@ -7,6 +7,7 @@ import {
   IconArrowDown,
   VDropdown,
   VEntity,
+  VEntityContainer,
   VEntityField,
 } from "@halo-dev/components";
 import Fuse from "fuse.js";
@@ -79,7 +80,11 @@ const selectedTag = computed(() => {
 </script>
 
 <template>
-  <VDropdown ref="dropdown" :classes="['!p-0']" @show="onDropdownShow">
+  <VDropdown
+    ref="dropdown"
+    popper-class="[&_.v-popper\_\_inner]:!p-0"
+    @show="onDropdownShow"
+  >
     <div
       class="flex cursor-pointer select-none items-center text-sm text-gray-700 hover:text-black"
       :class="{ 'font-semibold text-gray-700': modelValue !== undefined }"
@@ -105,35 +110,31 @@ const selectedTag = computed(() => {
           ></FormKit>
         </div>
         <div>
-          <ul
-            class="box-border h-full w-full divide-y divide-gray-100"
-            role="list"
-          >
-            <li
-              v-for="(tag, index) in searchResults"
-              :key="index"
+          <VEntityContainer>
+            <VEntity
+              v-for="tag in searchResults"
+              :key="tag.metadata.name"
+              :is-selected="modelValue === tag.metadata.name"
               @click="handleSelect(tag)"
             >
-              <VEntity :is-selected="modelValue === tag.metadata.name">
-                <template #start>
-                  <VEntityField :description="tag.status?.permalink">
-                    <template #title>
-                      <PostTag :tag="tag" />
-                    </template>
-                  </VEntityField>
-                </template>
-                <template #end>
-                  <VEntityField
-                    :description="
-                      $t('core.common.fields.post_count', {
-                        count: tag.status?.postCount || 0,
-                      })
-                    "
-                  />
-                </template>
-              </VEntity>
-            </li>
-          </ul>
+              <template #start>
+                <VEntityField :description="tag.status?.permalink">
+                  <template #title>
+                    <PostTag :tag="tag" />
+                  </template>
+                </VEntityField>
+              </template>
+              <template #end>
+                <VEntityField
+                  :description="
+                    $t('core.common.fields.post_count', {
+                      count: tag.status?.postCount || 0,
+                    })
+                  "
+                />
+              </template>
+            </VEntity>
+          </VEntityContainer>
         </div>
       </div>
     </template>

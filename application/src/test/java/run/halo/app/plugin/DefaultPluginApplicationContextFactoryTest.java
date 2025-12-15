@@ -1,12 +1,15 @@
 package run.halo.app.plugin;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -29,15 +32,18 @@ class DefaultPluginApplicationContextFactoryTest {
     void shouldCreateCorrectly() {
         var pw = mock(PluginWrapper.class);
         when(pw.getPluginClassLoader()).thenReturn(this.getClass().getClassLoader());
-        var sp = mock(SpringPlugin.class);
+        var plugin = mock(Plugin.class, withSettings().extraInterfaces(SpringPlugin.class));
+        var sp = (SpringPlugin) plugin;
         var pluginContext = new PluginContext.PluginContextBuilder()
             .name("fake-plugin")
             .version("1.0.0")
             .build();
         when(sp.getPluginContext()).thenReturn(pluginContext);
-        when(pw.getPlugin()).thenReturn(sp);
+        when(pw.getPlugin()).thenReturn(plugin);
         when(pluginManager.getPlugin("fake-plugin")).thenReturn(pw);
         var context = factory.create("fake-plugin");
+
+        assertEquals(pw.getPluginClassLoader(), Thread.currentThread().getContextClassLoader());
 
         assertInstanceOf(PluginApplicationContext.class, context);
         assertNotNull(context.getBeanProvider(SearchService.class).getIfUnique());

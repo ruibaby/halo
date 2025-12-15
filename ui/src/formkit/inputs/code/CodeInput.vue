@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { CodemirrorProps } from "@/components/codemirror/supports";
 import type { FormKitFrameworkContext } from "@formkit/core";
 import { VButton, VPageHeader } from "@halo-dev/components";
 import { useEventListener } from "@vueuse/core";
@@ -14,7 +15,7 @@ const props = defineProps({
 
 const codeInputWrapperRef = ref();
 
-const language = props.context.language as string;
+const language = props.context.language as CodemirrorProps["language"];
 
 const onChange = (value: string) => {
   props.context.node.input(value);
@@ -30,6 +31,15 @@ useEventListener(codeInputWrapperRef, "keydown", (e: KeyboardEvent) => {
   if (e.key === "Escape" && fullscreen.value) {
     fullscreen.value = false;
   }
+});
+
+const editorHeight = computed(() => {
+  if (fullscreen.value) {
+    // VPageHeader height is 3.5rem
+    return "calc(100vh - 3.5rem)";
+  }
+
+  return "100%";
 });
 </script>
 
@@ -52,7 +62,7 @@ useEventListener(codeInputWrapperRef, "keydown", (e: KeyboardEvent) => {
       <VCodemirror
         :model-value="props.context._value"
         v-bind="context.attrs"
-        height="100%"
+        :height="editorHeight"
         :language="language"
         class="block w-full"
         @change="onChange"
@@ -62,6 +72,7 @@ useEventListener(codeInputWrapperRef, "keydown", (e: KeyboardEvent) => {
         v-if="!fullscreen"
         v-tooltip="$t('core.formkit.code.fullscreen.enter')"
         class="absolute bottom-2 right-2 inline-flex cursor-pointer items-center justify-center rounded-full bg-primary p-1.5 text-white opacity-0 transition-all hover:!opacity-90 hover:shadow group-hover:opacity-100"
+        type="button"
         @click="fullscreen = true"
       >
         <RiFullscreenLine class="text-xs" />

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { useUserStore } from "@/stores/user";
 import { ucApiClient } from "@halo-dev/api-client";
 import {
   Dialog,
@@ -14,8 +13,10 @@ import {
   VPageHeader,
   VTabbar,
 } from "@halo-dev/components";
+import { stores } from "@halo-dev/ui-shared";
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
 import { useRouteQuery } from "@vueuse/router";
+import { chunk } from "es-toolkit";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
@@ -24,7 +25,7 @@ import NotificationListItem from "./components/NotificationListItem.vue";
 
 const queryClient = useQueryClient();
 const { t } = useI18n();
-const { currentUser } = useUserStore();
+const { currentUser } = stores.currentUser();
 
 const activeTab = useRouteQuery("tab", "unread");
 
@@ -38,7 +39,7 @@ const {
   queryFn: async () => {
     const { data } =
       await ucApiClient.notification.notification.listUserNotifications({
-        username: currentUser?.metadata.name as string,
+        username: currentUser?.user.metadata.name as string,
         fieldSelector: [`spec.unread=${activeTab.value === "unread"}`],
       });
 
@@ -78,12 +79,16 @@ function handleDeleteNotifications() {
         throw new Error("Current user is not found");
       }
 
-      for (const notification of notifications.value.items) {
-        await ucApiClient.notification.notification.deleteSpecifiedNotification(
-          {
-            username: currentUser.metadata.name,
-            name: notification.metadata.name,
-          }
+      const notificationChunks = chunk(notifications.value.items, 5);
+
+      for (const chunk of notificationChunks) {
+        await Promise.all(
+          chunk.map((notification) =>
+            ucApiClient.notification.notification.deleteSpecifiedNotification({
+              username: currentUser.user.metadata.name,
+              name: notification.metadata.name,
+            })
+          )
         );
       }
 
@@ -116,7 +121,7 @@ function handleMarkAllAsRead() {
       );
 
       await ucApiClient.notification.notification.markNotificationsAsRead({
-        username: currentUser.metadata.name,
+        username: currentUser.user.metadata.name,
         markSpecifiedRequest: {
           names,
         },
@@ -131,7 +136,7 @@ function handleMarkAllAsRead() {
 <template>
   <VPageHeader :title="$t('core.uc_notification.title')">
     <template #icon>
-      <IconNotificationBadgeLine class="mr-2 self-center" />
+      <IconNotificationBadgeLine />
     </template>
   </VPageHeader>
   <div class="m-0 md:m-4">
@@ -156,20 +161,20 @@ function handleMarkAllAsRead() {
             ></VTabbar>
 
             <div
-              class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2"
+              class="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-2"
             >
               <button
                 v-if="activeTab === 'unread'"
-                class="flex items-center justify-center h-7 w-7 rounded-full cursor-pointer hover:bg-gray-200 disabled:pointer-events-none disabled:opacity-70"
+                class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200 disabled:pointer-events-none disabled:opacity-70"
                 :disabled="!notifications?.items.length"
                 @click="handleMarkAllAsRead"
               >
                 <IconCheckboxCircle
-                  class="w-4 h-4 text-gray-600 group-hover:text-gray-900"
+                  class="h-4 w-4 text-gray-600 group-hover:text-gray-900"
                 />
               </button>
               <button
-                class="flex items-center justify-center h-7 w-7 group rounded-full cursor-pointer hover:bg-gray-200 disabled:pointer-events-none disabled:opacity-70"
+                class="group flex h-7 w-7 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200 disabled:pointer-events-none disabled:opacity-70"
                 :disabled="!notifications?.items.length"
                 @click="handleDeleteNotifications"
               >
@@ -226,7 +231,9 @@ function handleMarkAllAsRead() {
             </Transition>
           </OverlayScrollbarsComponent>
         </div>
-        <div class="col-span-12 sm:col-span-6 lg:col-span-7 xl:col-span-9">
+        <div
+          class="col-span-12 overflow-auto sm:col-span-6 lg:col-span-7 xl:col-span-9"
+        >
           <NotificationContent :notification="selectedNotification" />
         </div>
       </div>

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import HasPermission from "@/components/permission/HasPermission.vue";
-import { formatDatetime } from "@/utils/date";
 import type { Tag } from "@halo-dev/api-client";
 import {
   IconExternalLinkLine,
@@ -10,6 +8,7 @@ import {
   VSpace,
   VStatusDot,
 } from "@halo-dev/components";
+import { utils } from "@halo-dev/ui-shared";
 import PostTag from "./PostTag.vue";
 
 withDefaults(
@@ -51,7 +50,7 @@ const emit = defineEmits<{
             <a
               target="_blank"
               :href="tag.status?.permalink"
-              class="hidden text-gray-600 transition-all hover:text-gray-900 group-hover:inline-block"
+              class="text-gray-600 opacity-0 transition-all hover:text-gray-900 group-hover:opacity-100"
             >
               <IconExternalLinkLine class="h-3.5 w-3.5" />
             </a>
@@ -79,7 +78,7 @@ const emit = defineEmits<{
       <VEntityField>
         <template #description>
           <span class="truncate text-xs tabular-nums text-gray-500">
-            {{ formatDatetime(tag.metadata.creationTimestamp) }}
+            {{ utils.date.format(tag.metadata.creationTimestamp) }}
           </span>
         </template>
       </VEntityField>

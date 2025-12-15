@@ -1,15 +1,12 @@
 import Vue from "@vitejs/plugin-vue";
 import VueJsx from "@vitejs/plugin-vue-jsx";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import GzipPlugin from "rollup-plugin-gzip";
 import Icons from "unplugin-icons/vite";
-import { fileURLToPath } from "url";
 import { defineConfig, type Plugin } from "vite";
-import { VitePWA } from "vite-plugin-pwa";
 import { setupLibraryExternal } from "./library-external";
-
-import legacy from "@vitejs/plugin-legacy";
 
 interface Options {
   base: string;
@@ -36,20 +33,6 @@ export const sharedPlugins = [
       },
     },
   }),
-  VitePWA({
-    manifest: {
-      name: "Halo",
-      short_name: "Halo",
-      description: "Web Client For Halo",
-      theme_color: "#fff",
-    },
-    disable: true,
-  }),
-  legacy({
-    targets: ["defaults", "not IE 11"],
-    polyfills: ["es/object/has-own"],
-    modernPolyfills: ["es/object/has-own"],
-  }),
 ];
 
 export function createViteConfig(options: Options) {
@@ -62,6 +45,9 @@ export function createViteConfig(options: Options) {
 
   return defineConfig({
     base,
+    experimental: {
+      enableNativePlugin: true,
+    },
     plugins: [
       ...sharedPlugins,
       ...setupLibraryExternal(isProduction, base, entryFile),
@@ -84,21 +70,21 @@ export function createViteConfig(options: Options) {
       outDir: path.resolve(rootDir, outDir),
       emptyOutDir: true,
       chunkSizeWarningLimit: 2048,
-      rollupOptions: {
+      rolldownOptions: {
         output: {
-          manualChunks: {
-            vendor: [
-              "lodash-es",
+          advancedChunks: {
+            groups: [
+              "es-toolkit",
               "vue-grid-layout",
               "transliteration",
-              "vue-draggable-plus",
-              "emoji-mart",
               "colorjs.io",
-              "jsencrypt",
               "overlayscrollbars",
               "overlayscrollbars-vue",
-              "floating-vue",
-            ],
+              "@he-tree/vue",
+            ].map((name) => ({
+              name: "vendor",
+              test: name,
+            })),
           },
         },
       },

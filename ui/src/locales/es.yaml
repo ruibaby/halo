@@ -31,10 +31,7 @@ core:
     title: Panel de control
     actions:
       setting: Configuración
-      done: Hecho
-      add_widget: Agregar Widget
     widgets:
-      modal_title: Widgets
       groups:
         post: Publicación
         page: Página
@@ -50,8 +47,8 @@ core:
           title: Publicaciones Recientes
           visits: "{visits} Visitas"
           comments: "{comments} Comentarios"
-        quicklink:
-          title: Enlace Rápido
+        quickaction:
+          title: Acción Rápida
           actions:
             user_center:
               title: Perfil de Usuario
@@ -367,8 +364,6 @@ core:
         title: ¿Estás seguro de que deseas aprobar todas las respuestas a este comentario para su revisión?
       delete_reply:
         title: ¿Estás seguro de que deseas eliminar esta respuesta?
-      approve_reply:
-        button: Aprobar
       reply:
         button: Responder
     filters:
@@ -463,7 +458,6 @@ core:
         creation_time: Hora de Creación
         permalink: Enlace Permanente
       preview:
-        click_to_exit: Haz clic para salir de la vista previa
         video_not_support: El navegador actual no admite la reproducción de video.
         audio_not_support: El navegador actual no admite la reproducción de audio.
         not_support: Este archivo no admite la vista previa.
@@ -509,6 +503,9 @@ core:
       fields:
         display_name:
           label: Nombre para Mostrar
+        hidden:
+          label: Hide in upload interface
+          help: When enabled, this storage policy will be hidden in the upload interface
     upload_modal:
       title: Cargar adjunto
       filters:
@@ -799,7 +796,6 @@ core:
         roles: Roles
         bio: Biografía
         creation_time: Fecha de creación
-        identity_authentication: Autenticación de identidad
   role:
     title: Roles
     common:

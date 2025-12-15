@@ -1,13 +1,15 @@
-import { fileURLToPath, URL } from "url";
-
-import { defineConfig, type Plugin } from "vite";
 import Vue from "@vitejs/plugin-vue";
 import VueJsx from "@vitejs/plugin-vue-jsx";
+import path from "node:path";
+import { fileURLToPath, URL } from "node:url";
 import Icons from "unplugin-icons/vite";
+import { defineConfig, type Plugin } from "vite";
 import Dts from "vite-plugin-dts";
-import path from "path";
 
 export default defineConfig({
+  experimental: {
+    enableNativePlugin: true,
+  },
   plugins: [
     Vue(),
     VueJsx(),
@@ -20,7 +22,7 @@ export default defineConfig({
     }) as Plugin,
   ],
   define: {
-    "process.env": process.env,
+    "process.env.NODE_ENV": '"production"',
   },
   resolve: {
     alias: {
@@ -33,7 +35,7 @@ export default defineConfig({
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "HaloComponents",
       formats: ["es", "iife"],
-      fileName: (format) => `halo-components.${format}.js`,
+      fileName: (format) => `index.${format}.js`,
       cssFileName: "style",
     },
     rollupOptions: {
@@ -53,7 +55,6 @@ export default defineConfig({
           "@vueuse/router": "VueUse",
         },
         exports: "named",
-        generatedCode: "es5",
       },
     },
     sourcemap: true,

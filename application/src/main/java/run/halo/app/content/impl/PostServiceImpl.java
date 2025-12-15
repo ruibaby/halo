@@ -1,12 +1,14 @@
 package run.halo.app.content.impl;
 
-import static run.halo.app.extension.index.query.QueryFactory.in;
+import static run.halo.app.extension.index.query.Queries.in;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.ToIntFunction;
 import java.util.function.UnaryOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -153,7 +156,7 @@ public class PostServiceImpl extends AbstractContentService implements PostServi
     }
 
     private Flux<Tag> listTags(List<String> tagNames) {
-        if (tagNames == null) {
+        if (CollectionUtils.isEmpty(tagNames)) {
             return Flux.empty();
         }
         var listOptions = new ListOptions();
@@ -161,17 +164,21 @@ public class PostServiceImpl extends AbstractContentService implements PostServi
         return client.listAll(Tag.class, listOptions, Sort.by("metadata.creationTimestamp"));
     }
 
-    private Flux<Category> listCategories(List<String> categoryNames) {
-        if (categoryNames == null) {
+    @Override
+    public Flux<Category> listCategories(List<String> categoryNames) {
+        if (CollectionUtils.isEmpty(categoryNames)) {
             return Flux.empty();
         }
+        ToIntFunction<Category> comparator =
+            category -> categoryNames.indexOf(category.getMetadata().getName());
         var listOptions = new ListOptions();
         listOptions.setFieldSelector(FieldSelector.of(in("metadata.name", categoryNames)));
-        return client.listAll(Category.class, listOptions, Sort.by("metadata.creationTimestamp"));
+        return client.listAll(Category.class, listOptions, Sort.unsorted())
+            .sort(Comparator.comparingInt(comparator));
     }
 
     private Flux<Contributor> listContributors(List<String> usernames) {
-        if (usernames == null) {
+        if (CollectionUtils.isEmpty(usernames)) {
             return Flux.empty();
         }
         return Flux.fromIterable(usernames)

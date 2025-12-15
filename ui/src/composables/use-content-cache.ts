@@ -1,6 +1,6 @@
 import { Toast } from "@halo-dev/components";
 import { useLocalStorage } from "@vueuse/core";
-import { debounce } from "lodash-es";
+import { debounce } from "es-toolkit";
 import { computed, type Ref } from "vue";
 import { useI18n } from "vue-i18n";
 export interface ContentCache {
@@ -93,7 +93,9 @@ export function useContentCache(
         (c: ContentCache) => c.name === ""
       );
     }
-    index > -1 && content_caches.value.splice(index, 1);
+    if (index > -1) {
+      content_caches.value.splice(index, 1);
+    }
   };
 
   return {

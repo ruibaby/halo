@@ -1,7 +1,7 @@
 package run.halo.app.theme.finders.impl;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import run.halo.app.core.attachment.ThumbnailService;
+import run.halo.app.core.attachment.thumbnail.ThumbnailService;
 
 /**
  * Tests for {@link ThumbnailFinderImpl}.
@@ -37,7 +37,7 @@ class ThumbnailFinderImplTest {
             .expectNext("invalid uri")
             .verifyComplete();
 
-        verify(thumbnailService, times(0)).generate(any(), any());
+        verify(thumbnailService, never()).get(any(), any());
     }
 
     @Test

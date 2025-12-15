@@ -1,12 +1,14 @@
 package run.halo.app.infra;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Locale;
+import java.util.Optional;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.convert.ApplicationConversionService;
 import run.halo.app.extension.ConfigMap;
 import run.halo.app.infra.utils.JsonUtils;
@@ -66,6 +68,15 @@ public class SystemSetting {
         String subtitle;
         String logo;
         String favicon;
+        String language;
+        String externalUrl;
+
+        @JsonIgnore
+        public Optional<Locale> useSystemLocale() {
+            return Optional.ofNullable(language)
+                .filter(StringUtils::isNotBlank)
+                .map(Locale::forLanguageTag);
+        }
     }
 
     @Data
@@ -76,6 +87,7 @@ public class SystemSetting {
         String defaultRole;
         String avatarPolicy;
         String ucAttachmentPolicy;
+        String protectedUsernames;
     }
 
     @Data
@@ -117,34 +129,9 @@ public class SystemSetting {
     @Data
     public static class AuthProvider {
         public static final String GROUP = "authProvider";
-        /**
-         * Currently keep it to be compatible with the reference of the plugin.
-         *
-         * @deprecated Use {@link #getStates()} instead.
-         */
-        @Deprecated(since = "2.20.0", forRemoval = true)
-        private Set<String> enabled;
 
         private List<AuthProviderState> states;
 
-        /**
-         * <p>To be compatible with the old version of the enabled field and retained,
-         * since 2.20.0 version, we uses the states field, so the data needs to be synchronized
-         * to the enabled field, and this method needs to be deleted when the enabled field is
-         * removed.</p>
-         *
-         * @deprecated Use {@link #getStates()} instead.
-         */
-        @Deprecated(since = "2.20.0", forRemoval = true)
-        public Set<String> getEnabled() {
-            if (states == null) {
-                return enabled;
-            }
-            return this.states.stream()
-                .filter(AuthProviderState::isEnabled)
-                .map(AuthProviderState::getName)
-                .collect(Collectors.toSet());
-        }
     }
 
     @Data

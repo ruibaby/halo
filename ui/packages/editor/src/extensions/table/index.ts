@@ -1,15 +1,17 @@
 import { BlockActionSeparator, ToolboxItem } from "@/components";
+import { CONVERT_TO_KEY } from "@/components/drag/default-drag";
 import { i18n } from "@/locales";
 import {
-  CoreEditor,
+  Editor,
   findParentNode,
   isActive,
   isNodeActive,
   mergeAttributes,
-  type Editor,
+  posToDOMRect,
   type Range,
 } from "@/tiptap";
 import {
+  PluginKey,
   TextSelection,
   type DOMOutputSpec,
   type EditorState,
@@ -17,9 +19,10 @@ import {
   type Node as ProseMirrorNode,
   type ViewMutationRecord,
 } from "@/tiptap/pm";
-import type { ExtensionOptions, NodeBubbleMenu } from "@/types";
-import TiptapTable, {
+import type { ExtensionOptions, NodeBubbleMenuType } from "@/types";
+import {
   createColGroup,
+  Table as TiptapTable,
   type TableOptions,
 } from "@tiptap/extension-table";
 import { markRaw } from "vue";
@@ -54,6 +57,7 @@ function updateColumns(
   table: HTMLElement,
   cellMinWidth: number,
   overrideCol?: number,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   overrideValue?: any
 ) {
   let totalWidth = 0;
@@ -105,7 +109,7 @@ function updateColumns(
   }
 }
 
-let editor: CoreEditor | undefined = undefined;
+let editor: Editor | undefined = undefined;
 
 class TableView implements NodeView {
   node: ProseMirrorNode;
@@ -206,7 +210,11 @@ class TableView implements NodeView {
   }
 }
 
-const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
+export const TABLE_BUBBLE_MENU_KEY = new PluginKey("tableBubbleMenu");
+
+export type ExtensionTableOptions = ExtensionOptions & Partial<TableOptions>;
+
+export const ExtensionTable = TiptapTable.extend<ExtensionTableOptions>({
   allowGapCursor: true,
 
   addExtensions() {
@@ -224,7 +232,7 @@ const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
       allowTableNodeSelection: false,
       getToolboxItems({ editor }: { editor: Editor }) {
         return {
-          priority: 15,
+          priority: 40,
           component: markRaw(ToolboxItem),
           props: {
             editor,
@@ -255,28 +263,35 @@ const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
           },
         };
       },
-      getBubbleMenu({ editor }): NodeBubbleMenu {
+      getBubbleMenu({ editor }): NodeBubbleMenuType {
         return {
-          pluginKey: "tableBubbleMenu",
+          pluginKey: TABLE_BUBBLE_MENU_KEY,
           shouldShow: ({ state }: { state: EditorState }): boolean => {
-            return isActive(state, Table.name);
+            return isActive(state, ExtensionTable.name);
           },
-          getRenderContainer(node) {
-            let container = node;
-            if (container.nodeName === "#text") {
-              container = node.parentElement as HTMLElement;
-            }
-            while (
-              container &&
-              container.classList &&
-              !container.classList.contains("tableWrapper")
-            ) {
-              container = container.parentElement as HTMLElement;
-            }
-            return container;
+          options: {
+            placement: "bottom-start",
           },
-          tippyOptions: {
-            offset: [26, 0],
+          getReferencedVirtualElement() {
+            const editor = this.editor;
+            if (!editor) {
+              return null;
+            }
+            const parentNode = findParentNode(
+              (node) => node.type.name === ExtensionTable.name
+            )(editor.state.selection);
+            if (parentNode) {
+              const domRect = posToDOMRect(
+                editor.view,
+                parentNode.start,
+                parentNode.start + parentNode.node.nodeSize - 2
+              );
+              return {
+                getBoundingClientRect: () => domRect,
+                getClientRects: () => [domRect],
+              };
+            }
+            return null;
           },
           items: [
             {
@@ -396,52 +411,14 @@ const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
           ],
         };
       },
-      getDraggable() {
+      getDraggableMenuItems() {
         return {
-          getRenderContainer({ dom }) {
-            let container = dom;
-            while (container && !container.classList.contains("tableWrapper")) {
-              container = container.parentElement as HTMLElement;
+          extendsKey: CONVERT_TO_KEY,
+          visible({ editor }) {
+            if (isActive(editor.state, "table")) {
+              return false;
             }
-            return {
-              el: container,
-              dragDomOffset: {
-                x: 20,
-                y: 20,
-              },
-            };
-          },
-          handleDrop({ view, event, slice, insertPos }) {
-            const { state } = view;
-            const $pos = state.selection.$anchor;
-            for (let d = $pos.depth; d > 0; d--) {
-              const node = $pos.node(d);
-              if (node.type.spec["tableRole"] == "table") {
-                const eventPos = view.posAtCoords({
-                  left: event.clientX,
-                  top: event.clientY,
-                });
-                if (!eventPos) {
-                  return;
-                }
-                if (!slice) {
-                  return;
-                }
-
-                let tr = state.tr;
-                tr = tr.delete($pos.before(d), $pos.after(d));
-                const pos = tr.mapping.map(insertPos);
-                tr = tr.replaceRange(pos, pos, slice).scrollIntoView();
-
-                if (tr) {
-                  view.dispatch(tr);
-                  event.preventDefault();
-                  return true;
-                }
-
-                return false;
-              }
-            }
+            return true;
           },
         };
       },
@@ -459,7 +436,7 @@ const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
       // the node in the current active state is not a table
       // and the previous node is a table
       if (
-        !isNodeActive(editor.state, Table.name) &&
+        !isNodeActive(editor.state, ExtensionTable.name) &&
         hasTableBefore(editor.state) &&
         selection.empty
       ) {
@@ -467,7 +444,7 @@ const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
         return true;
       }
 
-      if (!isNodeActive(editor.state, Table.name)) {
+      if (!isNodeActive(editor.state, ExtensionTable.name)) {
         return false;
       }
 
@@ -487,7 +464,7 @@ const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
       "Mod-Backspace": () => handleBackspace(),
 
       "Mod-a": ({ editor }) => {
-        if (!isNodeActive(editor.state, Table.name)) {
+        if (!isNodeActive(editor.state, ExtensionTable.name)) {
           return false;
         }
 
@@ -519,7 +496,7 @@ const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
       },
       Tab: ({ editor }) => {
         const { state } = editor;
-        if (!isActive(editor.state, Table.name)) {
+        if (!isActive(editor.state, ExtensionTable.name)) {
           return false;
         }
         let nextView = editor.view;
@@ -555,7 +532,7 @@ const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
       },
       "Shift-Tab": ({ editor }) => {
         const { tr } = editor.state;
-        if (!isActive(editor.state, Table.name)) {
+        if (!isActive(editor.state, ExtensionTable.name)) {
           return false;
         }
         const previousCell = findPreviousCell(editor.state);
@@ -579,7 +556,7 @@ const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
   renderHTML({ node, HTMLAttributes }) {
     const { colgroup, tableWidth, tableMinWidth } = createColGroup(
       node,
-      this.options.cellMinWidth
+      this.options.cellMinWidth ?? 25
     );
 
     const table: DOMOutputSpec = [
@@ -587,11 +564,15 @@ const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
       { style: "overflow-x: auto; overflow-y: hidden;" },
       [
         "table",
-        mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-          style: tableWidth
-            ? `width: ${tableWidth}`
-            : `minWidth: ${tableMinWidth}`,
-        }),
+        mergeAttributes(
+          this.options.HTMLAttributes ?? {},
+          HTMLAttributes ?? {},
+          {
+            style: tableWidth
+              ? `width: ${tableWidth}`
+              : `minWidth: ${tableMinWidth}`,
+          }
+        ),
         colgroup,
         ["tbody", 0],
       ],
@@ -604,5 +585,3 @@ const Table = TiptapTable.extend<ExtensionOptions & TableOptions>({
     editor = this.editor;
   },
 }).configure({ resizable: true });
-
-export default Table;

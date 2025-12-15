@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 import run.halo.app.core.extension.User;
 import run.halo.app.core.extension.notification.Notification;
 import run.halo.app.core.extension.notification.NotifierDescriptor;
@@ -20,6 +19,8 @@ import run.halo.app.core.extension.notification.ReasonType;
 import run.halo.app.core.extension.notification.Subscription;
 import run.halo.app.extension.Metadata;
 import run.halo.app.extension.ReactiveExtensionClient;
+import run.halo.app.infra.SystemConfigurableEnvironmentFetcher;
+import run.halo.app.infra.SystemSetting;
 import run.halo.app.notification.endpoint.SubscriptionRouter;
 
 /**
@@ -41,6 +42,7 @@ public class DefaultNotificationCenter implements NotificationCenter {
     private final SubscriptionRouter subscriptionRouter;
     private final RecipientResolver recipientResolver;
     private final SubscriptionService subscriptionService;
+    private final SystemConfigurableEnvironmentFetcher environmentFetcher;
 
     @Override
     public Mono<Void> notify(Reason reason) {
@@ -49,7 +51,6 @@ public class DefaultNotificationCenter implements NotificationCenter {
                 log.debug("Dispatching notification to subscriber [{}] for reason [{}]",
                     subscriber, reason.getMetadata().getName());
             })
-            .publishOn(Schedulers.boundedElastic())
             .flatMap(subscriber -> dispatchNotification(reason, subscriber))
             .then();
     }
@@ -287,6 +288,8 @@ public class DefaultNotificationCenter implements NotificationCenter {
 
     Mono<Locale> getLocaleFromSubscriber(Subscriber subscriber) {
         // TODO get locale from subscriber
-        return Mono.just(Locale.getDefault());
+        return environmentFetcher.getBasic()
+            .map(SystemSetting.Basic::useSystemLocale)
+            .map(localeOpt -> localeOpt.orElse(Locale.getDefault()));
     }
 }

@@ -1,16 +1,18 @@
 import BasicLayout from "@console/layouts/BasicLayout.vue";
 import { IconDashboard } from "@halo-dev/components";
-import { definePlugin } from "@halo-dev/console-shared";
-import Dashboard from "./Dashboard.vue";
-
+import { definePlugin } from "@halo-dev/ui-shared";
 import { markRaw } from "vue";
-import QuickLinkWidget from "./widgets/QuickLinkWidget.vue";
-import ViewsStatsWidget from "./widgets/ViewsStatsWidget.vue";
+import WidgetCard from "./components/WidgetCard.vue";
+
+declare module "vue" {
+  interface GlobalComponents {
+    WidgetCard: (typeof import("./components/WidgetCard.vue"))["default"];
+  }
+}
 
 export default definePlugin({
   components: {
-    QuickLinkWidget,
-    ViewsStatsWidget,
+    WidgetCard,
   },
   routes: [
     {
@@ -22,7 +24,7 @@ export default definePlugin({
         {
           path: "dashboard",
           name: "Dashboard",
-          component: Dashboard,
+          component: () => import("./Dashboard.vue"),
           meta: {
             title: "core.dashboard.title",
             searchable: true,
@@ -33,6 +35,15 @@ export default definePlugin({
               priority: 0,
               mobile: true,
             },
+          },
+        },
+        {
+          path: "dashboard/designer",
+          name: "DashboardDesigner",
+          component: () => import("./DashboardDesigner.vue"),
+          meta: {
+            title: "core.dashboard_designer.title",
+            searchable: false,
           },
         },
       ],

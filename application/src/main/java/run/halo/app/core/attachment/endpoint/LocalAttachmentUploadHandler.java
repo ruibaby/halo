@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -34,7 +35,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.util.UriUtils;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -42,6 +42,9 @@ import reactor.core.publisher.SynchronousSink;
 import reactor.core.scheduler.Schedulers;
 import reactor.util.retry.Retry;
 import run.halo.app.core.attachment.AttachmentRootGetter;
+import run.halo.app.core.attachment.ThumbnailSize;
+import run.halo.app.core.attachment.thumbnail.LocalThumbnailService;
+import run.halo.app.core.attachment.thumbnail.ThumbnailUtils;
 import run.halo.app.core.extension.attachment.Attachment;
 import run.halo.app.core.extension.attachment.Attachment.AttachmentSpec;
 import run.halo.app.core.extension.attachment.Constant;
@@ -56,22 +59,30 @@ import run.halo.app.infra.exception.FileSizeExceededException;
 import run.halo.app.infra.exception.FileTypeNotAllowedException;
 import run.halo.app.infra.utils.FileNameUtils;
 import run.halo.app.infra.utils.FileTypeDetectUtils;
+import run.halo.app.infra.utils.HaloUtils;
 import run.halo.app.infra.utils.JsonUtils;
 
 @Slf4j
 @Component
 class LocalAttachmentUploadHandler implements AttachmentHandler {
 
+    private static final String UPLOAD_PATH = "upload";
+
     private final AttachmentRootGetter attachmentDirGetter;
 
     private final ExternalUrlSupplier externalUrl;
 
+    private final LocalThumbnailService localThumbnailService;
+
     private Clock clock = Clock.systemUTC();
 
-    public LocalAttachmentUploadHandler(AttachmentRootGetter attachmentDirGetter,
-        ExternalUrlSupplier externalUrl) {
+    public LocalAttachmentUploadHandler(
+        AttachmentRootGetter attachmentDirGetter,
+        ExternalUrlSupplier externalUrl,
+        LocalThumbnailService localThumbnailService) {
         this.attachmentDirGetter = attachmentDirGetter;
         this.externalUrl = externalUrl;
+        this.localThumbnailService = localThumbnailService;
     }
 
     /**
@@ -96,7 +107,7 @@ class LocalAttachmentUploadHandler implements AttachmentHandler {
                     .orElseGet(PolicySetting::new);
 
                 final var attachmentsRoot = attachmentDirGetter.get();
-                final var uploadRoot = attachmentsRoot.resolve("upload");
+                final var uploadRoot = attachmentsRoot.resolve(UPLOAD_PATH);
                 final var file = option.file();
                 final Path attachmentPath;
                 final String filename = getFilename(file.filename(), setting);
@@ -127,7 +138,7 @@ class LocalAttachmentUploadHandler implements AttachmentHandler {
                         var relativePath = attachmentsRoot.relativize(path).toString();
 
                         var pathSegments = new ArrayList<String>();
-                        pathSegments.add("upload");
+                        pathSegments.add(UPLOAD_PATH);
                         for (Path p : uploadRoot.relativize(path)) {
                             pathSegments.add(p.toString());
                         }
@@ -149,6 +160,20 @@ class LocalAttachmentUploadHandler implements AttachmentHandler {
                         var attachment = new Attachment();
                         attachment.setMetadata(metadata);
                         attachment.setSpec(spec);
+
+                        attachment.setStatus(new Attachment.AttachmentStatus());
+                        doGetPermalink(attachment).ifPresent(permalink ->
+                            attachment.getStatus().setPermalink(permalink.toASCIIString())
+                        );
+                        var thumbnailLinks = doGetThumbnailLinks(attachment);
+                        var thumbnails = thumbnailLinks.keySet().stream()
+                            .collect(Collectors.toMap(
+                                ThumbnailSize::name,
+                                size -> thumbnailLinks.get(size).toASCIIString()
+                            ));
+                        if (!thumbnails.isEmpty()) {
+                            attachment.getStatus().setThumbnails(thumbnails);
+                        }
                         return attachment;
                     })
                     .onErrorMap(FileAlreadyExistsException.class,
@@ -229,20 +254,8 @@ class LocalAttachmentUploadHandler implements AttachmentHandler {
                     if (StringUtils.hasText(localRelativePath)) {
                         var attachmentsRoot = attachmentDirGetter.get();
                         var attachmentPath = attachmentsRoot.resolve(localRelativePath);
-                        checkDirectoryTraversal(attachmentsRoot, attachmentPath);
-
-                        // delete it permanently
-                        try {
-                            log.info("{} is being deleted", attachmentPath);
-                            boolean deleted = Files.deleteIfExists(attachmentPath);
-                            if (deleted) {
-                                log.info("{} was deleted successfully", attachment);
-                            } else {
-                                log.info("{} was not exist", attachment);
-                            }
-                        } catch (IOException e) {
-                            throw Exceptions.propagate(e);
-                        }
+                        deleteAttachmentFile(attachmentPath);
+                        deleteThumbnails(attachmentPath);
                     }
                 }
             })
@@ -254,20 +267,7 @@ class LocalAttachmentUploadHandler implements AttachmentHandler {
         if (!this.shouldHandle(policy)) {
             return Mono.empty();
         }
-        var annotations = attachment.getMetadata().getAnnotations();
-        if (annotations == null
-            || !annotations.containsKey(Constant.URI_ANNO_KEY)) {
-            return Mono.empty();
-        }
-        var uriStr = annotations.get(Constant.URI_ANNO_KEY);
-        // the uriStr is encoded before.
-        uriStr = UriUtils.decode(uriStr, StandardCharsets.UTF_8);
-        var uri = UriComponentsBuilder.fromUri(externalUrl.get())
-            // The URI has been encoded before, so there is no need to encode it again.
-            .path(uriStr)
-            .build()
-            .toUri();
-        return Mono.just(uri);
+        return Mono.justOrEmpty(doGetPermalink(attachment));
     }
 
     @Override
@@ -276,6 +276,49 @@ class LocalAttachmentUploadHandler implements AttachmentHandler {
         ConfigMap configMap,
         Duration ttl) {
         return getPermalink(attachment, policy, configMap);
+    }
+
+    @Override
+    public Mono<Map<ThumbnailSize, URI>> getThumbnailLinks(Attachment attachment, Policy policy,
+        ConfigMap configMap) {
+        if (!this.shouldHandle(policy)) {
+            return Mono.empty();
+        }
+        return Mono.just(doGetThumbnailLinks(attachment));
+    }
+
+    protected Optional<URI> doGetPermalink(Attachment attachment) {
+        var annotations = attachment.getMetadata().getAnnotations();
+        if (annotations == null
+            || !annotations.containsKey(Constant.URI_ANNO_KEY)) {
+            return Optional.empty();
+        }
+        var uriStr = annotations.get(Constant.URI_ANNO_KEY);
+        return Optional.of(HaloUtils.safeToUri(uriStr));
+    }
+
+    private Map<ThumbnailSize, URI> doGetThumbnailLinks(Attachment attachment) {
+        if (attachment.getStatus() == null
+            || !StringUtils.hasText(attachment.getStatus().getPermalink())) {
+            return Map.of();
+        }
+        var permalinkUri = URI.create(attachment.getStatus().getPermalink());
+        return ThumbnailUtils.buildSrcsetMap(permalinkUri);
+    }
+
+    private void deleteAttachmentFile(Path attachmentPath) {
+        var attachmentsRoot = attachmentDirGetter.get();
+        checkDirectoryTraversal(attachmentsRoot, attachmentPath);
+        try {
+            Files.deleteIfExists(attachmentPath);
+            log.info("Deleted attachment file {}", attachmentPath);
+        } catch (IOException e) {
+            throw Exceptions.propagate(e);
+        }
+    }
+
+    private void deleteThumbnails(Path attachmentPath) {
+        this.localThumbnailService.delete(attachmentPath);
     }
 
     private boolean shouldHandle(Policy policy) {

@@ -1,10 +1,11 @@
-import type { PMNode, Selection } from "@/tiptap";
+import type { PMNode } from "@/tiptap";
 import {
   Decoration,
   DecorationSet,
   EditorView,
   Plugin,
   PluginKey,
+  Selection,
   Transaction,
 } from "@/tiptap/pm";
 import { Editor } from "@/tiptap/vue-3";
@@ -40,9 +41,9 @@ export class SearchAndReplacePluginView {
   }
 
   update() {
-    const { parentElement: editorParentElement } = this.editor.options.element;
-    if (!this.init && editorParentElement) {
-      editorParentElement.insertAdjacentElement(
+    const headerParentElement = this.findEditorEntryElement();
+    if (!this.init && headerParentElement) {
+      headerParentElement.insertAdjacentElement(
         "afterbegin",
         this.containerElement
       );
@@ -53,6 +54,22 @@ export class SearchAndReplacePluginView {
 
   destroy() {
     return false;
+  }
+
+  private findEditorEntryElement() {
+    const editorElement = this.editor.options.element as HTMLElement;
+    let currentElement = editorElement;
+    while (currentElement) {
+      if (currentElement.classList.contains("editor-main")) {
+        return currentElement;
+      }
+
+      if (!currentElement.parentElement) {
+        break;
+      }
+      currentElement = currentElement.parentElement;
+    }
+    return null;
   }
 }
 
@@ -345,7 +362,7 @@ export class SearchAndReplacePluginState {
    */
   getFullText(doc: PMNode): TextNodesWithPosition[] {
     const textNodesWithPosition: TextNodesWithPosition[] = [];
-    doc.descendants((node, pos, parent, index) => {
+    doc.descendants((node, pos, _parent, index) => {
       if (node.isText) {
         textNodesWithPosition.push({
           text: `${node.text}`,

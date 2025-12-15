@@ -1,20 +1,18 @@
 <script lang="ts" setup>
+import { useThemeStore } from "@console/stores/theme";
 import {
   reset,
   submitForm,
   type FormKitNode,
-  type FormKitSchemaCondition,
+  type FormKitSchemaDefinition,
   type FormKitSchemaNode,
 } from "@formkit/core";
-
-import { IconArrowRight } from "@halo-dev/components";
-
-import { randomUUID } from "@/utils/id";
-import { useThemeStore } from "@console/stores/theme";
 import { getValidationMessages } from "@formkit/validation";
 import type { AnnotationSetting } from "@halo-dev/api-client";
 import { coreApiClient } from "@halo-dev/api-client";
-import { cloneDeep } from "lodash-es";
+import { IconArrowRight } from "@halo-dev/components";
+import { utils } from "@halo-dev/ui-shared";
+import { cloneDeep } from "es-toolkit";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 
 const themeStore = useThemeStore();
@@ -69,18 +67,21 @@ const handleFetchAnnotationSettings = async () => {
   }
 };
 
-const specFormId = `${randomUUID()}-specForm`;
-const customFormId = `${randomUUID()}-customForm`;
+const specFormId = `${utils.id.uuid()}-specForm`;
+const customFormId = `${utils.id.uuid()}-customForm`;
 const annotations = ref<{
   [key: string]: string;
 }>({});
 const customAnnotationsState = ref<{ key: string; value: string }[]>([]);
 
 const customAnnotations = computed(() => {
-  return customAnnotationsState.value.reduce((acc, cur) => {
-    acc[cur.key] = cur.value;
-    return acc;
-  }, {} as { [key: string]: string });
+  return customAnnotationsState.value.reduce(
+    (acc, cur) => {
+      acc[cur.key] = cur.value;
+      return acc;
+    },
+    {} as { [key: string]: string }
+  );
 });
 
 const handleProcessCustomAnnotations = () => {
@@ -133,12 +134,15 @@ const handleProcessCustomAnnotations = () => {
       }
     })
     .filter(Boolean)
-    .reduce((acc, cur) => {
-      if (cur) {
-        acc[cur.key] = cur.value;
-      }
-      return acc;
-    }, {} as { [key: string]: string });
+    .reduce(
+      (acc, cur) => {
+        if (cur) {
+          acc[cur.key] = cur.value;
+        }
+        return acc;
+      },
+      {} as { [key: string]: string }
+    );
 };
 
 onMounted(async () => {
@@ -222,7 +226,9 @@ function onCustomFormToggle(e: Event) {
         <FormKitSchema
           v-if="annotationSetting.spec?.formSchema"
           :key="index"
-          :schema="annotationSetting.spec?.formSchema as (FormKitSchemaCondition| FormKitSchemaNode[])"
+          :schema="
+            annotationSetting.spec?.formSchema as FormKitSchemaDefinition
+          "
         />
       </template>
     </FormKit>
@@ -230,7 +236,7 @@ function onCustomFormToggle(e: Event) {
     <!-- @vue-ignore -->
     <details
       :open="showCustomForm"
-      class="flex flex-col cursor-pointer space-y-4 py-4 transition-all first:pt-0"
+      class="flex cursor-pointer flex-col space-y-4 py-4 transition-all first:pt-0"
       @toggle="onCustomFormToggle"
     >
       <summary class="group flex items-center justify-between">
@@ -265,8 +271,9 @@ function onCustomFormToggle(e: Event) {
       >
         <FormKit
           v-model="customAnnotationsState"
-          type="repeater"
+          type="array"
           :label="$t('core.components.annotations_form.custom_fields.label')"
+          :item-labels="[{ type: 'text', label: '$value.key' }]"
         >
           <FormKit
             type="text"

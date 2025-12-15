@@ -6,8 +6,6 @@ import { useContentCache } from "@/composables/use-content-cache";
 import { useEditorExtensionPoints } from "@/composables/use-editor-extension-points";
 import { useSessionKeepAlive } from "@/composables/use-session-keep-alive";
 import { contentAnnotations } from "@/constants/annotations";
-import { randomUUID } from "@/utils/id";
-import { usePermission } from "@/utils/permission";
 import { useContentSnapshot } from "@console/composables/use-content-snapshot";
 import { useSaveKeybinding } from "@console/composables/use-save-keybinding";
 import type { SinglePage, SinglePageRequest } from "@halo-dev/api-client";
@@ -27,18 +25,19 @@ import {
   Toast,
   VButton,
   VPageHeader,
-  VSpace,
 } from "@halo-dev/components";
-import type { EditorProvider } from "@halo-dev/console-shared";
+import { utils, type EditorProvider } from "@halo-dev/ui-shared";
 import { useLocalStorage } from "@vueuse/core";
 import { useRouteQuery } from "@vueuse/router";
 import type { AxiosRequestConfig } from "axios";
+import { isEqual } from "es-toolkit";
 import {
   computed,
   nextTick,
   onMounted,
   provide,
   ref,
+  shallowRef,
   toRef,
   watch,
   type ComputedRef,
@@ -51,11 +50,10 @@ import { usePageUpdateMutate } from "./composables/use-page-update-mutate";
 const router = useRouter();
 const { t } = useI18n();
 const { mutateAsync: singlePageUpdateMutate } = usePageUpdateMutate();
-const { currentUserHasPermission } = usePermission();
 
 // Editor providers
 const { editorProviders, fetchEditorProviders } = useEditorExtensionPoints();
-const currentEditorProvider = ref<EditorProvider>();
+const currentEditorProvider = shallowRef<EditorProvider>();
 const storedEditorProviderName = useLocalStorage("editor-provider-name", "");
 
 const handleChangeEditorProvider = async (provider: EditorProvider) => {
@@ -97,7 +95,7 @@ const formState = ref<SinglePageRequest>({
     apiVersion: "content.halo.run/v1alpha1",
     kind: "SinglePage",
     metadata: {
-      name: randomUUID(),
+      name: utils.id.uuid(),
       annotations: {},
     },
   },
@@ -111,11 +109,14 @@ const saving = ref(false);
 const publishing = ref(false);
 const settingModal = ref(false);
 
-const isTitleChanged = ref(false);
+const needsUpdatePage = ref(false);
 watch(
-  () => formState.value.page.spec.title,
-  (newValue, oldValue) => {
-    isTitleChanged.value = newValue !== oldValue;
+  [
+    () => formState.value.page.spec.title,
+    () => formState.value.page.spec.cover,
+  ],
+  (value, oldValue) => {
+    needsUpdatePage.value = !isEqual(value, oldValue);
   }
 );
 
@@ -149,12 +150,13 @@ const handleSave = async (options?: { mute?: boolean }) => {
     if (!formState.value.page.spec.title) {
       formState.value.page.spec.title = t("core.page_editor.untitled");
     }
+
     if (!formState.value.page.spec.slug) {
       formState.value.page.spec.slug = new Date().getTime().toString();
     }
 
     if (isUpdateMode.value) {
-      if (isTitleChanged.value) {
+      if (needsUpdatePage.value) {
         formState.value.page = (
           await singlePageUpdateMutate(formState.value.page)
         ).data;
@@ -167,7 +169,7 @@ const handleSave = async (options?: { mute?: boolean }) => {
         });
 
       formState.value.page = data;
-      isTitleChanged.value = false;
+      needsUpdatePage.value = false;
     } else {
       // Clear new page content cache
       handleClearCache();
@@ -205,7 +207,7 @@ const handlePublish = async () => {
       const { name: singlePageName } = formState.value.page.metadata;
       const { permalink } = formState.value.page.status || {};
 
-      if (isTitleChanged.value) {
+      if (needsUpdatePage.value) {
         formState.value.page = (
           await singlePageUpdateMutate(formState.value.page)
         ).data;
@@ -221,9 +223,15 @@ const handlePublish = async () => {
       });
 
       if (returnToView.value && permalink) {
+        handleClearCache(routeQueryName.value);
         window.location.href = permalink;
-      } else {
+        return;
+      }
+
+      if (router.options.history.state.back === null) {
         router.push({ name: "SinglePages" });
+      } else {
+        router.back();
       }
     } else {
       formState.value.page.spec.publish = true;
@@ -238,7 +246,7 @@ const handlePublish = async () => {
     }
 
     Toast.success(t("core.common.toast.publish_success"));
-    handleClearCache(routeQueryName.value as string);
+    handleClearCache(routeQueryName.value);
   } catch (error) {
     console.error("Failed to publish single page", error);
     Toast.error(t("core.common.toast.publish_failed_and_retry"));
@@ -311,27 +319,7 @@ const handleFetchContent = async () => {
 
 // SinglePage settings
 const handleOpenSettingModal = async () => {
-  if (isTitleChanged.value) {
-    await coreApiClient.content.singlePage.patchSinglePage({
-      name: formState.value.page.metadata.name,
-      jsonPatchInner: [
-        {
-          op: "add",
-          path: "/spec/title",
-          value:
-            formState.value.page.spec.title || t("core.page_editor.untitled"),
-        },
-      ],
-    });
-    isTitleChanged.value = false;
-  }
-
-  const { data: latestSinglePage } =
-    await coreApiClient.content.singlePage.getSinglePage({
-      name: formState.value.page.metadata.name,
-    });
-  formState.value.page = latestSinglePage;
-
+  await handleSave({ mute: true });
   settingModal.value = true;
 };
 
@@ -428,7 +416,7 @@ useSessionKeepAlive();
 
 // Upload image
 async function handleUploadImage(file: File, options?: AxiosRequestConfig) {
-  if (!currentUserHasPermission(["uc:attachments:manage"])) {
+  if (!utils.permission.has(["uc:attachments:manage"])) {
     return;
   }
 
@@ -464,71 +452,69 @@ async function handleUploadImage(file: File, options?: AxiosRequestConfig) {
 
   <VPageHeader :title="$t('core.page.title')">
     <template #icon>
-      <IconPages class="mr-2 self-center" />
+      <IconPages />
     </template>
     <template #actions>
-      <VSpace>
-        <EditorProviderSelector
-          v-if="editorProviders.length > 1"
-          :provider="currentEditorProvider"
-          :allow-forced-select="!isUpdateMode"
-          @select="handleChangeEditorProvider"
-        />
-        <VButton
-          v-if="isUpdateMode"
-          size="sm"
-          type="default"
-          @click="
-            $router.push({
-              name: 'SinglePageSnapshots',
-              query: { name: routeQueryName },
-            })
-          "
-        >
-          <template #icon>
-            <IconHistoryLine class="h-full w-full" />
-          </template>
-          {{ $t("core.page_editor.actions.snapshots") }}
-        </VButton>
-        <VButton
-          size="sm"
-          type="default"
-          :loading="previewPending"
-          @click="handlePreview"
-        >
-          <template #icon>
-            <IconEye class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.preview") }}
-        </VButton>
-        <VButton :loading="saving" size="sm" type="default" @click="handleSave">
-          <template #icon>
-            <IconSave class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.save") }}
-        </VButton>
-        <VButton
-          v-if="isUpdateMode"
-          size="sm"
-          type="default"
-          @click="handleOpenSettingModal"
-        >
-          <template #icon>
-            <IconSettings class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.setting") }}
-        </VButton>
-        <VButton
-          type="secondary"
-          :loading="publishing"
-          @click="handlePublishClick"
-        >
-          <template #icon>
-            <IconSendPlaneFill class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.publish") }}
-        </VButton>
-      </VSpace>
+      <EditorProviderSelector
+        v-if="editorProviders.length > 1"
+        :provider="currentEditorProvider"
+        :allow-forced-select="!isUpdateMode"
+        @select="handleChangeEditorProvider"
+      />
+      <VButton
+        v-if="isUpdateMode"
+        size="sm"
+        type="default"
+        @click="
+          $router.push({
+            name: 'SinglePageSnapshots',
+            query: { name: routeQueryName },
+          })
+        "
+      >
+        <template #icon>
+          <IconHistoryLine />
+        </template>
+        {{ $t("core.page_editor.actions.snapshots") }}
+      </VButton>
+      <VButton
+        size="sm"
+        type="default"
+        :loading="previewPending"
+        @click="handlePreview"
+      >
+        <template #icon>
+          <IconEye />
+        </template>
+        {{ $t("core.common.buttons.preview") }}
+      </VButton>
+      <VButton :loading="saving" size="sm" type="default" @click="handleSave">
+        <template #icon>
+          <IconSave />
+        </template>
+        {{ $t("core.common.buttons.save") }}
+      </VButton>
+      <VButton
+        v-if="isUpdateMode"
+        size="sm"
+        type="default"
+        @click="handleOpenSettingModal"
+      >
+        <template #icon>
+          <IconSettings />
+        </template>
+        {{ $t("core.common.buttons.setting") }}
+      </VButton>
+      <VButton
+        type="secondary"
+        :loading="publishing"
+        @click="handlePublishClick"
+      >
+        <template #icon>
+          <IconSendPlaneFill />
+        </template>
+        {{ $t("core.common.buttons.publish") }}
+      </VButton>
     </template>
   </VPageHeader>
   <div class="editor border-t" style="height: calc(100vh - 3.5rem)">
@@ -538,6 +524,7 @@ async function handleUploadImage(file: File, options?: AxiosRequestConfig) {
       v-model:raw="formState.content.raw"
       v-model:content="formState.content.content"
       v-model:title="formState.page.spec.title"
+      v-model:cover="formState.page.spec.cover"
       :upload-image="handleUploadImage"
       class="h-full"
       @update="handleSetContentCache"

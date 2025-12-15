@@ -1,7 +1,12 @@
 package run.halo.app.notification;
 
+import static run.halo.app.extension.ExtensionUtil.addFinalizers;
+import static run.halo.app.extension.ExtensionUtil.removeFinalizers;
+
+import java.time.Duration;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import run.halo.app.core.extension.notification.Reason;
 import run.halo.app.extension.ExtensionClient;
@@ -20,11 +25,13 @@ import run.halo.app.extension.controller.Reconciler;
  * @author guqing
  * @since 2.10.0
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class NotificationTrigger implements Reconciler<Reconciler.Request> {
 
     public static final String TRIGGERED_FINALIZER = "triggered";
+    private static final Duration TIMEOUT = Duration.ofMinutes(1);
 
     private final ExtensionClient client;
     private final NotificationCenter notificationCenter;
@@ -33,25 +40,34 @@ public class NotificationTrigger implements Reconciler<Reconciler.Request> {
     public Result reconcile(Request request) {
         client.fetch(Reason.class, request.name()).ifPresent(reason -> {
             if (ExtensionUtil.isDeleted(reason)) {
+                if (removeFinalizers(reason.getMetadata(), Set.of(TRIGGERED_FINALIZER))) {
+                    client.update(reason);
+                    log.info("Cleaned up notification reason {}", request.name());
+                }
                 return;
             }
-            if (ExtensionUtil.addFinalizers(reason.getMetadata(), Set.of(TRIGGERED_FINALIZER))) {
+            if (addFinalizers(reason.getMetadata(), Set.of(TRIGGERED_FINALIZER))) {
                 // notifier
                 onNewReasonReceived(reason);
-                client.update(reason);
             }
+            // cleanup reason after notified
+            client.delete(reason);
         });
         return Result.doNotRetry();
     }
 
-    public void onNewReasonReceived(Reason reason) {
-        notificationCenter.notify(reason).block();
+    private void onNewReasonReceived(Reason reason) {
+        var name = reason.getMetadata().getName();
+        log.info("Sending notification for reason: {}", name);
+        notificationCenter.notify(reason).block(TIMEOUT);
+        log.info("Notification sent for reason: {}", name);
     }
 
     @Override
     public Controller setupWith(ControllerBuilder builder) {
         return builder
             .extension(new Reason())
+            .workerCount(10)
             .build();
     }
 }

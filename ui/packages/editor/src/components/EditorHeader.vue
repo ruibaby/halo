@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { Editor, type AnyExtension } from "@/tiptap/vue-3";
-import type { ToolbarItem, ToolboxItem } from "@/types";
+import { VueEditor } from "@/tiptap";
+import { type AnyExtension } from "@/tiptap/vue-3";
+import type { ToolbarItemType, ToolboxItemType } from "@/types";
 import { Dropdown as VDropdown } from "floating-vue";
-import MdiPlusCircle from "~icons/mdi/plus-circle";
+import MingcuteAddCircleFill from "~icons/mingcute/add-circle-fill";
 
 const props = defineProps({
   editor: {
-    type: Editor,
+    type: VueEditor,
     required: true,
   },
 });
@@ -14,7 +15,7 @@ const props = defineProps({
 function getToolbarItemsFromExtensions() {
   const extensionManager = props.editor?.extensionManager;
   return extensionManager.extensions
-    .reduce((acc: ToolbarItem[], extension: AnyExtension) => {
+    .reduce((acc: ToolbarItemType[], extension: AnyExtension) => {
       const { getToolbarItems } = extension.options;
 
       if (!getToolbarItems) {
@@ -37,7 +38,7 @@ function getToolbarItemsFromExtensions() {
 function getToolboxItemsFromExtensions() {
   const extensionManager = props.editor?.extensionManager;
   return extensionManager.extensions
-    .reduce((acc: ToolboxItem[], extension: AnyExtension) => {
+    .reduce((acc: ToolboxItemType[], extension: AnyExtension) => {
       const { getToolboxItems } = extension.options;
 
       if (!getToolboxItems) {
@@ -59,17 +60,21 @@ function getToolboxItemsFromExtensions() {
 </script>
 <template>
   <div
-    class="editor-header py-1 space-x-1 px-3 overflow-auto border-t shadow-sm bg-white text-center"
+    class="editor-header space-x-1 overflow-auto border-b bg-white px-1 py-1 text-center shadow-sm"
   >
-    <div class="h-full inline-flex items-center">
+    <div class="inline-flex h-full items-center gap-1">
       <VDropdown :triggers="['click']" :popper-triggers="['click']">
-        <button class="p-1.5 rounded-md hover:bg-gray-100" tabindex="-1">
-          <MdiPlusCircle class="text-[#4CCBA0]" />
-        </button>
-        <template #popper>
-          <div
-            class="relative rounded-md bg-white overflow-hidden shadow w-56 p-1 max-h-96 overflow-y-auto space-y-1.5"
+        <template #default="{ shown }">
+          <button
+            class="inline-flex size-8 items-center justify-center rounded-md p-1 transition-colors hover:bg-gray-100 active:!bg-gray-200"
+            :class="{ 'bg-gray-200': shown }"
+            tabindex="-1"
           >
+            <MingcuteAddCircleFill class="text-primary" />
+          </button>
+        </template>
+        <template #popper>
+          <div class="relative max-h-96 w-56 overflow-hidden overflow-y-auto">
             <component
               :is="toolboxItem.component"
               v-for="(toolboxItem, index) in getToolboxItemsFromExtensions()"
@@ -80,7 +85,7 @@ function getToolboxItemsFromExtensions() {
           </div>
         </template>
       </VDropdown>
-      <div class="h-5 bg-gray-100 w-[1px] !mx-1"></div>
+      <div class="mx-1 h-5 w-[1px] bg-gray-100"></div>
       <div
         v-for="(item, index) in getToolbarItemsFromExtensions()"
         :key="index"
@@ -98,15 +103,18 @@ function getToolboxItemsFromExtensions() {
             :triggers="['click']"
             :popper-triggers="['click']"
           >
-            <component
-              :is="item.component"
-              v-bind="item.props"
-              :children="item.children"
-              tabindex="-1"
-            />
+            <template #default="{ shown }">
+              <component
+                :is="item.component"
+                v-bind="item.props"
+                :children="item.children"
+                tabindex="-1"
+                :class="{ 'bg-gray-200': shown }"
+              />
+            </template>
             <template #popper>
               <div
-                class="relative rounded-md bg-white overflow-hidden shadow w-56 p-1 max-h-96 overflow-y-auto space-y-1.5"
+                class="relative max-h-96 w-56 overflow-hidden overflow-y-auto"
               >
                 <component
                   v-bind="child.props"

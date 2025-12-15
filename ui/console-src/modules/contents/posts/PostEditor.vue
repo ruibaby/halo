@@ -6,9 +6,6 @@ import { useContentCache } from "@/composables/use-content-cache";
 import { useEditorExtensionPoints } from "@/composables/use-editor-extension-points";
 import { useSessionKeepAlive } from "@/composables/use-session-keep-alive";
 import { contentAnnotations } from "@/constants/annotations";
-import { FormType } from "@/types/slug";
-import { randomUUID } from "@/utils/id";
-import { usePermission } from "@/utils/permission";
 import { useContentSnapshot } from "@console/composables/use-content-snapshot";
 import { useSaveKeybinding } from "@console/composables/use-save-keybinding";
 import useSlugify from "@console/composables/use-slugify";
@@ -29,18 +26,21 @@ import {
   Toast,
   VButton,
   VPageHeader,
-  VSpace,
 } from "@halo-dev/components";
-import type { EditorProvider } from "@halo-dev/console-shared";
+import type { EditorProvider } from "@halo-dev/ui-shared";
+import { FormType, utils } from "@halo-dev/ui-shared";
 import { useLocalStorage } from "@vueuse/core";
 import { useRouteQuery } from "@vueuse/router";
 import type { AxiosRequestConfig } from "axios";
+import { isEqual } from "es-toolkit";
+import ShortUniqueId from "short-unique-id";
 import {
   computed,
   nextTick,
   onMounted,
   provide,
   ref,
+  shallowRef,
   toRef,
   watch,
   type ComputedRef,
@@ -50,14 +50,15 @@ import { useRouter } from "vue-router";
 import PostSettingModal from "./components/PostSettingModal.vue";
 import { usePostUpdateMutate } from "./composables/use-post-update-mutate";
 
+const uid = new ShortUniqueId();
+
 const router = useRouter();
 const { t } = useI18n();
 const { mutateAsync: postUpdateMutate } = usePostUpdateMutate();
-const { currentUserHasPermission } = usePermission();
 
 // Editor providers
 const { editorProviders, fetchEditorProviders } = useEditorExtensionPoints();
-const currentEditorProvider = ref<EditorProvider>();
+const currentEditorProvider = shallowRef<EditorProvider>();
 const storedEditorProviderName = useLocalStorage("editor-provider-name", "");
 
 const handleChangeEditorProvider = async (provider: EditorProvider) => {
@@ -77,17 +78,8 @@ const handleChangeEditorProvider = async (provider: EditorProvider) => {
   }
 };
 
-// fixme: PostRequest type may be wrong
-interface PostRequestWithContent extends PostRequest {
-  content: {
-    raw: string;
-    content: string;
-    rawType: string;
-  };
-}
-
 // Post form
-const formState = ref<PostRequestWithContent>({
+const formState = ref<PostRequest>({
   post: {
     spec: {
       title: "",
@@ -112,7 +104,7 @@ const formState = ref<PostRequestWithContent>({
     apiVersion: "content.halo.run/v1alpha1",
     kind: "Post",
     metadata: {
-      name: randomUUID(),
+      name: utils.id.uuid(),
       annotations: {},
     },
   },
@@ -126,11 +118,14 @@ const settingModal = ref(false);
 const saving = ref(false);
 const publishing = ref(false);
 
-const isTitleChanged = ref(false);
+const needsUpdatePost = ref(false);
 watch(
-  () => formState.value.post.spec.title,
-  (newValue, oldValue) => {
-    isTitleChanged.value = newValue !== oldValue;
+  [
+    () => formState.value.post.spec.title,
+    () => formState.value.post.spec.cover,
+  ],
+  (value, oldValue) => {
+    needsUpdatePost.value = !isEqual(value, oldValue);
   }
 );
 
@@ -152,6 +147,21 @@ provide<ComputedRef<string | undefined>>(
   computed(() => formState.value.post.status?.permalink)
 );
 
+// Slug generation
+const { handleGenerateSlug } = useSlugify(
+  computed(() => formState.value.post.spec.title),
+  computed({
+    get() {
+      return formState.value.post.spec.slug;
+    },
+    set(value) {
+      formState.value.post.spec.slug = value;
+    },
+  }),
+  computed(() => !isUpdateMode.value),
+  FormType.POST
+);
+
 const handleSave = async (options?: { mute?: boolean }) => {
   try {
     if (!options?.mute) {
@@ -163,13 +173,8 @@ const handleSave = async (options?: { mute?: boolean }) => {
       formState.value.post.spec.title = t("core.post_editor.untitled");
     }
 
-    if (!formState.value.post.spec.slug) {
-      formState.value.post.spec.slug = new Date().getTime().toString();
-    }
-
     if (isUpdateMode.value) {
-      // Save post title
-      if (isTitleChanged.value) {
+      if (needsUpdatePost.value) {
         formState.value.post = (
           await postUpdateMutate(formState.value.post)
         ).data;
@@ -182,10 +187,25 @@ const handleSave = async (options?: { mute?: boolean }) => {
 
       formState.value.post = data;
 
-      isTitleChanged.value = false;
+      needsUpdatePost.value = false;
     } else {
       // Clear new post content cache
       handleClearCache();
+
+      if (!formState.value.post.spec.slug) {
+        handleGenerateSlug(true);
+      }
+
+      // fixme: check if slug is unique
+      // Finally, we need to check if the slug is unique in the database
+      const { data: postsWithSameSlug } =
+        await coreApiClient.content.post.listPost({
+          fieldSelector: [`spec.slug=${formState.value.post.spec.slug}`],
+        });
+
+      if (postsWithSameSlug.total) {
+        formState.value.post.spec.slug = `${formState.value.post.spec.slug}-${uid.randomUUID(8)}`;
+      }
 
       const { data } = await consoleApiClient.content.post.draftPost({
         postRequest: formState.value,
@@ -218,7 +238,7 @@ const handlePublish = async () => {
       const { name: postName } = formState.value.post.metadata;
       const { permalink } = formState.value.post.status || {};
 
-      if (isTitleChanged.value) {
+      if (needsUpdatePost.value) {
         formState.value.post = (
           await postUpdateMutate(formState.value.post)
         ).data;
@@ -234,9 +254,15 @@ const handlePublish = async () => {
       });
 
       if (returnToView.value === "true" && permalink) {
+        handleClearCache(name.value);
         window.location.href = permalink;
-      } else {
+        return;
+      }
+
+      if (router.options.history.state.back === null) {
         router.push({ name: "Posts" });
+      } else {
+        router.back();
       }
     } else {
       const { data } = await consoleApiClient.content.post.draftPost({
@@ -332,26 +358,7 @@ const handleFetchContent = async () => {
 };
 
 const handleOpenSettingModal = async () => {
-  if (isTitleChanged.value) {
-    await coreApiClient.content.post.patchPost({
-      name: formState.value.post.metadata.name,
-      jsonPatchInner: [
-        {
-          op: "add",
-          path: "/spec/title",
-          value:
-            formState.value.post.spec.title || t("core.post_editor.untitled"),
-        },
-      ],
-    });
-    isTitleChanged.value = false;
-  }
-
-  const { data: latestPost } = await coreApiClient.content.post.getPost({
-    name: formState.value.post.metadata.name,
-  });
-  formState.value.post = latestPost;
-
+  await handleSave({ mute: true });
   settingModal.value = true;
 };
 
@@ -452,7 +459,7 @@ useSessionKeepAlive();
 
 // Upload image
 async function handleUploadImage(file: File, options?: AxiosRequestConfig) {
-  if (!currentUserHasPermission(["uc:attachments:manage"])) {
+  if (!utils.permission.has(["uc:attachments:manage"])) {
     return;
   }
 
@@ -466,21 +473,6 @@ async function handleUploadImage(file: File, options?: AxiosRequestConfig) {
   );
   return data;
 }
-
-// Slug generation
-useSlugify(
-  computed(() => formState.value.post.spec.title),
-  computed({
-    get() {
-      return formState.value.post.spec.slug;
-    },
-    set(value) {
-      formState.value.post.spec.slug = value;
-    },
-  }),
-  computed(() => !isUpdateMode.value),
-  FormType.POST
-);
 </script>
 
 <template>
@@ -503,68 +495,64 @@ useSlugify(
 
   <VPageHeader :title="$t('core.post.title')">
     <template #icon>
-      <IconBookRead class="mr-2 self-center" />
+      <IconBookRead />
     </template>
     <template #actions>
-      <VSpace>
-        <EditorProviderSelector
-          v-if="editorProviders.length > 1"
-          :provider="currentEditorProvider"
-          :allow-forced-select="!isUpdateMode"
-          @select="handleChangeEditorProvider"
-        />
-        <VButton
-          v-if="isUpdateMode"
-          size="sm"
-          type="default"
-          @click="
-            $router.push({ name: 'PostSnapshots', query: { name: name } })
-          "
-        >
-          <template #icon>
-            <IconHistoryLine class="h-full w-full" />
-          </template>
-          {{ $t("core.post_editor.actions.snapshots") }}
-        </VButton>
-        <VButton
-          size="sm"
-          type="default"
-          :loading="previewPending"
-          @click="handlePreview"
-        >
-          <template #icon>
-            <IconEye class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.preview") }}
-        </VButton>
-        <VButton :loading="saving" size="sm" type="default" @click="handleSave">
-          <template #icon>
-            <IconSave class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.save") }}
-        </VButton>
-        <VButton
-          v-if="isUpdateMode"
-          size="sm"
-          type="default"
-          @click="handleOpenSettingModal"
-        >
-          <template #icon>
-            <IconSettings class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.setting") }}
-        </VButton>
-        <VButton
-          type="secondary"
-          :loading="publishing"
-          @click="handlePublishClick"
-        >
-          <template #icon>
-            <IconSendPlaneFill class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.publish") }}
-        </VButton>
-      </VSpace>
+      <EditorProviderSelector
+        v-if="editorProviders.length > 1"
+        :provider="currentEditorProvider"
+        :allow-forced-select="!isUpdateMode"
+        @select="handleChangeEditorProvider"
+      />
+      <VButton
+        v-if="isUpdateMode"
+        size="sm"
+        type="default"
+        @click="$router.push({ name: 'PostSnapshots', query: { name: name } })"
+      >
+        <template #icon>
+          <IconHistoryLine />
+        </template>
+        {{ $t("core.post_editor.actions.snapshots") }}
+      </VButton>
+      <VButton
+        size="sm"
+        type="default"
+        :loading="previewPending"
+        @click="handlePreview"
+      >
+        <template #icon>
+          <IconEye />
+        </template>
+        {{ $t("core.common.buttons.preview") }}
+      </VButton>
+      <VButton :loading="saving" size="sm" type="default" @click="handleSave">
+        <template #icon>
+          <IconSave />
+        </template>
+        {{ $t("core.common.buttons.save") }}
+      </VButton>
+      <VButton
+        v-if="isUpdateMode"
+        size="sm"
+        type="default"
+        @click="handleOpenSettingModal"
+      >
+        <template #icon>
+          <IconSettings />
+        </template>
+        {{ $t("core.common.buttons.setting") }}
+      </VButton>
+      <VButton
+        type="secondary"
+        :loading="publishing"
+        @click="handlePublishClick"
+      >
+        <template #icon>
+          <IconSendPlaneFill />
+        </template>
+        {{ $t("core.common.buttons.publish") }}
+      </VButton>
     </template>
   </VPageHeader>
   <div class="editor border-t" style="height: calc(100vh - 3.5rem)">
@@ -574,8 +562,9 @@ useSlugify(
       v-model:raw="formState.content.raw"
       v-model:content="formState.content.content"
       v-model:title="formState.post.spec.title"
+      v-model:cover="formState.post.spec.cover"
       :upload-image="handleUploadImage"
-      class="h-full"
+      class="size-full"
       @update="handleSetContentCache"
     />
   </div>

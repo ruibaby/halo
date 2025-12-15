@@ -1,10 +1,10 @@
 package run.halo.app.content.stats;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
-import static run.halo.app.extension.index.query.QueryFactory.and;
-import static run.halo.app.extension.index.query.QueryFactory.equal;
-import static run.halo.app.extension.index.query.QueryFactory.greaterThan;
-import static run.halo.app.extension.index.query.QueryFactory.isNull;
+import static run.halo.app.extension.index.query.Queries.and;
+import static run.halo.app.extension.index.query.Queries.equal;
+import static run.halo.app.extension.index.query.Queries.greaterThan;
+import static run.halo.app.extension.index.query.Queries.isNull;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -28,8 +28,9 @@ import run.halo.app.extension.controller.DefaultController;
 import run.halo.app.extension.controller.DefaultQueue;
 import run.halo.app.extension.controller.Reconciler;
 import run.halo.app.extension.controller.RequestQueue;
-import run.halo.app.extension.index.query.Query;
+import run.halo.app.extension.index.query.Condition;
 import run.halo.app.extension.router.selector.FieldSelector;
+import run.halo.app.infra.InitializationPhase;
 
 /**
  * Update the comment status after receiving the reply event.
@@ -116,7 +117,7 @@ public class ReplyEventReconciler
         }
     }
 
-    static ListOptions listOptionsWithFieldQuery(Query query) {
+    static ListOptions listOptionsWithFieldQuery(Condition query) {
         var listOptions = new ListOptions();
         listOptions.setFieldSelector(FieldSelector.of(query));
         return listOptions;
@@ -148,6 +149,11 @@ public class ReplyEventReconciler
     @Override
     public boolean isRunning() {
         return this.running;
+    }
+
+    @Override
+    public int getPhase() {
+        return InitializationPhase.CONTROLLERS.getPhase();
     }
 
     @EventListener(ReplyEvent.class)

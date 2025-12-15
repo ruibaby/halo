@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Halo",
-    "version": "2.20.11-SNAPSHOT"
+    "version": "2.22.0-SNAPSHOT"
   },
   "servers": [
     {
@@ -2574,17 +2574,6 @@
         ]
       }
     },
-    "/apis/api.console.halo.run/v1alpha1/indices/post": {
-      "post": {
-        "deprecated": true,
-        "description": "Build or rebuild post indices for full text search. This method is deprecated, please use POST /indices/-/rebuild instead.",
-        "operationId": "BuildPostIndices",
-        "responses": {},
-        "tags": [
-          "IndicesV1alpha1Console"
-        ]
-      }
-    },
     "/apis/api.console.halo.run/v1alpha1/notifiers/{name}/sender-config": {
       "get": {
         "description": "Fetch sender config of notifier",
@@ -2834,77 +2823,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/Plugin"
-                }
-              }
-            },
-            "description": "default response"
-          }
-        },
-        "tags": [
-          "PluginV1alpha1Console"
-        ]
-      }
-    },
-    "/apis/api.console.halo.run/v1alpha1/plugins/{name}/config": {
-      "get": {
-        "description": "Fetch configMap of plugin by configured configMapName. it is deprecated since 2.20.0",
-        "operationId": "fetchPluginConfig",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConfigMap"
-                }
-              }
-            },
-            "description": "default response"
-          }
-        },
-        "tags": [
-          "PluginV1alpha1Console"
-        ]
-      },
-      "put": {
-        "deprecated": true,
-        "description": "Update the configMap of plugin setting, it is deprecated since 2.20.0",
-        "operationId": "updatePluginConfig",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ConfigMap"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConfigMap"
                 }
               }
             },
@@ -3679,7 +3597,7 @@
     },
     "/apis/api.console.halo.run/v1alpha1/posts/{name}/unpublish": {
       "put": {
-        "description": "Publish a post.",
+        "description": "UnPublish a post.",
         "operationId": "UnpublishPost",
         "parameters": [
           {
@@ -4541,78 +4459,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/Theme"
-                }
-              }
-            },
-            "description": "default response"
-          }
-        },
-        "tags": [
-          "ThemeV1alpha1Console"
-        ]
-      }
-    },
-    "/apis/api.console.halo.run/v1alpha1/themes/{name}/config": {
-      "get": {
-        "deprecated": true,
-        "description": "Fetch configMap of theme by configured configMapName. It is deprecated.",
-        "operationId": "fetchThemeConfig",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConfigMap"
-                }
-              }
-            },
-            "description": "default response"
-          }
-        },
-        "tags": [
-          "ThemeV1alpha1Console"
-        ]
-      },
-      "put": {
-        "deprecated": true,
-        "description": "Update the configMap of theme setting. It is deprecated.",
-        "operationId": "updateThemeConfig",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ConfigMap"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConfigMap"
                 }
               }
             },
@@ -6249,64 +6095,6 @@
         ]
       }
     },
-    "/apis/api.halo.run/v1alpha1/indices/post": {
-      "get": {
-        "deprecated": true,
-        "description": "Search posts with fuzzy query. This method is deprecated, please use POST /indices/-/search instead.",
-        "operationId": "SearchPost",
-        "parameters": [
-          {
-            "description": "Keyword to search",
-            "in": "query",
-            "name": "keyword",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "Limit of search results",
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "description": "Highlight pre tag",
-            "in": "query",
-            "name": "highlightPreTag",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "Highlight post tag",
-            "in": "query",
-            "name": "highlightPostTag",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchResult"
-                }
-              }
-            },
-            "description": "default response"
-          }
-        },
-        "tags": [
-          "IndexV1alpha1Public"
-        ]
-      }
-    },
     "/apis/api.halo.run/v1alpha1/menus/-": {
       "get": {
         "description": "Gets primary menu.",
@@ -6891,12 +6679,32 @@
             }
           },
           {
-            "description": "The size of the thumbnail,available values are s,m,l,xl",
+            "description": "The size of the thumbnail",
             "in": "query",
             "name": "size",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "S",
+                "M",
+                "L",
+                "XL"
+              ]
+            }
+          },
+          {
+            "description": "The width of the thumbnail, if \u0027size\u0027 is not provided, this parameter will be used to determine the size",
+            "in": "query",
+            "name": "width",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                "400",
+                "800",
+                "1200",
+                "1600"
+              ]
             }
           }
         ],
@@ -7617,6 +7425,89 @@
         },
         "tags": [
           "UserV1alpha1Console"
+        ]
+      }
+    },
+    "/apis/console.api.storage.halo.run/v1alpha1/policies/{name}/configs/{group}": {
+      "get": {
+        "description": "Get policy config by group",
+        "operationId": "getPolicyConfigByGroup",
+        "parameters": [
+          {
+            "description": "Name of the policy",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Name of the group",
+            "in": "path",
+            "name": "group",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonNode"
+                }
+              }
+            },
+            "description": "default response"
+          }
+        },
+        "tags": [
+          "PolicyAlpha1Console"
+        ]
+      },
+      "put": {
+        "description": "Update policy config by group",
+        "operationId": "updatePolicyConfigByGroup",
+        "parameters": [
+          {
+            "description": "Name of the policy",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Name of the group",
+            "in": "path",
+            "name": "group",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonNode"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "PolicyAlpha1Console"
         ]
       }
     },
@@ -12123,243 +12014,6 @@
         ]
       }
     },
-    "/apis/plugin.halo.run/v1alpha1/searchengines": {
-      "get": {
-        "description": "List SearchEngine",
-        "operationId": "listSearchEngine",
-        "parameters": [
-          {
-            "description": "Page number. Default is 0.",
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "description": "Size number. Default is 0.",
-            "in": "query",
-            "name": "size",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "description": "Label selector. e.g.: hidden!\u003dtrue",
-            "in": "query",
-            "name": "labelSelector",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "description": "Field selector. e.g.: metadata.name\u003d\u003dhalo",
-            "in": "query",
-            "name": "fieldSelector",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
-            "in": "query",
-            "name": "sort",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchEngineList"
-                }
-              }
-            },
-            "description": "Response searchengines"
-          }
-        },
-        "tags": [
-          "SearchEngineV1alpha1"
-        ]
-      },
-      "post": {
-        "description": "Create SearchEngine",
-        "operationId": "createSearchEngine",
-        "requestBody": {
-          "content": {
-            "*/*": {
-              "schema": {
-                "$ref": "#/components/schemas/SearchEngine"
-              }
-            }
-          },
-          "description": "Fresh searchengine"
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchEngine"
-                }
-              }
-            },
-            "description": "Response searchengines created just now"
-          }
-        },
-        "tags": [
-          "SearchEngineV1alpha1"
-        ]
-      }
-    },
-    "/apis/plugin.halo.run/v1alpha1/searchengines/{name}": {
-      "delete": {
-        "description": "Delete SearchEngine",
-        "operationId": "deleteSearchEngine",
-        "parameters": [
-          {
-            "description": "Name of searchengine",
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response searchengine deleted just now"
-          }
-        },
-        "tags": [
-          "SearchEngineV1alpha1"
-        ]
-      },
-      "get": {
-        "description": "Get SearchEngine",
-        "operationId": "getSearchEngine",
-        "parameters": [
-          {
-            "description": "Name of searchengine",
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchEngine"
-                }
-              }
-            },
-            "description": "Response single searchengine"
-          }
-        },
-        "tags": [
-          "SearchEngineV1alpha1"
-        ]
-      },
-      "patch": {
-        "description": "Patch SearchEngine",
-        "operationId": "patchSearchEngine",
-        "parameters": [
-          {
-            "description": "Name of searchengine",
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/JsonPatch"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchEngine"
-                }
-              }
-            },
-            "description": "Response searchengine patched just now"
-          }
-        },
-        "tags": [
-          "SearchEngineV1alpha1"
-        ]
-      },
-      "put": {
-        "description": "Update SearchEngine",
-        "operationId": "updateSearchEngine",
-        "parameters": [
-          {
-            "description": "Name of searchengine",
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "*/*": {
-              "schema": {
-                "$ref": "#/components/schemas/SearchEngine"
-              }
-            }
-          },
-          "description": "Updated searchengine"
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchEngine"
-                }
-              }
-            },
-            "description": "Response searchengines updated just now"
-          }
-        },
-        "tags": [
-          "SearchEngineV1alpha1"
-        ]
-      }
-    },
     "/apis/security.halo.run/v1alpha1/devices": {
       "get": {
         "description": "List Device",
@@ -15192,6 +14846,71 @@
         ]
       }
     },
+    "/apis/uc.api.halo.run/v1alpha1/user-preferences/{group}": {
+      "get": {
+        "description": "Get my preference by group.",
+        "operationId": "getMyPreference",
+        "parameters": [
+          {
+            "description": "Group of user preference, e.g. `notification`.",
+            "in": "path",
+            "name": "group",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonNode"
+                }
+              }
+            },
+            "description": "default response"
+          }
+        },
+        "tags": [
+          "UserPreferenceV1alpha1Uc"
+        ]
+      },
+      "put": {
+        "description": "Create or update my preference by group.",
+        "operationId": "updateMyPreference",
+        "parameters": [
+          {
+            "description": "Group of user preference, e.g. `notification`.",
+            "in": "path",
+            "name": "group",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonNode"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No content, preference updated successfully."
+          }
+        },
+        "tags": [
+          "UserPreferenceV1alpha1Uc"
+        ]
+      }
+    },
     "/apis/uc.api.security.halo.run/v1alpha1/authentications/two-factor/settings": {
       "get": {
         "description": "Get Two-factor authentication settings.",
@@ -15721,7 +15440,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UploadFromUrlRequest"
+                "$ref": "#/components/schemas/UcUploadFromUrlRequest"
               }
             }
           },
@@ -16060,7 +15779,8 @@
           "spec": {
             "$ref": "#/components/schemas/AuthProviderSpec"
           }
-        }
+        },
+        "description": "Auth provider extension."
       },
       "AuthProviderList": {
         "required": [
@@ -16131,6 +15851,7 @@
         "properties": {
           "authType": {
             "type": "string",
+            "description": "Auth type: form or oauth2.",
             "enum": [
               "FORM",
               "OAUTH2"
@@ -16220,17 +15941,21 @@
         "type": "object",
         "properties": {
           "filename": {
-            "type": "string"
+            "type": "string",
+            "description": "Filename of backup file."
           },
           "lastModifiedTime": {
             "type": "string",
+            "description": "Last modified time of backup file.",
             "format": "date-time"
           },
           "size": {
             "type": "integer",
+            "description": "Size of backup file.",
             "format": "int64"
           }
-        }
+        },
+        "description": "Backup file."
       },
       "BackupList": {
         "required": [
@@ -16318,7 +16043,8 @@
             "type": "string"
           },
           "filename": {
-            "type": "string"
+            "type": "string",
+            "description": "Name of backup file."
           },
           "phase": {
             "type": "string",
@@ -16331,6 +16057,7 @@
           },
           "size": {
             "type": "integer",
+            "description": "Size of backup file. Data unit: byte",
             "format": "int64"
           },
           "startTimestamp": {
@@ -16449,14 +16176,17 @@
             "type": "string"
           },
           "hideFromList": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "\u003cp\u003eWhether to hide the category from the category list.\u003c/p\u003e\n \u003cp\u003eWhen set to true, the category including its subcategories and related posts will\n not be displayed in the category list, but it can still be accessed by permalink.\u003c/p\u003e\n \u003cp\u003eLimitation: It only takes effect on the theme-side categorized list and it only\n allows to be set to true on the first level(root node) of categories.\u003c/p\u003e"
           },
           "postTemplate": {
             "maxLength": 255,
-            "type": "string"
+            "type": "string",
+            "description": "\u003cp\u003eUsed to specify the template for the posts associated with the category.\u003c/p\u003e\n \u003cp\u003eThe priority is not as high as that of the post.\u003c/p\u003e\n \u003cp\u003eIf the post also specifies a template, the post\u0027s template will prevail.\u003c/p\u003e"
           },
           "preventParentPostCascadeQuery": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "\u003cp\u003eif a category is queried for related posts, the default behavior is to\n query all posts under the category including its subcategories, but if this field is\n set to true, cascade query behavior will be terminated here.\u003c/p\u003e\n \u003cp\u003eFor example, if a category has subcategories A and B, and A has subcategories C and\n D and C marked this field as true, when querying posts under A category,all posts under A\n and B will be queried, but C and D will not be queried.\u003c/p\u003e"
           },
           "priority": {
             "type": "integer",
@@ -16481,10 +16211,12 @@
           },
           "postCount": {
             "type": "integer",
+            "description": "包括当前和其下所有层级的文章数量 (depth\u003dmax).",
             "format": "int32"
           },
           "visiblePostCount": {
             "type": "integer",
+            "description": "包括当前和其下所有层级的已发布且公开的文章数量 (depth\u003dmax).",
             "format": "int32"
           }
         }
@@ -16508,7 +16240,8 @@
           "status": {
             "$ref": "#/components/schemas/CategoryStatus"
           }
-        }
+        },
+        "description": "A value object for {@link Category Category}."
       },
       "CategoryVoList": {
         "required": [
@@ -16630,18 +16363,23 @@
         "type": "object",
         "properties": {
           "avatar": {
-            "type": "string"
+            "type": "string",
+            "description": "avatar for comment owner"
           },
           "displayName": {
-            "type": "string"
+            "type": "string",
+            "description": "display name for comment owner"
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "email for comment owner"
           },
           "website": {
-            "type": "string"
+            "type": "string",
+            "description": "website for comment owner"
           }
-        }
+        },
+        "description": "\u003cp\u003eThe creator info of the comment.\u003c/p\u003e\n This {@link CommentEmailOwner CommentEmailOwner} is only applicable to the user who is allowed to comment\n without logging in."
       },
       "CommentList": {
         "required": [
@@ -16744,6 +16482,10 @@
             "minLength": 1,
             "type": "string"
           },
+          "hidden": {
+            "type": "boolean",
+            "default": false
+          },
           "owner": {
             "$ref": "#/components/schemas/CommentEmailOwner"
           },
@@ -16754,7 +16496,8 @@
           "subjectRef": {
             "$ref": "#/components/schemas/Ref"
           }
-        }
+        },
+        "description": "Request parameter object for {@link Comment Comment}."
       },
       "CommentSpec": {
         "required": [
@@ -16788,6 +16531,7 @@
           },
           "creationTime": {
             "type": "string",
+            "description": "The user-defined creation time default is \u003ccode\u003emetadata.creationTimestamp\u003c/code\u003e.",
             "format": "date-time"
           },
           "hidden": {
@@ -16832,7 +16576,8 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "description": "comment stats value object."
       },
       "CommentStatsVo": {
         "type": "object",
@@ -16841,7 +16586,8 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "description": "comment stats value object."
       },
       "CommentStatus": {
         "type": "object",
@@ -17056,19 +16802,23 @@
         "properties": {
           "lastTransitionTime": {
             "type": "string",
+            "description": "Last time the condition transitioned from one status to another.",
             "format": "date-time"
           },
           "message": {
             "maxLength": 32768,
-            "type": "string"
+            "type": "string",
+            "description": "Human-readable message indicating details about last transition.\n This may be an empty string."
           },
           "reason": {
             "maxLength": 1024,
             "pattern": "^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$",
-            "type": "string"
+            "type": "string",
+            "description": "Unique, one-word, CamelCase reason for the condition\u0027s last transition."
           },
           "status": {
             "type": "string",
+            "description": "Status is the status of the condition. Can be True, False, Unknown.",
             "enum": [
               "TRUE",
               "FALSE",
@@ -17078,9 +16828,11 @@
           "type": {
             "maxLength": 316,
             "pattern": "^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$",
-            "type": "string"
+            "type": "string",
+            "description": "type of condition in CamelCase or in foo.example.com/CamelCase.\n example: Ready, Initialized.\n maxLength: 316."
           }
-        }
+        },
+        "description": "EqualsAndHashCode 排除了lastTransitionTime否则失败时，lastTransitionTime 会被更新\n 导致 equals 为 false，一直被加入队列."
       },
       "ConfigMap": {
         "required": [
@@ -17105,7 +16857,8 @@
           "metadata": {
             "$ref": "#/components/schemas/Metadata"
           }
-        }
+        },
+        "description": "\u003cp\u003eConfigMap holds configuration data to consume.\u003c/p\u003e"
       },
       "ConfigMapList": {
         "required": [
@@ -17179,6 +16932,11 @@
         }
       },
       "Content": {
+        "required": [
+          "content",
+          "raw",
+          "rawType"
+        ],
         "type": "object",
         "properties": {
           "content": {
@@ -17193,6 +16951,11 @@
         }
       },
       "ContentUpdateParam": {
+        "required": [
+          "content",
+          "raw",
+          "rawType"
+        ],
         "type": "object",
         "properties": {
           "content": {
@@ -17219,7 +16982,8 @@
           "raw": {
             "type": "string"
           }
-        }
+        },
+        "description": "A value object for Content from {@link Snapshot Snapshot}."
       },
       "ContentWrapper": {
         "type": "object",
@@ -17250,7 +17014,8 @@
           "name": {
             "type": "string"
           }
-        }
+        },
+        "description": "Contributor from user."
       },
       "ContributorVo": {
         "required": [
@@ -17276,7 +17041,8 @@
           "permalink": {
             "type": "string"
           }
-        }
+        },
+        "description": "A value object for {@link run.halo.app.core.extension.User run.halo.app.core.extension.User}."
       },
       "CopyOperation": {
         "required": [
@@ -17343,7 +17109,8 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "description": "A counter for number of requests by extension resource name."
       },
       "CounterList": {
         "required": [
@@ -17501,27 +17268,27 @@
         "properties": {
           "approvedComments": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "comments": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "posts": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "upvotes": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "users": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "visits": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           }
         }
       },
@@ -17681,7 +17448,8 @@
         "type": "object",
         "properties": {
           "displayName": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets email display name."
           },
           "enable": {
             "type": "boolean"
@@ -17700,7 +17468,8 @@
             "format": "int32"
           },
           "sender": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets email sender address."
           },
           "username": {
             "type": "string"
@@ -17714,6 +17483,7 @@
         "type": "object",
         "properties": {
           "email": {
+            "minLength": 1,
             "type": "string"
           }
         }
@@ -17750,7 +17520,8 @@
           "metadata": {
             "$ref": "#/components/schemas/Metadata"
           }
-        }
+        },
+        "description": "Extension is an interface which represents an Extension. It contains setters and getters of\n GroupVersionKind and Metadata."
       },
       "ExtensionDefinition": {
         "required": [
@@ -17773,7 +17544,8 @@
           "spec": {
             "$ref": "#/components/schemas/ExtensionSpec"
           }
-        }
+        },
+        "description": "Extension definition.\n An {@link ExtensionDefinition ExtensionDefinition} is a type of metadata that provides additional information about\n an extension. An extension is a way to add new functionality to an existing class, structure,\n enumeration, or protocol type without needing to subclass it."
       },
       "ExtensionDefinitionList": {
         "required": [
@@ -17855,7 +17627,8 @@
           "spec": {
             "$ref": "#/components/schemas/ExtensionPointSpec"
           }
-        }
+        },
+        "description": "Extension point definition.\n An {@link ExtensionPointDefinition ExtensionPointDefinition} is a concept used in \u003ccode\u003eHalo\u003c/code\u003e to allow for the\n dynamic extension of system. It defines a location within \u003ccode\u003eHalo\u003c/code\u003e where\n additional functionality can be added through the use of plugins or extensions."
       },
       "ExtensionPointDefinitionList": {
         "required": [
@@ -18023,12 +17796,15 @@
         "type": "object",
         "properties": {
           "group": {
-            "type": "string"
+            "type": "string",
+            "description": "is group name of Extension."
           },
           "kind": {
-            "type": "string"
+            "type": "string",
+            "description": "is kind name of Extension."
           }
-        }
+        },
+        "description": "GroupKind contains group and kind data only."
       },
       "GroupList": {
         "required": [
@@ -18133,62 +17909,86 @@
             "type": "object",
             "additionalProperties": {
               "type": "string"
-            }
+            },
+            "description": "Custom metadata. Make sure the map is serializable."
           },
           "categories": {
             "type": "array",
+            "description": "Document categories. The item in the list is the category metadata name.",
             "items": {
               "type": "string"
             }
           },
           "content": {
-            "type": "string"
+            "minLength": 1,
+            "type": "string",
+            "description": "Document content. Safety content, without HTML tag."
           },
           "creationTimestamp": {
             "type": "string",
+            "description": "Document creation timestamp.",
             "format": "date-time"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "description": "Document description."
           },
           "exposed": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the document is exposed to the public."
           },
           "id": {
-            "type": "string"
+            "minLength": 1,
+            "type": "string",
+            "description": "Document ID. It should be unique globally."
           },
           "metadataName": {
-            "type": "string"
+            "minLength": 1,
+            "type": "string",
+            "description": "Metadata name of the corresponding extension."
           },
           "ownerName": {
-            "type": "string"
+            "minLength": 1,
+            "type": "string",
+            "description": "Document owner metadata name."
           },
           "permalink": {
-            "type": "string"
+            "minLength": 1,
+            "type": "string",
+            "description": "Document permalink."
           },
           "published": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the document is published."
           },
           "recycled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the document is recycled."
           },
           "tags": {
             "type": "array",
+            "description": "Document tags. The item in the list is the tag metadata name.",
             "items": {
               "type": "string"
             }
           },
           "title": {
-            "type": "string"
+            "minLength": 1,
+            "type": "string",
+            "description": "Document title."
           },
           "type": {
-            "type": "string"
+            "minLength": 1,
+            "type": "string",
+            "description": "Document type. e.g.: post.content.halo.run, singlepage.content.halo.run, moment.moment\n .halo.run, doc.doc.halo.run."
           },
           "updateTimestamp": {
             "type": "string",
+            "description": "Document update timestamp.",
             "format": "date-time"
           }
-        }
+        },
+        "description": "Document for search."
       },
       "IAvatarUploadRequest": {
         "required": [
@@ -18278,6 +18078,9 @@
         },
         "description": "The subject name of reason type to be interested in"
       },
+      "JsonNode": {
+        "type": "object"
+      },
       "JsonPatch": {
         "minItems": 1,
         "uniqueItems": true,
@@ -18315,7 +18118,8 @@
           "url": {
             "type": "string"
           }
-        }
+        },
+        "description": "Common data objects for license."
       },
       "ListResultReplyVo": {
         "required": [
@@ -18433,7 +18237,8 @@
           "website": {
             "type": "string"
           }
-        }
+        },
+        "description": "A listed value object for {@link run.halo.app.core.extension.AuthProvider run.halo.app.core.extension.AuthProvider}."
       },
       "ListedComment": {
         "required": [
@@ -18656,7 +18461,8 @@
               "$ref": "#/components/schemas/TagVo"
             }
           }
-        }
+        },
+        "description": "A value object for {@link Post Post}."
       },
       "ListedPostVoList": {
         "required": [
@@ -19025,7 +18831,8 @@
           "apiVersion",
           "kind",
           "metadata",
-          "spec"
+          "spec",
+          "status"
         ],
         "type": "object",
         "properties": {
@@ -19117,11 +18924,13 @@
         "type": "object",
         "properties": {
           "filePath": {
-            "type": "string"
+            "type": "string",
+            "description": "Consider the compatibility of the system and migration, use unix-style relative paths\n here."
           },
           "imageSignature": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "A hash signature for the image uri."
           },
           "imageUri": {
             "minLength": 1,
@@ -19138,7 +18947,8 @@
           },
           "thumbSignature": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "A hash signature for the thumbnail uri."
           },
           "thumbnailUri": {
             "minLength": 1,
@@ -19156,33 +18966,6 @@
               "SUCCEEDED",
               "FAILED"
             ]
-          }
-        }
-      },
-      "LoginHistory": {
-        "required": [
-          "loginAt",
-          "sourceIp",
-          "successful",
-          "userAgent"
-        ],
-        "type": "object",
-        "properties": {
-          "loginAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "reason": {
-            "type": "string"
-          },
-          "sourceIp": {
-            "type": "string"
-          },
-          "successful": {
-            "type": "boolean"
-          },
-          "userAgent": {
-            "type": "string"
           }
         }
       },
@@ -19343,8 +19126,7 @@
           "targetRef": {
             "$ref": "#/components/schemas/Ref"
           }
-        },
-        "description": "The spec of menu item."
+        }
       },
       "MenuItemStatus": {
         "type": "object",
@@ -19357,8 +19139,7 @@
             "type": "string",
             "description": "Calculated href of manu item."
           }
-        },
-        "description": "The status of menu item."
+        }
       },
       "MenuItemVo": {
         "required": [
@@ -19367,7 +19148,8 @@
         "type": "object",
         "properties": {
           "displayName": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets menu item\u0027s display name."
           },
           "metadata": {
             "$ref": "#/components/schemas/Metadata"
@@ -19381,7 +19163,8 @@
           "status": {
             "$ref": "#/components/schemas/MenuItemStatus"
           }
-        }
+        },
+        "description": "A value object for {@link MenuItem MenuItem}."
       },
       "MenuList": {
         "required": [
@@ -19461,8 +19244,7 @@
               "description": "Name of menu item."
             }
           }
-        },
-        "description": "The spec of menu."
+        }
       },
       "MenuVo": {
         "required": [
@@ -19482,7 +19264,8 @@
           "spec": {
             "$ref": "#/components/schemas/MenuSpec"
           }
-        }
+        },
+        "description": "A value object for {@link Menu Menu}."
       },
       "Metadata": {
         "required": [
@@ -19494,15 +19277,18 @@
             "type": "object",
             "additionalProperties": {
               "type": "string"
-            }
+            },
+            "description": "Annotations are like key-value format."
           },
           "creationTimestamp": {
             "type": "string",
+            "description": "Creation timestamp of the Extension.",
             "format": "date-time",
             "nullable": true
           },
           "deletionTimestamp": {
             "type": "string",
+            "description": "Deletion timestamp of the Extension.",
             "format": "date-time",
             "nullable": true
           },
@@ -19523,7 +19309,8 @@
             "type": "object",
             "additionalProperties": {
               "type": "string"
-            }
+            },
+            "description": "Labels are like key-value format."
           },
           "name": {
             "type": "string",
@@ -19531,10 +19318,12 @@
           },
           "version": {
             "type": "integer",
+            "description": "Current version of the Extension. It will be bumped up every update.",
             "format": "int64",
             "nullable": true
           }
-        }
+        },
+        "description": "Metadata of Extension."
       },
       "MoveOperation": {
         "required": [
@@ -19576,7 +19365,8 @@
           "previous": {
             "$ref": "#/components/schemas/PostVo"
           }
-        }
+        },
+        "description": "Post navigation vo to hold previous and next item."
       },
       "Notification": {
         "required": [
@@ -19598,7 +19388,8 @@
           "spec": {
             "$ref": "#/components/schemas/NotificationSpec"
           }
-        }
+        },
+        "description": "\u003cp\u003e{@link Notification Notification} is a custom extension that used to store notification information for\n inner use, it\u0027s on-site notification.\u003c/p\u003e\n\n \u003cp\u003eSupports the following operations:\u003c/p\u003e\n \u003cul\u003e\n    \u003cli\u003eMarked as read: {@link NotificationSpec#setUnread(boolean) NotificationSpec#setUnread(boolean)}\u003c/li\u003e\n    \u003cli\u003eGet the last read time: {@link NotificationSpec#getLastReadAt NotificationSpec#getLastReadAt()}\u003c/li\u003e\n    \u003cli\u003eFilter by recipient: {@link NotificationSpec#getRecipient NotificationSpec#getRecipient()}\u003c/li\u003e\n \u003c/ul\u003e"
       },
       "NotificationList": {
         "required": [
@@ -19718,7 +19509,8 @@
           "spec": {
             "$ref": "#/components/schemas/NotificationTemplateSpec"
           }
-        }
+        },
+        "description": "\u003cp\u003e{@link NotificationTemplate NotificationTemplate} is a custom extension that defines a notification template.\u003c/p\u003e\n \u003cp\u003eIt describes the notification template\u0027s name, description, and the template content.\u003c/p\u003e\n \u003cp\u003e{@link Spec#getReasonSelector Spec#getReasonSelector()} is used to select the template by reasonType and language,\n if multiple templates are matched, the best match will be selected. This is useful when you\n want to override the default template.\u003c/p\u003e"
       },
       "NotificationTemplateList": {
         "required": [
@@ -19810,7 +19602,8 @@
           "spec": {
             "$ref": "#/components/schemas/NotifierDescriptorSpec"
           }
-        }
+        },
+        "description": "\u003cp\u003e{@link NotifierDescriptor NotifierDescriptor} is a custom extension that defines a notifier.\u003c/p\u003e\n \u003cp\u003eIt describes the notifier\u0027s name, description, and the extension name of the notifier to\n let the user know what the notifier is and what it can do in the UI and also let the\n \u003ccode\u003eNotificationCenter\u003c/code\u003e know how to load the notifier and prepare the notifier\u0027s settings.\u003c/p\u003e"
       },
       "NotifierDescriptorList": {
         "required": [
@@ -19944,7 +19737,8 @@
           "name": {
             "type": "string"
           }
-        }
+        },
+        "description": "Comment owner info."
       },
       "Part": {
         "type": "object"
@@ -19956,6 +19750,7 @@
         "type": "object",
         "properties": {
           "password": {
+            "minLength": 1,
             "type": "string"
           }
         }
@@ -20114,7 +19909,8 @@
           "status": {
             "$ref": "#/components/schemas/PluginStatus"
           }
-        }
+        },
+        "description": "A custom resource for Plugin."
       },
       "PluginAuthor": {
         "required": [
@@ -20259,10 +20055,6 @@
           "logo": {
             "type": "string"
           },
-          "pluginClass": {
-            "type": "string",
-            "deprecated": true
-          },
           "pluginDependencies": {
             "type": "object",
             "additionalProperties": {
@@ -20273,14 +20065,16 @@
             "type": "string"
           },
           "requires": {
-            "type": "string"
+            "type": "string",
+            "description": "SemVer format."
           },
           "settingName": {
             "type": "string"
           },
           "version": {
             "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
-            "type": "string"
+            "type": "string",
+            "description": "plugin version."
           }
         }
       },
@@ -20432,35 +20226,41 @@
         "properties": {
           "apiGroups": {
             "type": "array",
+            "description": "APIGroups is the name of the APIGroup that contains the resources.\n If multiple API groups are specified, any action requested against one of the enumerated\n resources in any API group will be allowed.",
             "items": {
               "type": "string"
             }
           },
           "nonResourceURLs": {
             "type": "array",
+            "description": "NonResourceURLs is a set of partial urls that a user should have access to.\n *s are allowed, but only as the full, final step in the path\n If an action is not a resource API request, then the URL is split on \u0027/\u0027 and is checked\n against the NonResourceURLs to look for a match.\n Since non-resource URLs are not namespaced, this field is only applicable for\n ClusterRoles referenced from a ClusterRoleBinding.\n Rules can either apply to API resources (such as \"pods\" or \"secrets\") or non-resource\n URL paths (such as \"/api\"),  but not both.",
             "items": {
               "type": "string"
             }
           },
           "resourceNames": {
             "type": "array",
+            "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set\n means that everything is allowed.",
             "items": {
               "type": "string"
             }
           },
           "resources": {
             "type": "array",
+            "description": "Resources is a list of resources this rule applies to.  \u0027*\u0027 represents all resources in\n the specified apiGroups.\n \u0027*\u0026#47;foo\u0027 represents the subresource \u0027foo\u0027 for all resources in the specified\n apiGroups.",
             "items": {
               "type": "string"
             }
           },
           "verbs": {
             "type": "array",
+            "description": "about who the rule applies to or which namespace the rule applies to.",
             "items": {
               "type": "string"
             }
           }
-        }
+        },
+        "description": "PolicyRule holds information that describes a policy rule, but does not contain information\n about whom the rule applies to or which namespace the rule applies to."
       },
       "PolicySpec": {
         "required": [
@@ -20602,7 +20402,8 @@
           "status": {
             "$ref": "#/components/schemas/PostStatus"
           }
-        }
+        },
+        "description": "\u003cp\u003ePost extension.\u003c/p\u003e"
       },
       "PostAttachmentRequest": {
         "required": [
@@ -20685,6 +20486,7 @@
       },
       "PostRequest": {
         "required": [
+          "content",
           "post"
         ],
         "type": "object",
@@ -20695,7 +20497,8 @@
           "post": {
             "$ref": "#/components/schemas/Post"
           }
-        }
+        },
+        "description": "Post and content data for creating and updating post."
       },
       "PostSpec": {
         "required": [
@@ -20767,7 +20570,8 @@
             "format": "date-time"
           },
           "releaseSnapshot": {
-            "type": "string"
+            "type": "string",
+            "description": "文章引用到的已发布的内容，用于主题端显示."
           },
           "slug": {
             "minLength": 1,
@@ -20788,12 +20592,12 @@
           },
           "visible": {
             "type": "string",
-            "default": "PUBLIC",
             "enum": [
               "PUBLIC",
               "INTERNAL",
               "PRIVATE"
-            ]
+            ],
+            "default": "PUBLIC"
           }
         }
       },
@@ -20825,7 +20629,8 @@
             "type": "string"
           },
           "hideFromList": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "see {@link Category.CategorySpec#isHideFromList Category.CategorySpec#isHideFromList()}."
           },
           "inProgress": {
             "type": "boolean"
@@ -20888,7 +20693,8 @@
               "$ref": "#/components/schemas/TagVo"
             }
           }
-        }
+        },
+        "description": "A value object for {@link Post Post}."
       },
       "Reason": {
         "required": [
@@ -20910,7 +20716,8 @@
           "spec": {
             "$ref": "#/components/schemas/ReasonSpec"
           }
-        }
+        },
+        "description": "\u003cp\u003e{@link Reason Reason} is a custom extension that defines a reason for a notification, It represents\n an instance of a {@link ReasonType ReasonType}.\u003c/p\u003e\n \u003cp\u003eIt can be understood as an event that triggers a notification.\u003c/p\u003e"
       },
       "ReasonAttributes": {
         "type": "object",
@@ -21090,7 +20897,8 @@
           "spec": {
             "$ref": "#/components/schemas/ReasonTypeSpec"
           }
-        }
+        },
+        "description": "\u003cp\u003e{@link ReasonType ReasonType} is a custom extension that defines a type of reason.\u003c/p\u003e\n \u003cp\u003eOne {@link ReasonType ReasonType} can have multiple {@link Reason Reason}s to notify.\u003c/p\u003e"
       },
       "ReasonTypeInfo": {
         "type": "object",
@@ -21529,6 +21337,10 @@
             "minLength": 1,
             "type": "string"
           },
+          "hidden": {
+            "type": "boolean",
+            "default": false
+          },
           "owner": {
             "$ref": "#/components/schemas/CommentEmailOwner"
           },
@@ -21539,7 +21351,8 @@
             "minLength": 1,
             "type": "string"
           }
-        }
+        },
+        "description": "A request parameter object for {@link Reply Reply}."
       },
       "ReplySpec": {
         "required": [
@@ -21577,6 +21390,7 @@
           },
           "creationTime": {
             "type": "string",
+            "description": "The user-defined creation time default is \u003ccode\u003emetadata.creationTimestamp\u003c/code\u003e.",
             "format": "date-time"
           },
           "hidden": {
@@ -21746,7 +21560,8 @@
               "$ref": "#/components/schemas/ReverseProxyRule"
             }
           }
-        }
+        },
+        "description": "\u003cp\u003eThe reverse proxy custom resource is used to configure a path to proxy it to a directory or\n file.\u003c/p\u003e\n \u003cp\u003eHTTP proxy may be added in the future.\u003c/p\u003e"
       },
       "ReverseProxyList": {
         "required": [
@@ -21890,11 +21705,13 @@
           },
           "subjects": {
             "type": "array",
+            "description": "Subjects holds references to the objects the role applies to.",
             "items": {
               "$ref": "#/components/schemas/Subject"
             }
           }
-        }
+        },
+        "description": "RoleBinding references a role, but does not contain it.\n It can reference a Role in the global.\n It adds who information via Subjects."
       },
       "RoleBindingList": {
         "required": [
@@ -22018,123 +21835,19 @@
         "type": "object",
         "properties": {
           "apiGroup": {
-            "type": "string"
+            "type": "string",
+            "description": "APIGroup is the group for the resource being referenced."
           },
           "kind": {
-            "type": "string"
+            "type": "string",
+            "description": "Kind is the type of resource being referenced."
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Name is the name of resource being referenced."
           }
-        }
-      },
-      "SearchEngine": {
-        "required": [
-          "apiVersion",
-          "kind",
-          "metadata",
-          "spec"
-        ],
-        "type": "object",
-        "properties": {
-          "apiVersion": {
-            "type": "string"
-          },
-          "kind": {
-            "type": "string"
-          },
-          "metadata": {
-            "$ref": "#/components/schemas/Metadata"
-          },
-          "spec": {
-            "$ref": "#/components/schemas/SearchEngineSpec"
-          }
-        }
-      },
-      "SearchEngineList": {
-        "required": [
-          "first",
-          "hasNext",
-          "hasPrevious",
-          "items",
-          "last",
-          "page",
-          "size",
-          "total",
-          "totalPages"
-        ],
-        "type": "object",
-        "properties": {
-          "first": {
-            "type": "boolean",
-            "description": "Indicates whether current page is the first page."
-          },
-          "hasNext": {
-            "type": "boolean",
-            "description": "Indicates whether current page has previous page."
-          },
-          "hasPrevious": {
-            "type": "boolean",
-            "description": "Indicates whether current page has previous page."
-          },
-          "items": {
-            "type": "array",
-            "description": "A chunk of items.",
-            "items": {
-              "$ref": "#/components/schemas/SearchEngine"
-            }
-          },
-          "last": {
-            "type": "boolean",
-            "description": "Indicates whether current page is the last page."
-          },
-          "page": {
-            "type": "integer",
-            "description": "Page number, starts from 1. If not set or equal to 0, it means no pagination.",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "description": "Size of each page. If not set or equal to 0, it means no pagination.",
-            "format": "int32"
-          },
-          "total": {
-            "type": "integer",
-            "description": "Total elements.",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "description": "Indicates total pages.",
-            "format": "int64"
-          }
-        }
-      },
-      "SearchEngineSpec": {
-        "required": [
-          "displayName"
-        ],
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "displayName": {
-            "type": "string"
-          },
-          "logo": {
-            "type": "string"
-          },
-          "postSearchImpl": {
-            "type": "string"
-          },
-          "settingRef": {
-            "$ref": "#/components/schemas/Ref"
-          },
-          "website": {
-            "type": "string"
-          }
-        }
+        },
+        "description": "RoleRef contains information that points to the role being used."
       },
       "SearchOption": {
         "required": [
@@ -22146,57 +21859,71 @@
             "type": "object",
             "additionalProperties": {
               "type": "string"
-            }
+            },
+            "description": "Additional annotations for extending search option by other search engines."
           },
           "filterExposed": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether to filter exposed content. If null, it will not filter."
           },
           "filterPublished": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether to filter published content. If null, it will not filter."
           },
           "filterRecycled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether to filter recycled content. If null, it will not filter."
           },
           "highlightPostTag": {
-            "type": "string"
+            "type": "string",
+            "description": "Post HTML tag of highlighted fragment."
           },
           "highlightPreTag": {
-            "type": "string"
+            "type": "string",
+            "description": "Pre HTML tag of highlighted fragment."
           },
           "includeCategoryNames": {
             "type": "array",
+            "description": "Category names to include(and). If null, it will include all categories.",
             "items": {
               "type": "string"
             }
           },
           "includeOwnerNames": {
             "type": "array",
+            "description": "Owner names to include(or). If null, it will include all owners.",
             "items": {
               "type": "string"
             }
           },
           "includeTagNames": {
             "type": "array",
+            "description": "Tag names to include(and). If null, it will include all tags.",
             "items": {
               "type": "string"
             }
           },
           "includeTypes": {
             "type": "array",
+            "description": "Types to include(or). If null, it will include all types.",
             "items": {
               "type": "string"
             }
           },
           "keyword": {
-            "type": "string"
+            "minLength": 1,
+            "type": "string",
+            "description": "Search keyword."
           },
           "limit": {
             "maximum": 1000,
             "minimum": 1,
             "type": "integer",
+            "description": "Limit of result.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Search option. It is used to control search behavior."
       },
       "SearchResult": {
         "type": "object",
@@ -22240,7 +21967,8 @@
             "additionalProperties": {
               "type": "string",
               "format": "byte"
-            }
+            },
+            "description": "\u003cp\u003eThe total bytes of the values in\n the Data field must be less than {@link run.halo.app.extension.Secret#MAX_SECRET_SIZE #MAX_SECRET_SIZE} bytes.\u003c/p\u003e\n \u003cp\u003e\u003ccode\u003edata\u003c/code\u003e contains the secret data. Each key must consist of alphanumeric\n characters, \u0027-\u0027, \u0027_\u0027 or \u0027.\u0027. The serialized form of the secret data is a\n base64 encoded string, representing the arbitrary (possibly non-string)\n data value here. Described in\n \u003ca href\u003d\"https://tools.ietf.org/html/rfc4648#section-4\"\u003erfc4648#section-4\u003c/a\u003e\n \u003c/p\u003e"
           },
           "kind": {
             "type": "string"
@@ -22252,12 +21980,15 @@
             "type": "object",
             "additionalProperties": {
               "type": "string"
-            }
+            },
+            "description": "\u003ccode\u003estringData\u003c/code\u003e allows specifying non-binary secret data in string form.\n It is provided as a write-only input field for convenience.\n All keys and values are merged into the data field on write, overwriting any existing\n values.\n The stringData field is never output when reading from the API."
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "Used to facilitate programmatic handling of secret data.\n More info:\n \u003ca href\u003d\"https://kubernetes.io/docs/concepts/configuration/secret/#secret-types\"\u003esecret-types\u003c/a\u003e"
           }
-        }
+        },
+        "description": "Secret is a small piece of sensitive data which should be kept secret, such as a password,\n a token, or a key."
       },
       "SecretList": {
         "required": [
@@ -22339,7 +22070,8 @@
           "spec": {
             "$ref": "#/components/schemas/SettingSpec"
           }
-        }
+        },
+        "description": "{@link Setting Setting} is a custom extension to generate forms based on configuration."
       },
       "SettingForm": {
         "minLength": 1,
@@ -22478,7 +22210,8 @@
           "status": {
             "$ref": "#/components/schemas/SinglePageStatus"
           }
-        }
+        },
+        "description": "\u003cp\u003eSingle page extension.\u003c/p\u003e"
       },
       "SinglePageList": {
         "required": [
@@ -22552,7 +22285,8 @@
           "page": {
             "$ref": "#/components/schemas/SinglePage"
           }
-        }
+        },
+        "description": "A request parameter for {@link SinglePage SinglePage}."
       },
       "SinglePageSpec": {
         "required": [
@@ -22618,7 +22352,8 @@
             "format": "date-time"
           },
           "releaseSnapshot": {
-            "type": "string"
+            "type": "string",
+            "description": "引用到的已发布的内容，用于主题端显示."
           },
           "slug": {
             "minLength": 1,
@@ -22633,12 +22368,12 @@
           },
           "visible": {
             "type": "string",
-            "default": "PUBLIC",
             "enum": [
               "PUBLIC",
               "INTERNAL",
               "PRIVATE"
-            ]
+            ],
+            "default": "PUBLIC"
           }
         }
       },
@@ -22670,7 +22405,8 @@
             "type": "string"
           },
           "hideFromList": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "see {@link Category.CategorySpec#isHideFromList Category.CategorySpec#isHideFromList()}."
           },
           "inProgress": {
             "type": "boolean"
@@ -22721,7 +22457,8 @@
           "status": {
             "$ref": "#/components/schemas/SinglePageStatus"
           }
-        }
+        },
+        "description": "A value object for {@link SinglePage SinglePage}."
       },
       "SiteStatsVo": {
         "type": "object",
@@ -22746,7 +22483,8 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "description": "A value object for site stats."
       },
       "SnapShotSpec": {
         "required": [
@@ -22783,7 +22521,8 @@
           "rawType": {
             "maxLength": 50,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "such as: markdown | html | json | asciidoc | latex."
           },
           "subjectRef": {
             "$ref": "#/components/schemas/Ref"
@@ -22891,7 +22630,8 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "description": "Stats value object."
       },
       "StatsVo": {
         "type": "object",
@@ -22908,19 +22648,23 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "description": "Stats value object."
       },
       "Subject": {
         "type": "object",
         "properties": {
           "apiGroup": {
-            "type": "string"
+            "type": "string",
+            "description": "APIGroup holds the API group of the referenced subject.\n Defaults to \"\" for ServiceAccount subjects.\n Defaults to \"rbac.authorization.halo.run\" for User and Group subjects."
           },
           "kind": {
-            "type": "string"
+            "type": "string",
+            "description": "Kind of object being referenced. Values defined by this API group are \"User\", \"Group\",\n and \"ServiceAccount\".\n If the Authorizer does not recognize the kind value, the Authorizer should report\n an error."
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Name of the object being referenced."
           }
         }
       },
@@ -22944,7 +22688,8 @@
           "spec": {
             "$ref": "#/components/schemas/SubscriptionSpec"
           }
-        }
+        },
+        "description": "\u003cp\u003e{@link Subscription Subscription} is a custom extension that defines a subscriber to be notified when a\n certain {@link Reason Reason} is triggered.\u003c/p\u003e\n \u003cp\u003eIt holds a {@link Subscriber Subscriber} to the user to be notified, a {@link InterestReason InterestReason} to\n subscribe to.\u003c/p\u003e"
       },
       "SubscriptionList": {
         "required": [
@@ -23136,7 +22881,8 @@
         "properties": {
           "color": {
             "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
-            "type": "string"
+            "type": "string",
+            "description": "Color regex explanation.\n \u003cpre\u003e\n ^                 # start of the line\n #                 # start with a number sign `#`\n (                 # start of (group 1)\n   [a-fA-F0-9]{6}  # support z-f, A-F and 0-9, with a length of 6\n   |               # or\n   [a-fA-F0-9]{3}  # support z-f, A-F and 0-9, with a length of 3\n )                 # end of (group 1)\n $                 # end of the line\n \u003c/pre\u003e"
           },
           "cover": {
             "type": "string"
@@ -23190,7 +22936,8 @@
           "status": {
             "$ref": "#/components/schemas/TagStatus"
           }
-        }
+        },
+        "description": "A value object for {@link Tag Tag}."
       },
       "TagVoList": {
         "required": [
@@ -23290,7 +23037,8 @@
           "screenshot": {
             "type": "string"
           }
-        }
+        },
+        "description": "Type used to describe custom template page."
       },
       "TestOperation": {
         "required": [
@@ -23341,7 +23089,8 @@
           "status": {
             "$ref": "#/components/schemas/ThemeStatus"
           }
-        }
+        },
+        "description": "\u003cp\u003eTheme extension.\u003c/p\u003e"
       },
       "ThemeInstallRequest": {
         "type": "object"
@@ -23408,8 +23157,7 @@
       "ThemeSpec": {
         "required": [
           "author",
-          "displayName",
-          "version"
+          "displayName"
         ],
         "type": "object",
         "properties": {
@@ -23447,11 +23195,6 @@
           "repo": {
             "type": "string"
           },
-          "require": {
-            "type": "string",
-            "description": "Deprecated, use `requires` instead.",
-            "deprecated": true
-          },
           "requires": {
             "type": "string"
           },
@@ -23460,10 +23203,6 @@
           },
           "version": {
             "type": "string"
-          },
-          "website": {
-            "type": "string",
-            "deprecated": true
           }
         }
       },
@@ -23613,6 +23352,7 @@
         "properties": {
           "authLink": {
             "type": "string",
+            "description": "QR Code with base64 encoded.",
             "format": "uri"
           },
           "rawSecret": {
@@ -23632,9 +23372,11 @@
             "type": "string"
           },
           "password": {
+            "minLength": 1,
             "type": "string"
           },
           "secret": {
+            "minLength": 1,
             "type": "string"
           }
         }
@@ -23643,7 +23385,8 @@
         "type": "object",
         "properties": {
           "available": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Check if 2FA is available."
           },
           "emailVerified": {
             "type": "boolean"
@@ -23653,6 +23396,22 @@
           },
           "totpConfigured": {
             "type": "boolean"
+          }
+        }
+      },
+      "UcUploadFromUrlRequest": {
+        "required": [
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Custom file name"
+          },
+          "url": {
+            "type": "string",
+            "format": "url"
           }
         }
       },
@@ -23715,12 +23474,22 @@
       },
       "UploadFromUrlRequest": {
         "required": [
+          "policyName",
           "url"
         ],
         "type": "object",
         "properties": {
           "filename": {
-            "type": "string"
+            "type": "string",
+            "description": "Custom file name"
+          },
+          "groupName": {
+            "type": "string",
+            "description": "The name of the group to which the attachment belongs"
+          },
+          "policyName": {
+            "type": "string",
+            "description": "Storage policy name"
           },
           "url": {
             "type": "string",
@@ -23752,7 +23521,8 @@
           "status": {
             "$ref": "#/components/schemas/UserStatus"
           }
-        }
+        },
+        "description": "The extension represents user details of Halo."
       },
       "UserConnection": {
         "required": [
@@ -23775,7 +23545,8 @@
           "spec": {
             "$ref": "#/components/schemas/UserConnectionSpec"
           }
-        }
+        },
+        "description": "User connection extension."
       },
       "UserConnectionList": {
         "required": [
@@ -23845,17 +23616,21 @@
         "type": "object",
         "properties": {
           "providerUserId": {
-            "type": "string"
+            "type": "string",
+            "description": "The unique identifier for the user\u0027s connection to the OAuth provider.\n for example, the user\u0027s GitHub id."
           },
           "registrationId": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the OAuth provider (e.g. Google, Facebook, Twitter)."
           },
           "updatedAt": {
             "type": "string",
+            "description": "The time when the user connection was last updated.",
             "format": "date-time"
           },
           "username": {
-            "type": "string"
+            "type": "string",
+            "description": "The {@link Metadata#getName Metadata#getName()} of the user associated with the OAuth connection."
           }
         }
       },
@@ -24074,16 +23849,6 @@
       "UserStatus": {
         "type": "object",
         "properties": {
-          "lastLoginAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "loginHistories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LoginHistory"
-            }
-          },
           "permalink": {
             "type": "string"
           }

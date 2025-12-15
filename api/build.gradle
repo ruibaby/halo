@@ -1,34 +1,59 @@
 plugins {
+    id 'checkstyle'
     id 'java-library'
     id 'halo.publish'
     id 'jacoco'
-    id "io.freefair.lombok"
-    id "com.github.ben-manes.versions"
+    alias(libs.plugins.lombok)
+    alias(libs.plugins.versions)
 }
 
 group = 'run.halo.app'
 description = 'API of halo project, connecting by other projects.'
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+    options.encoding = 'UTF-8'
 }
 
-compileJava.options.encoding = "UTF-8"
-compileTestJava.options.encoding = "UTF-8"
-javadoc.options.encoding = "UTF-8"
+tasks.withType(Javadoc).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withJavadocJar()
+    withSourcesJar()
+}
+
+checkstyle {
+    toolVersion = libs.versions.checkstyle.get()
+    showViolations = false
+    ignoreFailures = false
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': 'Halo Project',
+        )
+    }
+}
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }
-    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://repo.spring.io/milestone' }
+    maven { url = 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
     api platform(project(':platform:application'))
+    annotationProcessor platform(project(':platform:application'))
 
     api 'org.springframework.boot:spring-boot-starter-actuator'
-    api 'org.springframework.boot:spring-boot-starter-data-jpa'
     api 'org.springframework.boot:spring-boot-starter-mail'
     api 'org.springframework.boot:spring-boot-starter-thymeleaf'
     api 'org.springframework.boot:spring-boot-starter-webflux'
@@ -42,6 +67,8 @@ dependencies {
     api 'org.springframework.security:spring-security-oauth2-client'
     api 'org.springframework.security:spring-security-oauth2-resource-server'
 
+    api 'io.micrometer:context-propagation'
+
     // Cache
     api "org.springframework.boot:spring-boot-starter-cache"
     api "com.github.ben-manes.caffeine:caffeine"
@@ -49,6 +76,7 @@ dependencies {
     api "org.springdoc:springdoc-openapi-starter-webflux-ui"
     api 'org.openapi4j:openapi-schema-validator'
     api "net.bytebuddy:byte-buddy"
+    api "org.bouncycastle:bcpkix-jdk18on"
 
     // Apache Lucene
     api "org.apache.lucene:lucene-core"
@@ -67,8 +95,7 @@ dependencies {
     api "com.github.java-json-tools:json-patch"
     api "org.thymeleaf.extras:thymeleaf-extras-springsecurity6"
     api 'org.apache.tika:tika-core'
-    api "org.imgscalr:imgscalr-lib"
-    api 'com.drewnoakes:metadata-extractor'
+    api 'net.coobird:thumbnailator'
 
     api "io.github.resilience4j:resilience4j-spring-boot3"
     api "io.github.resilience4j:resilience4j-reactor"
@@ -80,15 +107,15 @@ dependencies {
     runtimeOnly 'org.postgresql:r2dbc-postgresql'
     runtimeOnly 'org.mariadb:r2dbc-mariadb'
     runtimeOnly 'io.asyncer:r2dbc-mysql'
+    runtimeOnly 'com.github.therapi:therapi-runtime-javadoc'
+
+    annotationProcessor "com.github.therapi:therapi-runtime-javadoc-scribe"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'io.projectreactor:reactor-test'
-}
 
-java {
-    withSourcesJar()
-    withJavadocJar()
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 publishing {

@@ -4,7 +4,9 @@ import { axiosInstance } from "@halo-dev/api-client";
 import { useDebounceFn } from "@vueuse/core";
 import { useFuse } from "@vueuse/integrations/useFuse";
 import type { AxiosRequestConfig } from "axios";
-import { get, has, type PropertyPath } from "lodash-es";
+import { get, has } from "es-toolkit/compat";
+// TODO: remove lodash-es dependency in the future
+import { type PropertyPath } from "lodash-es";
 import {
   computed,
   onMounted,
@@ -446,9 +448,8 @@ const mapUnresolvedOptions = async (
       mappedOptions = await fetchRemoteMappedOptions(unmappedSelectValues);
     } else if (selectProps.remote) {
       const remoteOption = selectProps.remoteOption as SelectRemoteOption;
-      mappedOptions = await remoteOption.findOptionsByValues(
-        unmappedSelectValues
-      );
+      mappedOptions =
+        await remoteOption.findOptionsByValues(unmappedSelectValues);
     }
   }
 
@@ -738,8 +739,18 @@ const handleSearch = async (value: string, event?: Event) => {
   }
 };
 
+const hasNextPage = computed(() => {
+  const totalPages = Math.ceil(total.value / size.value);
+  return (
+    hasMoreOptions.value &&
+    !isFetchingMore.value &&
+    !isLoading.value &&
+    page.value < totalPages
+  );
+});
+
 const handleNextPage = async () => {
-  if (!hasMoreOptions.value || isFetchingMore.value || isLoading.value) {
+  if (!hasNextPage.value) {
     return;
   }
   isFetchingMore.value = true;

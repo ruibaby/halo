@@ -7,7 +7,7 @@ import {
   PluginKey,
 } from "@/tiptap/pm";
 import { mergeAttributes, Node } from "@/tiptap/vue-3";
-import { Tooltip } from "floating-vue";
+import { VTooltipComponent } from "@halo-dev/components";
 import { h, render } from "vue";
 import MdiPlus from "~icons/mdi/plus";
 import {
@@ -19,6 +19,7 @@ import {
 } from "./util";
 
 export interface TableCellOptions {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   HTMLAttributes: Record<string, any>;
 }
 
@@ -150,7 +151,7 @@ const TableCell = Node.create<TableCellOptions>({
                     if (!grip) {
                       grip = document.createElement("a");
                       const instance = h(
-                        Tooltip,
+                        VTooltipComponent,
                         {
                           triggers: ["hover"],
                         },

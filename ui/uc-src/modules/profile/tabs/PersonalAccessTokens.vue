@@ -5,6 +5,7 @@ import {
   IconAddCircle,
   VButton,
   VEmpty,
+  VEntityContainer,
   VLoading,
   VSpace,
 } from "@halo-dev/components";
@@ -38,7 +39,7 @@ const creationModal = ref(false);
   <div v-if="pats?.length" class="my-5 flex justify-end">
     <VButton type="secondary" @click="creationModal = true">
       <template #icon>
-        <IconAddCircle class="h-full w-full" />
+        <IconAddCircle />
       </template>
       {{ $t("core.common.buttons.new") }}
     </VButton>
@@ -58,7 +59,7 @@ const creationModal = ref(false);
           </VButton>
           <VButton type="secondary" @click="creationModal = true">
             <template #icon>
-              <IconAddCircle class="h-full w-full" />
+              <IconAddCircle />
             </template>
             {{ $t("core.common.buttons.new") }}
           </VButton>
@@ -68,14 +69,15 @@ const creationModal = ref(false);
   </Transition>
 
   <Transition v-else appear name="fade">
-    <ul
-      class="box-border h-full w-full divide-y divide-gray-100 overflow-hidden rounded-base border"
-      role="list"
-    >
-      <li v-for="(token, index) in pats" :key="index">
-        <PersonalAccessTokenListItem :token="token" />
-      </li>
-    </ul>
+    <div class="overflow-hidden rounded-base border">
+      <VEntityContainer>
+        <PersonalAccessTokenListItem
+          v-for="token in pats"
+          :key="token.metadata.name"
+          :token="token"
+        />
+      </VEntityContainer>
+    </div>
   </Transition>
 
   <PersonalAccessTokenCreationModal

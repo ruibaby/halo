@@ -1,18 +1,23 @@
 package run.halo.app.core.user.service.impl;
 
 import static run.halo.app.extension.ExtensionUtil.defaultSort;
-import static run.halo.app.extension.index.query.QueryFactory.equal;
+import static run.halo.app.extension.index.query.Queries.equal;
 
 import java.time.Clock;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.ReactiveTransactionManager;
@@ -38,6 +43,7 @@ import run.halo.app.extension.ListOptions;
 import run.halo.app.extension.Metadata;
 import run.halo.app.extension.ReactiveExtensionClient;
 import run.halo.app.extension.exception.ExtensionNotFoundException;
+import run.halo.app.extension.index.query.Queries;
 import run.halo.app.extension.router.selector.FieldSelector;
 import run.halo.app.infra.SystemConfigurableEnvironmentFetcher;
 import run.halo.app.infra.SystemSetting;
@@ -45,16 +51,16 @@ import run.halo.app.infra.ValidationUtils;
 import run.halo.app.infra.exception.DuplicateNameException;
 import run.halo.app.infra.exception.EmailAlreadyTakenException;
 import run.halo.app.infra.exception.EmailVerificationFailed;
+import run.halo.app.infra.exception.RestrictedNameException;
 import run.halo.app.infra.exception.UnsatisfiedAttributeValueException;
 import run.halo.app.infra.exception.UserNotFoundException;
 import run.halo.app.plugin.extensionpoint.ExtensionGetter;
+import run.halo.app.security.authorization.AuthorityUtils;
 import run.halo.app.security.device.DeviceService;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
-    public static final String GHOST_USER_NAME = "ghost";
 
     private final ReactiveExtensionClient client;
 
@@ -90,6 +96,27 @@ public class UserServiceImpl implements UserService {
     public Mono<User> getUserOrGhost(String username) {
         return client.fetch(User.class, username)
             .switchIfEmpty(Mono.defer(() -> client.get(User.class, GHOST_USER_NAME)));
+    }
+
+    @Override
+    public Flux<User> getUsersOrGhosts(Collection<String> names) {
+        if (CollectionUtils.isEmpty(names)) {
+            return Flux.empty();
+        }
+        var nameSet = new HashSet<>(names);
+        nameSet.add(GHOST_USER_NAME);
+        var options = ListOptions.builder()
+            .andQuery(Queries.in("metadata.name", nameSet))
+            .build();
+        return client.listAll(User.class, options, defaultSort())
+            .collectMap(u -> u.getMetadata().getName())
+            .map(map -> {
+                var ghost = map.get(GHOST_USER_NAME);
+                return names.stream()
+                    .map(name -> map.getOrDefault(name, ghost))
+                    .toList();
+            })
+            .flatMapMany(Flux::fromIterable);
     }
 
     @Override
@@ -171,12 +198,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Mono<Boolean> hasSufficientRoles(Collection<String> roles) {
+        return ReactiveSecurityContextHolder.getContext()
+            .map(SecurityContext::getAuthentication)
+            .map(a -> AuthorityUtils.authoritiesToRoles(a.getAuthorities()))
+            .flatMap(userRoles -> roleService.contains(userRoles, roles))
+            .defaultIfEmpty(false);
+    }
+
+    @Override
     public Mono<User> signUp(SignUpData signUpData) {
         return environmentFetcher.fetch(SystemSetting.User.GROUP, SystemSetting.User.class)
             .filter(SystemSetting.User::isAllowRegistration)
             .switchIfEmpty(Mono.error(() -> new ServerWebInputException(
                 "The registration is not allowed by the administrator."
             )))
+            .filter(setting -> isUsernameAllowed(setting, signUpData.getUsername()))
+            .switchIfEmpty(Mono.error(RestrictedNameException::new))
             .filter(setting -> StringUtils.hasText(setting.getDefaultRole()))
             .switchIfEmpty(Mono.error(() -> new ServerWebInputException(
                 "The default role is not configured by the administrator."
@@ -318,5 +356,18 @@ public class UserServiceImpl implements UserService {
 
     void publishPasswordChangedEvent(String username) {
         eventPublisher.publishEvent(new PasswordChangedEvent(this, username));
+    }
+
+    private boolean isUsernameAllowed(SystemSetting.User setting, String username) {
+        String protectedUsernamesStr = setting.getProtectedUsernames();
+        if (protectedUsernamesStr == null || protectedUsernamesStr.trim().isEmpty()) {
+            return true;
+        }
+        Set<String> protectedLowerSet = Arrays.stream(protectedUsernamesStr.split(","))
+            .map(String::trim)
+            .filter(n -> !n.isEmpty())
+            .map(String::toLowerCase)
+            .collect(Collectors.toUnmodifiableSet());
+        return !protectedLowerSet.contains(username.toLowerCase());
     }
 }

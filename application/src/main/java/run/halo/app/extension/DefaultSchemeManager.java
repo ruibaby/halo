@@ -1,61 +1,61 @@
 package run.halo.app.extension;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-import run.halo.app.extension.SchemeWatcherManager.SchemeRegistered;
-import run.halo.app.extension.SchemeWatcherManager.SchemeUnregistered;
-import run.halo.app.extension.index.IndexSpecRegistry;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+import run.halo.app.extension.event.SchemeAddedEvent;
+import run.halo.app.extension.event.SchemeRemovedEvent;
+import run.halo.app.extension.index.IndexEngine;
 import run.halo.app.extension.index.IndexSpecs;
+import run.halo.app.extension.index.ValueIndexSpec;
 
+@Component
 public class DefaultSchemeManager implements SchemeManager {
 
     private final List<Scheme> schemes;
 
-    private final IndexSpecRegistry indexSpecRegistry;
+    private final IndexEngine indexEngine;
 
-    @Nullable
-    private final SchemeWatcherManager watcherManager;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public DefaultSchemeManager(IndexSpecRegistry indexSpecRegistry,
-        @Nullable SchemeWatcherManager watcherManager) {
-        this.indexSpecRegistry = indexSpecRegistry;
-        this.watcherManager = watcherManager;
+    public DefaultSchemeManager(IndexEngine indexEngine,
+        ApplicationEventPublisher eventPublisher) {
+        this.indexEngine = indexEngine;
+        this.eventPublisher = eventPublisher;
         // we have to use CopyOnWriteArrayList at here to prevent concurrent modification between
         // registering and listing.
         schemes = new CopyOnWriteArrayList<>();
     }
 
     @Override
-    public void register(@NonNull Scheme scheme) {
-        if (!schemes.contains(scheme)) {
-            indexSpecRegistry.indexFor(scheme);
-            schemes.add(scheme);
-            getWatchers().forEach(watcher -> watcher.onChange(new SchemeRegistered(scheme)));
-        }
-    }
-
-    @Override
-    public void register(@NonNull Scheme scheme, Consumer<IndexSpecs> specsConsumer) {
+    public <E extends Extension> void register(Class<E> type,
+        Consumer<IndexSpecs<E>> specsConsumer) {
+        var scheme = Scheme.buildFromType(type);
         if (schemes.contains(scheme)) {
             return;
         }
-        var indexSpecs = indexSpecRegistry.indexFor(scheme);
-        specsConsumer.accept(indexSpecs);
+        var indexSpecs = new DefaultIndexSpecs<E>();
+        if (specsConsumer != null) {
+            specsConsumer.accept(indexSpecs);
+        }
+        indexEngine.getIndicesManager().add(type, indexSpecs.getIndexSpecs());
         schemes.add(scheme);
-        getWatchers().forEach(watcher -> watcher.onChange(new SchemeRegistered(scheme)));
+        eventPublisher.publishEvent(new SchemeAddedEvent(this, scheme));
     }
 
     @Override
     public void unregister(@NonNull Scheme scheme) {
         if (schemes.contains(scheme)) {
-            indexSpecRegistry.removeIndexSpecs(scheme);
+            indexEngine.getIndicesManager().remove(scheme.type());
             schemes.remove(scheme);
-            getWatchers().forEach(watcher -> watcher.onChange(new SchemeUnregistered(scheme)));
+            eventPublisher.publishEvent(new SchemeRemovedEvent(this, scheme));
         }
     }
 
@@ -65,11 +65,25 @@ public class DefaultSchemeManager implements SchemeManager {
         return Collections.unmodifiableList(schemes);
     }
 
-    @NonNull
-    private List<SchemeWatcherManager.SchemeWatcher> getWatchers() {
-        if (this.watcherManager == null) {
-            return Collections.emptyList();
+    private static class DefaultIndexSpecs<E extends Extension> implements IndexSpecs<E> {
+
+        private final Map<String, ValueIndexSpec<E, ?>> specMap;
+
+        private DefaultIndexSpecs() {
+            this.specMap = new HashMap<>();
         }
-        return Optional.ofNullable(this.watcherManager.watchers()).orElse(Collections.emptyList());
+
+        @Override
+        public <K extends Comparable<K>> void add(ValueIndexSpec<E, K> indexSpec) {
+            Assert.isTrue(!specMap.containsKey(indexSpec.getName()),
+                "Index spec with name " + indexSpec.getName() + " already exists.");
+            this.specMap.put(indexSpec.getName(), indexSpec);
+        }
+
+        @Override
+        public List<ValueIndexSpec<E, ?>> getIndexSpecs() {
+            return specMap.values().stream().toList();
+        }
+
     }
 }

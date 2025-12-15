@@ -2,6 +2,9 @@ package run.halo.app.theme.router.factories;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
+import static run.halo.app.extension.index.query.Queries.and;
+import static run.halo.app.extension.index.query.Queries.equal;
+import static run.halo.app.extension.index.query.Queries.isNull;
 import static run.halo.app.theme.router.PageUrlUtils.totalPage;
 
 import java.util.HashMap;
@@ -21,12 +24,12 @@ import run.halo.app.extension.ListOptions;
 import run.halo.app.extension.ListResult;
 import run.halo.app.extension.PageRequestImpl;
 import run.halo.app.extension.ReactiveExtensionClient;
-import run.halo.app.extension.index.query.QueryFactory;
 import run.halo.app.extension.router.selector.FieldSelector;
 import run.halo.app.infra.SystemConfigurableEnvironmentFetcher;
 import run.halo.app.infra.SystemSetting;
 import run.halo.app.infra.exception.NotFoundException;
 import run.halo.app.infra.utils.PathUtils;
+import run.halo.app.theme.Constant;
 import run.halo.app.theme.DefaultTemplateEnum;
 import run.halo.app.theme.ViewNameResolver;
 import run.halo.app.theme.finders.PostFinder;
@@ -75,6 +78,10 @@ public class CategoryPostRouteFactory implements RouteFactory {
                     model.put("posts",
                         postListByCategoryName(categoryVo.getMetadata().getName(), request));
                     model.put("category", categoryVo);
+                    model.put(
+                        Constant.META_DESCRIPTION_VARIABLE_NAME,
+                        categoryVo.getSpec().getDescription()
+                    );
                     String template = categoryVo.getSpec().getTemplate();
                     return viewNameResolver.resolveViewNameOrDefault(request, template,
                             DefaultTemplateEnum.CATEGORY.getValue())
@@ -88,9 +95,9 @@ public class CategoryPostRouteFactory implements RouteFactory {
     Mono<CategoryVo> fetchBySlug(String slug) {
         var listOptions = new ListOptions();
         listOptions.setFieldSelector(FieldSelector.of(
-            QueryFactory.and(
-                QueryFactory.equal("spec.slug", slug),
-                QueryFactory.isNull("metadata.deletionTimestamp")
+            and(
+                equal("spec.slug", slug),
+                isNull("metadata.deletionTimestamp")
             )
         ));
         return client.listBy(Category.class, listOptions, PageRequestImpl.ofSize(1))

@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import { i18n } from "@/locales";
-import { Editor, EditorContent } from "@/tiptap/vue-3";
+import { EditorContent, VueEditor } from "@/tiptap";
 import { watch, type CSSProperties, type PropType } from "vue";
-import EditorBubbleMenu from "./EditorBubbleMenu.vue";
+import EditorBubbleMenu from "./bubble/EditorBubbleMenu.vue";
+import EditorDragHandle from "./drag/EditorDragHandle.vue";
 import EditorHeader from "./EditorHeader.vue";
 
 const props = defineProps({
   editor: {
-    type: Object as PropType<Editor>,
+    type: Object as PropType<VueEditor>,
     required: true,
   },
   contentStyles: {
@@ -35,20 +36,23 @@ watch(
 <template>
   <div v-if="editor" class="halo-rich-text-editor flex flex-col">
     <editor-bubble-menu :editor="editor" />
-    <div class="overflow-y-auto flex-1 min-h-0 shrink bg-white relative">
-      <div v-if="$slots.content" class="editor-header-extra">
-        <slot name="content" />
+    <editor-drag-handle :editor="editor" />
+    <div class="editor-entry">
+      <div class="editor-main">
+        <div v-if="$slots.content" class="editor-main-extra">
+          <slot name="content" />
+        </div>
+
+        <editor-content
+          :editor="editor"
+          :style="contentStyles"
+          class="editor-main-content markdown-body"
+        />
       </div>
 
-      <editor-content
-        :editor="editor"
-        :style="contentStyles"
-        class="editor-content markdown-body relative"
-      />
-    </div>
-
-    <div class="flex-none">
-      <editor-header :editor="editor" />
+      <div class="flex-none">
+        <editor-header :editor="editor" />
+      </div>
     </div>
   </div>
 </template>

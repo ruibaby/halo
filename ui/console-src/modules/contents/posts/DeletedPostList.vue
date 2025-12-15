@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import PostContributorList from "@/components/user/PostContributorList.vue";
-import { formatDatetime } from "@/utils/date";
-import { usePermission } from "@/utils/permission";
 import type { ListedPost, Post } from "@halo-dev/api-client";
-import { consoleApiClient, coreApiClient } from "@halo-dev/api-client";
+import {
+  consoleApiClient,
+  coreApiClient,
+  GetThumbnailByUriSizeEnum,
+} from "@halo-dev/api-client";
 import {
   Dialog,
   IconAddCircle,
@@ -15,6 +17,7 @@ import {
   VDropdownItem,
   VEmpty,
   VEntity,
+  VEntityContainer,
   VEntityField,
   VLoading,
   VPageHeader,
@@ -22,12 +25,13 @@ import {
   VSpace,
   VStatusDot,
 } from "@halo-dev/components";
+import { utils } from "@halo-dev/ui-shared";
 import { useQuery } from "@tanstack/vue-query";
+import { chunk } from "es-toolkit";
 import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import PostTag from "./tags/components/PostTag.vue";
 
-const { currentUserHasPermission } = usePermission();
 const { t } = useI18n();
 
 const checkedAll = ref(false);
@@ -109,13 +113,18 @@ const handleDeletePermanentlyInBatch = async () => {
     confirmText: t("core.common.buttons.confirm"),
     cancelText: t("core.common.buttons.cancel"),
     onConfirm: async () => {
-      await Promise.all(
-        selectedPostNames.value.map((name) => {
-          return coreApiClient.content.post.deletePost({
-            name,
-          });
-        })
-      );
+      const chunks = chunk(selectedPostNames.value, 5);
+
+      for (const chunk of chunks) {
+        await Promise.all(
+          chunk.map((name) => {
+            return coreApiClient.content.post.deletePost({
+              name,
+            });
+          })
+        );
+      }
+
       await refetch();
       selectedPostNames.value = [];
 
@@ -158,28 +167,33 @@ const handleRecoveryInBatch = async () => {
     confirmText: t("core.common.buttons.confirm"),
     cancelText: t("core.common.buttons.cancel"),
     onConfirm: async () => {
-      await Promise.all(
-        selectedPostNames.value.map((name) => {
-          const isPostExist = posts.value?.some(
-            (item) => item.post.metadata.name === name
-          );
+      const chunks = chunk(selectedPostNames.value, 5);
 
-          if (!isPostExist) {
-            return Promise.resolve();
-          }
+      for (const chunk of chunks) {
+        await Promise.all(
+          chunk.map((name) => {
+            const isPostExist = posts.value?.some(
+              (item) => item.post.metadata.name === name
+            );
 
-          return coreApiClient.content.post.patchPost({
-            name: name,
-            jsonPatchInner: [
-              {
-                op: "add",
-                path: "/spec/deleted",
-                value: false,
-              },
-            ],
-          });
-        })
-      );
+            if (!isPostExist) {
+              return Promise.resolve();
+            }
+
+            return coreApiClient.content.post.patchPost({
+              name: name,
+              jsonPatchInner: [
+                {
+                  op: "add",
+                  path: "/spec/deleted",
+                  value: false,
+                },
+              ],
+            });
+          })
+        );
+      }
+
       await refetch();
       selectedPostNames.value = [];
 
@@ -202,24 +216,22 @@ watch(
 <template>
   <VPageHeader :title="$t('core.deleted_post.title')">
     <template #icon>
-      <IconDeleteBin class="mr-2 self-center text-green-600" />
+      <IconDeleteBin class="text-green-600" />
     </template>
     <template #actions>
-      <VSpace>
-        <VButton :route="{ name: 'Posts' }" size="sm">
-          {{ $t("core.common.buttons.back") }}
-        </VButton>
-        <VButton
-          v-permission="['system:posts:manage']"
-          :route="{ name: 'PostEditor' }"
-          type="secondary"
-        >
-          <template #icon>
-            <IconAddCircle class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.new") }}
-        </VButton>
-      </VSpace>
+      <VButton :route="{ name: 'Posts' }" size="sm">
+        {{ $t("core.common.buttons.back") }}
+      </VButton>
+      <VButton
+        v-permission="['system:posts:manage']"
+        :route="{ name: 'PostEditor' }"
+        type="secondary"
+      >
+        <template #icon>
+          <IconAddCircle />
+        </template>
+        {{ $t("core.common.buttons.new") }}
+      </VButton>
     </template>
   </VPageHeader>
 
@@ -289,120 +301,135 @@ watch(
       </Transition>
 
       <Transition v-else appear name="fade">
-        <ul
-          class="box-border h-full w-full divide-y divide-gray-100"
-          role="list"
-        >
-          <li v-for="(post, index) in posts" :key="index">
-            <VEntity :is-selected="checkSelection(post.post)">
-              <template
-                v-if="currentUserHasPermission(['system:posts:manage'])"
-                #checkbox
-              >
-                <input
-                  v-model="selectedPostNames"
-                  :value="post.post.metadata.name"
-                  name="post-checkbox"
-                  type="checkbox"
-                />
-              </template>
-              <template #start>
-                <VEntityField :title="post.post.spec.title" width="27rem">
-                  <template #description>
-                    <div class="flex flex-col gap-1.5">
-                      <VSpace class="flex-wrap !gap-y-1">
-                        <p
-                          v-if="post.categories.length"
-                          class="inline-flex flex-wrap gap-1 text-xs text-gray-500"
+        <VEntityContainer>
+          <VEntity
+            v-for="post in posts"
+            :key="post.post.metadata.name"
+            :is-selected="checkSelection(post.post)"
+          >
+            <template
+              v-if="utils.permission.has(['system:posts:manage'])"
+              #checkbox
+            >
+              <input
+                v-model="selectedPostNames"
+                :value="post.post.metadata.name"
+                name="post-checkbox"
+                type="checkbox"
+              />
+            </template>
+            <template #start>
+              <VEntityField v-if="post.post.spec.cover">
+                <template #description>
+                  <div
+                    class="aspect-h-2 aspect-w-3 w-20 overflow-hidden rounded-md"
+                  >
+                    <img
+                      class="h-full w-full object-cover"
+                      :src="
+                        utils.attachment.getThumbnailUrl(
+                          post.post.spec.cover,
+                          GetThumbnailByUriSizeEnum.S
+                        )
+                      "
+                    />
+                  </div>
+                </template>
+              </VEntityField>
+              <VEntityField :title="post.post.spec.title" max-width="30rem">
+                <template #description>
+                  <div class="flex flex-col gap-1.5">
+                    <VSpace class="flex-wrap !gap-y-1">
+                      <p
+                        v-if="post.categories.length"
+                        class="inline-flex flex-wrap gap-1 text-xs text-gray-500"
+                      >
+                        {{ $t("core.post.list.fields.categories") }}
+                        <span
+                          v-for="(category, categoryIndex) in post.categories"
+                          :key="categoryIndex"
+                          class="cursor-pointer hover:text-gray-900"
                         >
-                          {{ $t("core.post.list.fields.categories") }}
-                          <span
-                            v-for="(category, categoryIndex) in post.categories"
-                            :key="categoryIndex"
-                            class="cursor-pointer hover:text-gray-900"
-                          >
-                            {{ category.spec.displayName }}
-                          </span>
-                        </p>
-                        <span class="text-xs text-gray-500">
-                          {{
-                            $t("core.post.list.fields.visits", {
-                              visits: post.stats.visit,
-                            })
-                          }}
+                          {{ category.spec.displayName }}
                         </span>
-                        <span class="text-xs text-gray-500">
-                          {{
-                            $t("core.post.list.fields.comments", {
-                              comments: post.stats.totalComment || 0,
-                            })
-                          }}
-                        </span>
-                      </VSpace>
-                      <VSpace v-if="post.tags.length" class="flex-wrap">
-                        <PostTag
-                          v-for="(tag, tagIndex) in post.tags"
-                          :key="tagIndex"
-                          :tag="tag"
-                          route
-                        ></PostTag>
-                      </VSpace>
-                    </div>
-                  </template>
-                </VEntityField>
-              </template>
-              <template #end>
-                <VEntityField>
-                  <template #description>
-                    <PostContributorList
-                      :owner="post.owner"
-                      :contributors="post.contributors"
-                    />
-                  </template>
-                </VEntityField>
-                <VEntityField v-if="!post?.post?.spec.deleted">
-                  <template #description>
-                    <VStatusDot
-                      v-tooltip="$t('core.common.tooltips.recovering')"
-                      state="success"
-                      animate
-                    />
-                  </template>
-                </VEntityField>
-                <VEntityField v-if="post?.post?.metadata.deletionTimestamp">
-                  <template #description>
-                    <VStatusDot
-                      v-tooltip="$t('core.common.status.deleting')"
-                      state="warning"
-                      animate
-                    />
-                  </template>
-                </VEntityField>
-                <VEntityField>
-                  <template #description>
-                    <span class="truncate text-xs tabular-nums text-gray-500">
-                      {{ formatDatetime(post.post.spec.publishTime) }}
-                    </span>
-                  </template>
-                </VEntityField>
-              </template>
-              <template
-                v-if="currentUserHasPermission(['system:posts:manage'])"
-                #dropdownItems
+                      </p>
+                      <span class="text-xs text-gray-500">
+                        {{
+                          $t("core.post.list.fields.visits", {
+                            visits: post.stats.visit,
+                          })
+                        }}
+                      </span>
+                      <span class="text-xs text-gray-500">
+                        {{
+                          $t("core.post.list.fields.comments", {
+                            comments: post.stats.totalComment || 0,
+                          })
+                        }}
+                      </span>
+                    </VSpace>
+                    <VSpace v-if="post.tags.length" class="flex-wrap">
+                      <PostTag
+                        v-for="(tag, tagIndex) in post.tags"
+                        :key="tagIndex"
+                        :tag="tag"
+                        route
+                      ></PostTag>
+                    </VSpace>
+                  </div>
+                </template>
+              </VEntityField>
+            </template>
+            <template #end>
+              <VEntityField>
+                <template #description>
+                  <PostContributorList
+                    :owner="post.owner"
+                    :contributors="post.contributors"
+                  />
+                </template>
+              </VEntityField>
+              <VEntityField v-if="!post?.post?.spec.deleted">
+                <template #description>
+                  <VStatusDot
+                    v-tooltip="$t('core.common.tooltips.recovering')"
+                    state="success"
+                    animate
+                  />
+                </template>
+              </VEntityField>
+              <VEntityField v-if="post?.post?.metadata.deletionTimestamp">
+                <template #description>
+                  <VStatusDot
+                    v-tooltip="$t('core.common.status.deleting')"
+                    state="warning"
+                    animate
+                  />
+                </template>
+              </VEntityField>
+              <VEntityField
+                v-if="post.post.spec.publishTime"
+                v-tooltip="utils.date.format(post.post.spec.publishTime)"
+                :description="utils.date.timeAgo(post.post.spec.publishTime)"
               >
-                <VDropdownItem
-                  type="danger"
-                  @click="handleDeletePermanently(post.post)"
-                >
-                  {{ $t("core.common.buttons.delete_permanently") }}
-                </VDropdownItem>
-                <VDropdownItem @click="handleRecovery(post.post)">
-                  {{ $t("core.common.buttons.recovery") }}
-                </VDropdownItem>
-              </template>
-            </VEntity>
-          </li>
-        </ul>
+              </VEntityField>
+            </template>
+            <template
+              v-if="utils.permission.has(['system:posts:manage'])"
+              #dropdownItems
+            >
+              <VDropdownItem
+                type="danger"
+                @click="handleDeletePermanently(post.post)"
+              >
+                {{ $t("core.common.buttons.delete_permanently") }}
+              </VDropdownItem>
+              <VDropdownItem @click="handleRecovery(post.post)">
+                {{ $t("core.common.buttons.recovery") }}
+              </VDropdownItem>
+            </template>
+          </VEntity>
+        </VEntityContainer>
       </Transition>
 
       <template #footer>

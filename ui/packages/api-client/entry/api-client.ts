@@ -19,6 +19,7 @@ import {
   ExtensionPointDefinitionV1alpha1Api,
   GroupV1alpha1Api,
   IndicesV1alpha1ConsoleApi,
+  LocalThumbnailV1alpha1Api,
   MenuItemV1alpha1Api,
   MenuV1alpha1Api,
   MenuV1alpha1PublicApi,
@@ -34,6 +35,7 @@ import {
   PersonalAccessTokenV1alpha1UcApi,
   PluginV1alpha1Api,
   PluginV1alpha1ConsoleApi,
+  PolicyAlpha1ConsoleApi,
   PolicyTemplateV1alpha1Api,
   PolicyV1alpha1Api,
   PostV1alpha1Api,
@@ -47,7 +49,6 @@ import {
   ReverseProxyV1alpha1Api,
   RoleBindingV1alpha1Api,
   RoleV1alpha1Api,
-  SearchEngineV1alpha1Api,
   SecretV1alpha1Api,
   SettingV1alpha1Api,
   SinglePageV1alpha1Api,
@@ -62,8 +63,10 @@ import {
   TagV1alpha1ConsoleApi,
   ThemeV1alpha1Api,
   ThemeV1alpha1ConsoleApi,
+  ThumbnailV1alpha1Api,
   TwoFactorAuthV1alpha1UcApi,
   UserConnectionV1alpha1Api,
+  UserPreferenceV1alpha1UcApi,
   UserV1alpha1Api,
   UserV1alpha1ConsoleApi,
 } from "../src";
@@ -162,6 +165,12 @@ function createCoreApiClient(axiosInstance: AxiosInstance) {
         baseURL,
         axiosInstance
       ),
+      localThumbnail: new LocalThumbnailV1alpha1Api(
+        undefined,
+        baseURL,
+        axiosInstance
+      ),
+      thumbnail: new ThumbnailV1alpha1Api(undefined, baseURL, axiosInstance),
     },
 
     // plugin.halo.run
@@ -178,11 +187,6 @@ function createCoreApiClient(axiosInstance: AxiosInstance) {
       ),
       plugin: new PluginV1alpha1Api(undefined, baseURL, axiosInstance),
       reverseProxy: new ReverseProxyV1alpha1Api(
-        undefined,
-        baseURL,
-        axiosInstance
-      ),
-      searchEngine: new SearchEngineV1alpha1Api(
         undefined,
         baseURL,
         axiosInstance
@@ -286,6 +290,7 @@ function createConsoleApiClient(axiosInstance: AxiosInstance) {
         baseURL,
         axiosInstance
       ),
+      policy: new PolicyAlpha1ConsoleApi(undefined, baseURL, axiosInstance),
     },
     auth: {
       authProvider: new AuthProviderV1alpha1ConsoleApi(
@@ -392,6 +397,13 @@ function createUcApiClient(axiosInstance: AxiosInstance) {
         axiosInstance
       ),
     },
+    user: {
+      preference: new UserPreferenceV1alpha1UcApi(
+        undefined,
+        baseURL,
+        axiosInstance
+      ),
+    },
   };
 }
 
@@ -444,10 +456,14 @@ function createPublicApiClient(axiosInstance: AxiosInstance) {
   };
 }
 
-const defaultCoreApiClient = createCoreApiClient(defaultAxiosInstance);
-const defaultConsoleApiClient = createConsoleApiClient(defaultAxiosInstance);
-const defaultUcApiClient = createUcApiClient(defaultAxiosInstance);
-const defaultPublicApiClient = createPublicApiClient(defaultAxiosInstance);
+const defaultCoreApiClient =
+  /*#__PURE__*/ createCoreApiClient(defaultAxiosInstance);
+const defaultConsoleApiClient =
+  /*#__PURE__*/ createConsoleApiClient(defaultAxiosInstance);
+const defaultUcApiClient =
+  /*#__PURE__*/ createUcApiClient(defaultAxiosInstance);
+const defaultPublicApiClient =
+  /*#__PURE__*/ createPublicApiClient(defaultAxiosInstance);
 
 export {
   defaultAxiosInstance as axiosInstance,

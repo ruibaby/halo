@@ -14,6 +14,7 @@ import {
   VButton,
   VCard,
   VEmpty,
+  VEntityContainer,
   VLoading,
   VPageHeader,
   VPagination,
@@ -280,28 +281,26 @@ watch(selectedPageNames, (newValue) => {
 
   <VPageHeader :title="$t('core.page.title')">
     <template #icon>
-      <IconPages class="mr-2 self-center" />
+      <IconPages />
     </template>
     <template #actions>
-      <VSpace>
-        <VButton
-          v-permission="['system:singlepages:view']"
-          :route="{ name: 'DeletedSinglePages' }"
-          size="sm"
-        >
-          {{ $t("core.page.actions.recycle_bin") }}
-        </VButton>
-        <VButton
-          v-permission="['system:singlepages:manage']"
-          :route="{ name: 'SinglePageEditor' }"
-          type="secondary"
-        >
-          <template #icon>
-            <IconAddCircle class="h-full w-full" />
-          </template>
-          {{ $t("core.common.buttons.new") }}
-        </VButton>
-      </VSpace>
+      <VButton
+        v-permission="['system:singlepages:view']"
+        :route="{ name: 'DeletedSinglePages' }"
+        size="sm"
+      >
+        {{ $t("core.page.actions.recycle_bin") }}
+      </VButton>
+      <VButton
+        v-permission="['system:singlepages:manage']"
+        :route="{ name: 'SinglePageEditor' }"
+        type="secondary"
+      >
+        <template #icon>
+          <IconAddCircle />
+        </template>
+        {{ $t("core.common.buttons.new") }}
+      </VButton>
     </template>
   </VPageHeader>
 
@@ -435,7 +434,7 @@ watch(selectedPageNames, (newValue) => {
                 type="secondary"
               >
                 <template #icon>
-                  <IconAddCircle class="h-full w-full" />
+                  <IconAddCircle />
                 </template>
                 {{ $t("core.common.buttons.new") }}
               </VButton>
@@ -444,21 +443,15 @@ watch(selectedPageNames, (newValue) => {
         </VEmpty>
       </Transition>
       <Transition v-else appear name="fade">
-        <ul
-          class="box-border h-full w-full divide-y divide-gray-100"
-          role="list"
-        >
-          <li
+        <VEntityContainer>
+          <SinglePageListItem
             v-for="singlePage in singlePages"
             :key="singlePage.page.metadata.name"
-          >
-            <SinglePageListItem
-              :single-page="singlePage"
-              :is-selected="checkSelection(singlePage.page)"
-              @open-setting-modal="handleOpenSettingModal"
-            />
-          </li>
-        </ul>
+            :single-page="singlePage"
+            :is-selected="checkSelection(singlePage.page)"
+            @open-setting-modal="handleOpenSettingModal"
+          />
+        </VEntityContainer>
       </Transition>
 
       <template #footer>

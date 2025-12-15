@@ -4,7 +4,7 @@ import { EditorState } from "@/tiptap/pm";
 import { Editor, Extension } from "@/tiptap/vue-3";
 import type { ExtensionOptions } from "@/types";
 import { h, markRaw, render } from "vue";
-import MdiTextBoxSearchOutline from "~icons/mdi/text-box-search-outline";
+import MingcuteListSearchLine from "~icons/mingcute/list-search-line";
 import SearchAndReplaceVue from "./SearchAndReplace.vue";
 import {
   SearchAndReplacePlugin,
@@ -42,6 +42,7 @@ declare module "@/tiptap" {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const instance = h<any>(SearchAndReplaceVue);
 function isShowSearch() {
   const searchAndReplaceInstance = instance.component;
@@ -50,7 +51,8 @@ function isShowSearch() {
   }
   return false;
 }
-const SearchAndReplace = Extension.create<ExtensionOptions>({
+
+export const ExtensionSearchAndReplace = Extension.create<ExtensionOptions>({
   name: "searchAndReplace",
 
   // @ts-ignore
@@ -64,7 +66,7 @@ const SearchAndReplace = Extension.create<ExtensionOptions>({
             props: {
               editor,
               isActive: isShowSearch(),
-              icon: markRaw(MdiTextBoxSearchOutline),
+              icon: markRaw(MingcuteListSearchLine),
               title: i18n.global.t(
                 "editor.extensions.search_and_replace.title"
               ),
@@ -95,6 +97,7 @@ const SearchAndReplace = Extension.create<ExtensionOptions>({
           dispatch,
         }: {
           state: EditorState;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           dispatch: ((args?: any) => any) | undefined;
         }) => {
           const searchAndReplaceState =
@@ -130,6 +133,7 @@ const SearchAndReplace = Extension.create<ExtensionOptions>({
           dispatch,
         }: {
           state: EditorState;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           dispatch: ((args?: any) => any) | undefined;
         }) => {
           const searchAndReplaceState =
@@ -161,6 +165,7 @@ const SearchAndReplace = Extension.create<ExtensionOptions>({
           dispatch,
         }: {
           state: EditorState;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           dispatch: ((args?: any) => any) | undefined;
         }) => {
           if (dispatch) {
@@ -187,6 +192,7 @@ const SearchAndReplace = Extension.create<ExtensionOptions>({
           dispatch,
         }: {
           state: EditorState;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           dispatch: ((args?: any) => any) | undefined;
         }) => {
           if (dispatch) {
@@ -212,6 +218,7 @@ const SearchAndReplace = Extension.create<ExtensionOptions>({
           dispatch,
         }: {
           state: EditorState;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           dispatch: ((args?: any) => any) | undefined;
         }) => {
           const searchAndReplaceState =
@@ -240,6 +247,7 @@ const SearchAndReplace = Extension.create<ExtensionOptions>({
           dispatch,
         }: {
           state: EditorState;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           dispatch: ((args?: any) => any) | undefined;
         }) => {
           const searchAndReplaceState =
@@ -291,5 +299,3 @@ const SearchAndReplace = Extension.create<ExtensionOptions>({
     };
   },
 });
-
-export default SearchAndReplace;

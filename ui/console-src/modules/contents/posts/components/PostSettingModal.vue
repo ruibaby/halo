@@ -1,12 +1,9 @@
 <script lang="ts" setup>
-import AnnotationsForm from "@/components/form/AnnotationsForm.vue";
+import type AnnotationsForm from "@/components/form/AnnotationsForm.vue";
 import { postLabels } from "@/constants/labels";
-import { FormType } from "@/types/slug";
-import { formatDatetime, toDatetimeLocal, toISOString } from "@/utils/date";
-import { randomUUID } from "@/utils/id";
 import useSlugify from "@console/composables/use-slugify";
 import { useThemeCustomTemplates } from "@console/modules/interface/themes/composables/use-theme";
-import { submitForm } from "@formkit/core";
+import { submitForm, type FormKitNode } from "@formkit/core";
 import type { Post } from "@halo-dev/api-client";
 import { consoleApiClient, coreApiClient } from "@halo-dev/api-client";
 import {
@@ -16,7 +13,8 @@ import {
   VModal,
   VSpace,
 } from "@halo-dev/components";
-import { cloneDeep } from "lodash-es";
+import { FormType, utils } from "@halo-dev/ui-shared";
+import { cloneDeep } from "es-toolkit";
 import { computed, nextTick, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { usePostUpdateMutate } from "../composables/use-post-update-mutate";
@@ -67,7 +65,7 @@ const formState = ref<Post>({
   apiVersion: "content.halo.run/v1alpha1",
   kind: "Post",
   metadata: {
-    name: randomUUID(),
+    name: utils.id.uuid(),
   },
 });
 const isSubmitting = ref(false);
@@ -208,7 +206,9 @@ watch(
   (value) => {
     if (value) {
       formState.value = cloneDeep(value);
-      publishTime.value = toDatetimeLocal(formState.value.spec.publishTime);
+      publishTime.value = utils.date.toDatetimeLocal(
+        formState.value.spec.publishTime
+      );
     }
   },
   {
@@ -219,7 +219,9 @@ watch(
 watch(
   () => publishTime.value,
   (value) => {
-    formState.value.spec.publishTime = value ? toISOString(value) : undefined;
+    formState.value.spec.publishTime = value
+      ? utils.date.toISOString(value)
+      : undefined;
   }
 );
 
@@ -233,7 +235,7 @@ const isScheduledPublish = computed(() => {
 const publishTimeHelp = computed(() => {
   return isScheduledPublish.value
     ? t("core.post.settings.fields.publish_time.help.schedule_publish", {
-        datetime: formatDatetime(publishTime.value),
+        datetime: utils.date.format(publishTime.value),
       })
     : "";
 });
@@ -257,6 +259,29 @@ const { handleGenerateSlug } = useSlugify(
   computed(() => !isUpdateMode.value),
   FormType.POST
 );
+
+// fixme: check if slug is unique
+// Finally, we need to check if the slug is unique in the database
+async function slugUniqueValidation(node: FormKitNode) {
+  const value = node.value;
+  if (!value) {
+    return true;
+  }
+
+  const fieldSelector = [`spec.slug=${value}`];
+
+  if (isUpdateMode.value) {
+    fieldSelector.push(`metadata.name!=${formState.value.metadata.name}`);
+  }
+
+  const { data: postsWithSameSlug } = await coreApiClient.content.post.listPost(
+    {
+      fieldSelector,
+    }
+  );
+
+  return !postsWithSameSlug.total;
+}
 
 // Buttons condition
 const showPublishButton = computed(() => {
@@ -322,7 +347,13 @@ const showCancelPublishButton = computed(() => {
               :label="$t('core.post.settings.fields.slug.label')"
               name="slug"
               type="text"
-              validation="required|length:0,100"
+              validation="required|length:0,100|slugUniqueValidation"
+              :validation-rules="{ slugUniqueValidation }"
+              :validation-messages="{
+                slugUniqueValidation: $t(
+                  'core.common.form.validation.slug_unique'
+                ),
+              }"
               :help="$t('core.post.settings.fields.slug.help')"
             >
               <template #suffix>
@@ -368,7 +399,8 @@ const showCancelPublishButton = computed(() => {
               :label="$t('core.post.settings.fields.raw_excerpt.label')"
               name="raw"
               type="textarea"
-              :rows="5"
+              auto-height
+              :max-auto-height="200"
               validation="length:0,1024"
             ></FormKit>
           </div>
@@ -498,6 +530,7 @@ const showCancelPublishButton = computed(() => {
           v-if="showCancelPublishButton"
           :loading="publishCanceling"
           type="danger"
+          ghost
           @click="handleUnpublish()"
         >
           {{ $t("core.common.buttons.cancel_publish") }}

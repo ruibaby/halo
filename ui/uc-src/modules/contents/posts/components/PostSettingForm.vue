@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import HasPermission from "@/components/permission/HasPermission.vue";
-import { FormType } from "@/types/slug";
-import { formatDatetime, toISOString } from "@/utils/date";
 import useSlugify from "@console/composables/use-slugify";
+import type { FormKitNode } from "@formkit/core";
+import { publicApiClient } from "@halo-dev/api-client";
 import { IconRefreshLine } from "@halo-dev/components";
+import { FormType, utils } from "@halo-dev/ui-shared";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PostFormState } from "../types";
@@ -12,10 +12,12 @@ const { t } = useI18n();
 
 const props = withDefaults(
   defineProps<{
+    name?: string;
     formState?: PostFormState;
     updateMode?: boolean;
   }>(),
   {
+    name: undefined,
     formState: undefined,
     updateMode: false,
   }
@@ -44,7 +46,9 @@ const emit = defineEmits<{
 function onSubmit(data: PostFormState) {
   emit("submit", {
     ...data,
-    publishTime: data.publishTime ? toISOString(data.publishTime) : undefined,
+    publishTime: data.publishTime
+      ? utils.date.toISOString(data.publishTime)
+      : undefined,
   });
 }
 
@@ -63,6 +67,28 @@ const { handleGenerateSlug } = useSlugify(
   FormType.POST
 );
 
+// fixme: check if slug is unique
+// Finally, we need to check if the slug is unique in the database
+async function slugUniqueValidation(node: FormKitNode) {
+  const value = node.value;
+  if (!value) {
+    return true;
+  }
+
+  const fieldSelector = [`spec.slug=${value}`];
+
+  if (props.name) {
+    fieldSelector.push(`metadata.name!=${props.name}`);
+  }
+
+  const { data: postsWithSameSlug } =
+    await publicApiClient.content.post.queryPosts({
+      fieldSelector,
+    });
+
+  return !postsWithSameSlug.total;
+}
+
 const isScheduledPublish = computed(() => {
   const { publishTime } = internalFormState.value;
   return publishTime && new Date(publishTime) > new Date();
@@ -71,7 +97,7 @@ const isScheduledPublish = computed(() => {
 const publishTimeHelp = computed(() => {
   return isScheduledPublish.value
     ? t("core.post.settings.fields.publish_time.help.schedule_publish", {
-        datetime: formatDatetime(internalFormState.value.publishTime),
+        datetime: utils.date.format(internalFormState.value.publishTime),
       })
     : "";
 });
@@ -107,7 +133,13 @@ const publishTimeHelp = computed(() => {
             :label="$t('core.post.settings.fields.slug.label')"
             name="slug"
             type="text"
-            validation="required|length:0,100"
+            validation="required|length:0,100|slugUniqueValidation"
+            :validation-rules="{ slugUniqueValidation }"
+            :validation-messages="{
+              slugUniqueValidation: $t(
+                'core.common.form.validation.slug_unique'
+              ),
+            }"
             :help="$t('core.post.settings.fields.slug.help')"
           >
             <template #suffix>
@@ -146,7 +178,8 @@ const publishTimeHelp = computed(() => {
             :label="$t('core.post.settings.fields.raw_excerpt.label')"
             name="excerptRaw"
             type="textarea"
-            :rows="5"
+            auto-height
+            :max-auto-height="200"
             validation="length:0,1024"
           ></FormKit>
         </div>

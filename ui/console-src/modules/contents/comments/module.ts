@@ -1,13 +1,23 @@
 import BasicLayout from "@console/layouts/BasicLayout.vue";
-import { IconMessage } from "@halo-dev/components";
-import { definePlugin } from "@halo-dev/console-shared";
-import { markRaw } from "vue";
-import CommentList from "./CommentList.vue";
-import CommentStatsWidget from "./widgets/CommentStatsWidget.vue";
+import { IconMessage, VLoading } from "@halo-dev/components";
+import { definePlugin } from "@halo-dev/ui-shared";
+import { defineAsyncComponent, markRaw } from "vue";
+import SubjectQueryCommentListModal from "./components/SubjectQueryCommentListModal.vue";
+
+declare module "vue" {
+  interface GlobalComponents {
+    SubjectQueryCommentList: (typeof import("./components/SubjectQueryCommentList.vue"))["default"];
+    SubjectQueryCommentListModal: (typeof import("./components/SubjectQueryCommentListModal.vue"))["default"];
+  }
+}
 
 export default definePlugin({
   components: {
-    CommentStatsWidget,
+    SubjectQueryCommentList: defineAsyncComponent({
+      loader: () => import("./components/SubjectQueryCommentList.vue"),
+      loadingComponent: VLoading,
+    }),
+    SubjectQueryCommentListModal,
   },
   routes: [
     {
@@ -30,7 +40,7 @@ export default definePlugin({
         {
           path: "",
           name: "Comments",
-          component: CommentList,
+          component: () => import("./CommentList.vue"),
         },
       ],
     },

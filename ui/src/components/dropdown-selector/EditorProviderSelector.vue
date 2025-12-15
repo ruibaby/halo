@@ -6,12 +6,12 @@ import {
   VDropdown,
   VDropdownItem,
 } from "@halo-dev/components";
-import type { EditorProvider } from "@halo-dev/console-shared";
+import type { EditorProvider } from "@halo-dev/ui-shared";
 
 withDefaults(
   defineProps<{
     provider?: EditorProvider;
-    allowForcedSelect: boolean;
+    allowForcedSelect?: boolean;
   }>(),
   {
     provider: undefined,
@@ -34,7 +34,9 @@ fetchEditorProviders();
       class="group flex w-full cursor-pointer items-center gap-2 rounded p-1 hover:bg-gray-100"
     >
       <VAvatar v-if="provider?.logo" :src="provider.logo" size="xs"></VAvatar>
-      <div class="select-none text-sm text-gray-600 group-hover:text-gray-900">
+      <div
+        class="select-none whitespace-nowrap text-sm text-gray-600 group-hover:text-gray-900"
+      >
         {{ provider?.displayName }}
       </div>
       <IconExchange class="h-4 w-4 text-gray-600 group-hover:text-gray-900" />

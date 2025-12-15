@@ -6,6 +6,7 @@ import { Extension } from "@/tiptap/vue-3";
  * @param {Array | object} args.types possible types
  * @param {object} args.node node to check
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function nodeEqualsType({ types, node }: { types: any; node: any }) {
   return (
     (Array.isArray(types) && types.includes(node.type)) || node.type === types
@@ -19,7 +20,7 @@ function nodeEqualsType({ types, node }: { types: any; node: any }) {
  * - https://github.com/remirror/remirror/blob/e0f1bec4a1e8073ce8f5500d62193e52321155b9/packages/prosemirror-trailing-node/src/trailing-node-plugin.ts
  */
 
-const TrailingNode = Extension.create({
+export const ExtensionTrailingNode = Extension.create({
   name: "trailingNode",
 
   addOptions() {
@@ -75,5 +76,3 @@ const TrailingNode = Extension.create({
     ];
   },
 });
-
-export default TrailingNode;

@@ -1,23 +1,30 @@
 import { BlockActionSeparator, ToolboxItem } from "@/components";
-import MdiDeleteForeverOutline from "@/components/icon/MdiDeleteForeverOutline.vue";
+import MingcuteDelete2Line from "@/components/icon/MingcuteDelete2Line.vue";
 import { i18n } from "@/locales";
-import type { NodeType, Schema } from "@/tiptap/pm";
-import { EditorState, Node as PMNode, TextSelection } from "@/tiptap/pm";
 import {
   Editor,
-  Node,
   findParentNode,
   isActive,
   mergeAttributes,
+  Node,
+  posToDOMRect,
   type Range,
-} from "@/tiptap/vue-3";
+} from "@/tiptap";
+import type { NodeType, Schema } from "@/tiptap/pm";
+import {
+  EditorState,
+  PluginKey,
+  Node as PMNode,
+  TextSelection,
+} from "@/tiptap/pm";
+import type { ExtensionOptions } from "@/types";
 import { deleteNode } from "@/utils";
 import { markRaw } from "vue";
-import MdiCollage from "~icons/mdi/collage";
+import MingcuteColumns2Line from "~icons/mingcute/columns-2-line";
 import RiDeleteColumn from "~icons/ri/delete-column";
 import RiInsertColumnLeft from "~icons/ri/insert-column-left";
 import RiInsertColumnRight from "~icons/ri/insert-column-right";
-import Column from "./column";
+import { ExtensionColumn } from "./column";
 
 declare module "@/tiptap" {
   interface Commands<ReturnType> {
@@ -29,6 +36,8 @@ declare module "@/tiptap" {
     };
   }
 }
+
+export const COLUMNS_BUBBLE_MENU_KEY = new PluginKey("columnsBubbleMenu");
 
 const createColumns = (schema: Schema, colsCount: number) => {
   const types = getColumnsNodeTypes(schema);
@@ -66,16 +75,17 @@ const getColumnsNodeTypes = (
 
 type ColOperateType = "addBefore" | "addAfter" | "delete";
 const addOrDeleteCol = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: any,
   state: EditorState,
   type: ColOperateType
 ) => {
   const maybeColumns = findParentNode(
-    (node) => node.type.name === Columns.name
+    (node) => node.type.name === ExtensionColumns.name
   )(state.selection);
-  const maybeColumn = findParentNode((node) => node.type.name === Column.name)(
-    state.selection
-  );
+  const maybeColumn = findParentNode(
+    (node) => node.type.name === ExtensionColumn.name
+  )(state.selection);
   if (dispatch && maybeColumns && maybeColumn) {
     const cols = maybeColumns.node;
     const colIndex = maybeColumn.node.attrs.index;
@@ -103,6 +113,7 @@ const addOrDeleteCol = (
 
     colsJSON.attrs.cols = colsJSON.content.length;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     colsJSON.content.forEach((colJSON: any, index: number) => {
       colJSON.attrs.index = index;
     });
@@ -110,7 +121,7 @@ const addOrDeleteCol = (
     const nextCols = PMNode.fromJSON(state.schema, colsJSON);
 
     let nextSelectPos = maybeColumns.pos;
-    nextCols.content.forEach((col, pos, index) => {
+    nextCols.content.forEach((col, _pos, index) => {
       if (index < nextIndex) {
         nextSelectPos += col.nodeSize;
       }
@@ -130,13 +141,14 @@ const addOrDeleteCol = (
 };
 
 type GotoColType = "before" | "after";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const gotoCol = (state: EditorState, dispatch: any, type: GotoColType) => {
   const maybeColumns = findParentNode(
-    (node) => node.type.name === Columns.name
+    (node) => node.type.name === ExtensionColumns.name
   )(state.selection);
-  const maybeColumn = findParentNode((node) => node.type.name === Column.name)(
-    state.selection
-  );
+  const maybeColumn = findParentNode(
+    (node) => node.type.name === ExtensionColumn.name
+  )(state.selection);
 
   if (dispatch && maybeColumns && maybeColumn) {
     const cols = maybeColumns.node;
@@ -151,7 +163,7 @@ const gotoCol = (state: EditorState, dispatch: any, type: GotoColType) => {
     }
 
     let nextSelectPos = maybeColumns.pos;
-    cols.content.forEach((col, pos, index) => {
+    cols.content.forEach((col, _pos, index) => {
       if (index < nextIndex) {
         nextSelectPos += col.nodeSize;
       }
@@ -167,7 +179,13 @@ const gotoCol = (state: EditorState, dispatch: any, type: GotoColType) => {
   return false;
 };
 
-const Columns = Node.create({
+export interface ExtensionColumnsOptions extends ExtensionOptions {
+  HTMLAttributes: {
+    class: string;
+  };
+}
+
+export const ExtensionColumns = Node.create<ExtensionColumnsOptions>({
   name: "columns",
   group: "block",
   priority: 10,
@@ -185,11 +203,11 @@ const Columns = Node.create({
       getToolboxItems({ editor }: { editor: Editor }) {
         return [
           {
-            priority: 50,
+            priority: 70,
             component: markRaw(ToolboxItem),
             props: {
               editor,
-              icon: markRaw(MdiCollage),
+              icon: markRaw(MingcuteColumns2Line),
               title: i18n.global.t("editor.extensions.commands_menu.columns"),
               action: () => {
                 editor
@@ -207,7 +225,7 @@ const Columns = Node.create({
       getCommandMenuItems() {
         return {
           priority: 70,
-          icon: markRaw(MdiCollage),
+          icon: markRaw(MingcuteColumns2Line),
           title: "editor.extensions.commands_menu.columns",
           keywords: ["fenlan", "columns"],
           command: ({ editor, range }: { editor: Editor; range: Range }) => {
@@ -224,24 +242,33 @@ const Columns = Node.create({
       },
       getBubbleMenu() {
         return {
-          pluginKey: "columnsBubbleMenu",
-          shouldShow: ({ state }: { state: EditorState }) => {
-            return isActive(state, Columns.name);
+          pluginKey: COLUMNS_BUBBLE_MENU_KEY,
+          shouldShow: ({ state }: { state: EditorState }): boolean => {
+            return isActive(state, ExtensionColumns.name);
           },
-          getRenderContainer: (node: HTMLElement) => {
-            let container = node;
-            // 文本节点
-            if (container.nodeName === "#text") {
-              container = node.parentElement as HTMLElement;
+          options: {
+            placement: "bottom-start",
+          },
+          getReferencedVirtualElement() {
+            const editor = this.editor;
+            if (!editor) {
+              return null;
             }
-            while (
-              container &&
-              container.classList &&
-              !container.classList.contains("column")
-            ) {
-              container = container.parentElement as HTMLElement;
+            const parentNode = findParentNode(
+              (node) => node.type.name === ExtensionColumn.name
+            )(editor.state.selection);
+            if (parentNode) {
+              const domRect = posToDOMRect(
+                editor.view,
+                parentNode.pos,
+                parentNode.pos + parentNode.node.nodeSize
+              );
+              return {
+                getBoundingClientRect: () => domRect,
+                getClientRects: () => [domRect],
+              };
             }
-            return container;
+            return null;
           },
           items: [
             {
@@ -285,31 +312,14 @@ const Columns = Node.create({
             {
               priority: 50,
               props: {
-                icon: markRaw(MdiDeleteForeverOutline),
+                icon: markRaw(MingcuteDelete2Line),
                 title: i18n.global.t("editor.common.button.delete"),
                 action: ({ editor }: { editor: Editor }) => {
-                  deleteNode(Columns.name, editor);
+                  deleteNode(ExtensionColumns.name, editor);
                 },
               },
             },
           ],
-        };
-      },
-      getDraggable() {
-        return {
-          getRenderContainer({ dom }: { dom: HTMLElement }) {
-            let container = dom;
-            while (container && !container.classList.contains("columns")) {
-              container = container.parentElement as HTMLElement;
-            }
-            return {
-              el: container,
-              dragDomOffset: {
-                y: -5,
-              },
-            };
-          },
-          allowPropagationDownward: true,
         };
       },
     };
@@ -382,6 +392,7 @@ const Columns = Node.create({
       },
     };
   },
+  addExtensions() {
+    return [ExtensionColumn];
+  },
 });
-
-export default Columns;

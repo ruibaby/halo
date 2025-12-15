@@ -9,7 +9,7 @@ import static org.springdoc.core.fn.builders.requestbody.Builder.requestBodyBuil
 import static org.springdoc.core.fn.builders.schema.Builder.schemaBuilder;
 import static org.springdoc.webflux.core.fn.SpringdocRouteBuilder.route;
 import static org.springframework.web.reactive.function.server.RequestPredicates.contentType;
-import static run.halo.app.extension.index.query.QueryFactory.equal;
+import static run.halo.app.extension.index.query.Queries.equal;
 
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -333,8 +333,9 @@ public class UcAttachmentEndpoint implements CustomEndpoint {
         return GroupVersion.parseAPIVersion("uc.api.storage.halo.run/v1alpha1");
     }
 
+    @Schema(name = "UcUploadFromUrlRequest")
     public record UploadFromUrlRequest(@Schema(requiredMode = REQUIRED) URL url,
-                                       String filename) {
+                                       @Schema(description = "Custom file name") String filename) {
         public UploadFromUrlRequest {
             if (Objects.isNull(url)) {
                 throw new ServerWebInputException("Required url is missing.");

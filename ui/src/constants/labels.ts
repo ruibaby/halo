@@ -1,6 +1,7 @@
 // plugin
 export enum pluginLabels {
   NAME = "plugin.halo.run/plugin-name",
+  SYSTEM_RESERVED = "plugin.halo.run/system-reserved",
 }
 
 // role
@@ -27,4 +28,13 @@ export enum singlePageLabels {
   OWNER = "content.halo.run/owner",
   VISIBLE = "content.halo.run/visible",
   PHASE = "content.halo.run/phase",
+}
+
+// attachment
+export enum attachmentPolicyLabels {
+  // Used for ui display only
+  HIDDEN = "storage.halo.run/policy-hidden-in-upload-ui",
+  HIDDEN_WITH_JSON_PATCH = "storage.halo.run~1policy-hidden-in-upload-ui",
+  PRIORITY = "storage.halo.run/policy-priority-in-upload-ui",
+  PRIORITY_WITH_JSON_PATCH = "storage.halo.run~1policy-priority-in-upload-ui",
 }

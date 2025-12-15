@@ -42,6 +42,7 @@ api/personal-access-token-v1alpha1-uc-api.ts
 api/plugin-v1alpha1-api.ts
 api/plugin-v1alpha1-console-api.ts
 api/plugin-v1alpha1-public-api.ts
+api/policy-alpha1-console-api.ts
 api/policy-template-v1alpha1-api.ts
 api/policy-v1alpha1-api.ts
 api/post-v1alpha1-api.ts
@@ -56,7 +57,6 @@ api/reply-v1alpha1-console-api.ts
 api/reverse-proxy-v1alpha1-api.ts
 api/role-binding-v1alpha1-api.ts
 api/role-v1alpha1-api.ts
-api/search-engine-v1alpha1-api.ts
 api/secret-v1alpha1-api.ts
 api/setting-v1alpha1-api.ts
 api/single-page-v1alpha1-api.ts
@@ -78,6 +78,7 @@ api/thumbnail-v1alpha1-public-api.ts
 api/two-factor-auth-v1alpha1-uc-api.ts
 api/user-connection-v1alpha1-api.ts
 api/user-connection-v1alpha1-uc-api.ts
+api/user-preference-v1alpha1-uc-api.ts
 api/user-v1alpha1-api.ts
 api/user-v1alpha1-console-api.ts
 base.ts
@@ -190,7 +191,6 @@ models/local-thumbnail-list.ts
 models/local-thumbnail-spec.ts
 models/local-thumbnail-status.ts
 models/local-thumbnail.ts
-models/login-history.ts
 models/mark-specified-request.ts
 models/menu-item-list.ts
 models/menu-item-spec.ts
@@ -276,9 +276,6 @@ models/role-binding.ts
 models/role-list.ts
 models/role-ref.ts
 models/role.ts
-models/search-engine-list.ts
-models/search-engine-spec.ts
-models/search-engine.ts
 models/search-option.ts
 models/search-result.ts
 models/secret-list.ts
@@ -324,6 +321,7 @@ models/thumbnail.ts
 models/totp-auth-link-response.ts
 models/totp-request.ts
 models/two-factor-auth-settings.ts
+models/uc-upload-from-url-request.ts
 models/uc-upload-request-form-data.ts
 models/upgrade-from-uri-request.ts
 models/upload-from-url-request.ts

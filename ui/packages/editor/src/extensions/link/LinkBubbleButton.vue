@@ -1,43 +1,54 @@
 <script lang="ts" setup>
+import Input from "@/components/base/Input.vue";
 import { i18n } from "@/locales";
-import { type Editor } from "@/tiptap/vue-3";
+import type { BubbleItemComponentProps } from "@/types";
+import { VDropdown, vTooltip } from "@halo-dev/components";
 import { TextSelection } from "@tiptap/pm/state";
-import { Dropdown as VDropdown, vTooltip } from "floating-vue";
 import { test } from "linkifyjs";
-import { computed, type Component } from "vue";
-import MdiLinkVariant from "~icons/mdi/link-variant";
+import { computed } from "vue";
+import MingcuteLinkLine from "~icons/mingcute/link-line";
+import { ExtensionLink } from ".";
 
-const props = defineProps<{
-  editor: Editor;
-  isActive: ({ editor }: { editor: Editor }) => boolean;
-  visible?: ({ editor }: { editor: Editor }) => boolean;
-  icon?: Component;
-  title?: string;
-  action?: ({ editor }: { editor: Editor }) => void;
-}>();
+const props = defineProps<BubbleItemComponentProps>();
 
 const href = computed({
   get() {
-    const attrs = props.editor.getAttributes("link");
+    const attrs = props.editor.getAttributes(ExtensionLink.name);
     return attrs?.href;
   },
   set(value) {
     props.editor.commands.setLink({
       href: value,
       target: target.value ? "_blank" : "_self",
+      rel: rel.value ? "nofollow" : "",
     });
   },
 });
 
 const target = computed({
   get() {
-    const attrs = props.editor.getAttributes("link");
+    const attrs = props.editor.getAttributes(ExtensionLink.name);
     return attrs?.target === "_blank";
   },
   set(value) {
     props.editor.commands.setLink({
       href: href.value,
       target: value ? "_blank" : "_self",
+      rel: rel.value ? "nofollow" : "",
+    });
+  },
+});
+
+const rel = computed({
+  get() {
+    const attrs = props.editor.getAttributes(ExtensionLink.name);
+    return attrs?.rel === "nofollow";
+  },
+  set(value) {
+    props.editor.commands.setLink({
+      href: href.value,
+      target: target.value ? "_blank" : "_self",
+      rel: value ? "nofollow" : "",
     });
   },
 });
@@ -46,7 +57,7 @@ const target = computed({
  * Convert the currently selected text when clicking the link
  */
 const handleLinkBubbleButton = () => {
-  if (props.isActive({ editor: props.editor })) {
+  if (props.isActive?.({ editor: props.editor })) {
     return;
   }
   const { state } = props.editor;
@@ -66,6 +77,7 @@ const handleLinkBubbleButton = () => {
       props.editor.commands.setLink({
         href: text,
         target: "_self",
+        rel: "",
       });
     }
   }
@@ -81,33 +93,34 @@ const handleLinkBubbleButton = () => {
   >
     <button
       v-tooltip="
-        isActive({ editor })
+        isActive?.({ editor })
           ? i18n.global.t('editor.extensions.link.edit_link')
           : i18n.global.t('editor.extensions.link.add_link')
       "
-      class="text-gray-600 text-lg hover:bg-gray-100 p-2 rounded-md"
-      :class="{ 'bg-gray-200 !text-black': isActive({ editor }) }"
+      class="inline-flex size-8 items-center justify-center rounded-md text-lg text-gray-600 hover:bg-gray-100 active:!bg-gray-200"
+      :class="{ 'bg-gray-200 !text-black': isActive?.({ editor }) }"
     >
-      <MdiLinkVariant />
+      <MingcuteLinkLine />
     </button>
 
     <template #popper>
-      <div
-        class="relative rounded-md bg-white overflow-hidden shadow w-96 p-1 max-h-72 overflow-y-auto"
-      >
-        <input
+      <div class="relative w-96">
+        <Input
           v-model.lazy="href"
+          auto-focus
           :placeholder="i18n.global.t('editor.extensions.link.placeholder')"
-          class="bg-gray-50 rounded-md hover:bg-gray-100 block px-2 w-full py-1.5 text-sm text-gray-900 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
         />
-        <label class="inline-flex items-center mt-2">
-          <input
-            v-model="target"
-            type="checkbox"
-            class="form-checkbox text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-          />
+        <label class="mr-2 mt-2 inline-flex items-center">
+          <input v-model="target" type="checkbox" />
           <span class="ml-2 text-sm text-gray-500">
             {{ i18n.global.t("editor.extensions.link.open_in_new_window") }}
+          </span>
+        </label>
+        <label class="mt-2 inline-flex items-center">
+          <!-- nofollow -->
+          <input v-model="rel" type="checkbox" />
+          <span class="ml-2 text-sm text-gray-500">
+            {{ i18n.global.t("editor.extensions.link.nofollow") }}
           </span>
         </label>
       </div>

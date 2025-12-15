@@ -2,6 +2,7 @@ package run.halo.app.infra.config;
 
 import static org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers.pathMatchers;
 
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
@@ -10,9 +11,12 @@ import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
@@ -24,7 +28,6 @@ import org.springframework.session.MapSession;
 import org.springframework.session.config.annotation.web.server.EnableSpringWebSession;
 import run.halo.app.core.user.service.RoleService;
 import run.halo.app.core.user.service.UserService;
-import run.halo.app.extension.ReactiveExtensionClient;
 import run.halo.app.infra.AnonymousUserConst;
 import run.halo.app.infra.properties.HaloProperties;
 import run.halo.app.security.DefaultUserDetailService;
@@ -44,16 +47,14 @@ import run.halo.app.security.session.ReactiveIndexedSessionRepository;
 @Configuration
 @EnableSpringWebSession
 @EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
 @RequiredArgsConstructor
 public class WebServerSecurityConfig {
 
     @Bean
     SecurityWebFilterChain filterChain(ServerHttpSecurity http,
-        RoleService roleService,
         ObjectProvider<SecurityConfigurer> securityConfigurers,
         ServerSecurityContextRepository securityContextRepository,
-        ReactiveExtensionClient client,
-        CryptoService cryptoService,
         HaloProperties haloProperties,
         ServerRequestCache serverRequestCache) {
 
@@ -63,7 +64,6 @@ public class WebServerSecurityConfig {
             "/uc/assets/**",
             "/themes/{themeName}/assets/{*resourcePaths}",
             "/plugins/{pluginName}/assets/**",
-            "/upload/**",
             "/webjars/**",
             "/js/**",
             "/styles/**",
@@ -138,8 +138,17 @@ public class WebServerSecurityConfig {
     }
 
     @Bean
+    @SuppressWarnings("deprecation")
     PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        // For removing the length limit of password, we have to create an argon2 password encoder
+        // as default encoder.
+        // When https://github.com/spring-projects/spring-security/issues/16879 resolved,
+        // we can remove this code.
+        var encodingId = "argon2@SpringSecurity_v5_8";
+        var encoders = new HashMap<String, PasswordEncoder>();
+        encoders.put(encodingId, Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8());
+        encoders.put("bcrypt", new BCryptPasswordEncoder());
+        return new DelegatingPasswordEncoder(encodingId, encoders);
     }
 
     @Bean

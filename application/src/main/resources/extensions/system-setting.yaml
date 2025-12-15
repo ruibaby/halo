@@ -24,6 +24,19 @@ spec:
           name: favicon
           accepts:
             - 'image/*'
+        - $formkit: select
+          label: "首选语言"
+          name: language
+          value: 'zh-CN'
+          options:
+            - label: 'English'
+              value: 'en'
+            - label: 'Español'
+              value: 'es'
+            - label: '简体中文'
+              value: 'zh-CN'
+            - label: '繁体中文'
+              value: 'zh-TW'
     - group: post
       label: 文章设置
       formSchema:
@@ -86,12 +99,17 @@ spec:
           name: blockSpiders
           label: "屏蔽搜索引擎"
           value: false
+          help: "为所有页面添加 <meta name=\"robots\" content=\"noindex\" /> 标签，阻止搜索引擎索引，但不是所有搜索引擎都会遵守"
         - $formkit: textarea
           name: keywords
           label: "站点关键词"
+          help: "目前主流搜索引擎已经不再使用此字段，所以通常不建议设置，此选项可能在未来版本中被移除"
+          auto-height: true
         - $formkit: textarea
           name: description
           label: "站点描述"
+          help: "仅对首页生效，其他页面将根据页面类型自动生成描述"
+          auto-height: true
     - group: user
       label: 用户设置
       formSchema:
@@ -107,6 +125,12 @@ spec:
           if: "$get(allowRegistration).value === true"
           help: "需要确保已经正确配置邮件通知器"
           value: false
+        - $formkit: textarea
+          name: protectedUsernames
+          label: "保留用户名"
+          if: "$get(allowRegistration).value === true"
+          help: 保留用户名，限制用户注册时使用，多个用户名请用英文逗号,分隔，留空则不限制
+          value: "admin,administrator,root,system,superuser,guest,test,demo,user,backup,ftp,www,manager,support,service,api"
         - $formkit: roleSelect
           name: defaultRole
           label: "默认角色"
@@ -180,6 +204,8 @@ spec:
               value: '/{year:\d{4}}/{month:\d{2}}/{slug}'
             - label: '/{year}/{month}/{day}/{slug}'
               value: '/{year:\d{4}}/{month:\d{2}}/{day:\d{2}}/{slug}'
+            - label: '/categories/{categorySlug}/{slug}'
+              value: '/categories/{categorySlug}/{slug}'
           name: post
           validation: required
     - group: codeInjection

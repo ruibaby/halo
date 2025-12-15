@@ -22,6 +22,7 @@ core:
         overview: 概览
         backup: 备份
         tools: 工具
+        home: 首页
     operations:
       logout:
         tooltip: 退出登录
@@ -45,13 +46,10 @@ core:
     profile:
       aggregate_role: 聚合角色
   dashboard:
-    title: 仪表板
+    title: 仪表盘
     actions:
       setting: 设置
-      done: 完成
-      add_widget: 添加组件
     widgets:
-      modal_title: 小组件
       groups:
         post: 文章
         page: 页面
@@ -67,12 +65,14 @@ core:
           title: 最近文章
           visits: 访问量 {visits}
           comments: 评论 {comments}
-          publishTime: 发布日期 {publishTime}
+          empty:
+            title: 暂无已发布文章
+          comments-with-pending: " ({count} 条待审核)"
         notification:
           title: 通知
           empty:
             title: 当前没有未读的消息
-        quicklink:
+        quickaction:
           title: 快捷访问
           actions:
             user_center:
@@ -96,12 +96,72 @@ core:
               dialog_title: 刷新搜索引擎索引
               dialog_content: 此操作会对所有已发布的文章重新创建本地搜索引擎的索引。
               success_message: 刷新成功
+          config:
+            fields:
+              enabled_items:
+                label: 启用的功能
         user_stats:
           title: 用户
         comment_stats:
           title: 评论
         views_stats:
           title: 浏览量
+        pending_comments:
+          title: 新评论
+          empty:
+            title: 暂无待审核评论
+        iframe:
+          title: 网页嵌入
+          empty:
+            title: 请在配置中输入 URL
+          config:
+            fields:
+              title:
+                label: 标题
+        stack:
+          title: 堆叠部件
+          operations:
+            add_widget:
+              button: 添加部件
+          config_modal:
+            title: 堆叠部件配置
+            fields:
+              auto_play:
+                label: 自动切换
+              auto_play_interval:
+                label: 自动切换间隔
+              widgets:
+                label: 部件
+            toast:
+              nest_warning: 不能将堆叠部件添加到堆叠部件中
+      common_form:
+        fields:
+          enable_animation:
+            label: 启用动画
+  dashboard_designer:
+    title: 编辑仪表盘
+    actions:
+      add_widget: 添加部件
+    widgets_modal:
+      title: 小部件
+    config_modal:
+      title: 部件配置
+    operations:
+      back:
+        title: 布局未保存
+        description: 当前编辑的布局还未保存，放弃后，当前布局将丢失，是否继续？
+        confirm_text: 放弃
+      change_breakpoint:
+        tips_not_saved: 请先保存当前布局
+      copy_from_layout:
+        button: 从其他布局复制
+      open_widgets_hub:
+        button: 小部件中心
+    breakpoints:
+      lg: 桌面端
+      md: 平板端（横向）
+      sm: 平板端
+      xs: 手机端
   post:
     title: 文章
     actions:
@@ -165,6 +225,7 @@ core:
         pinned: 已置顶
         schedule_publish:
           tooltip: 定时发布
+        comments-with-pending: （{count} 条待审核）
     settings:
       title: 文章设置
       groups:
@@ -210,6 +271,7 @@ core:
             create_time_asc: 较早创建
             display_name_desc: 标签名降序
             display_name_asc: 标签名升序
+            post_desc: 最多文章量
     batch_setting_modal:
       title: 文章批量设置
       fields:
@@ -294,7 +356,7 @@ core:
           label: 名称
         slug:
           label: 别名
-          help: 通常用于生成分类的固定链接
+          help: 通常用于生成标签的固定链接
           refresh_message: 根据名称重新生成别名
         color:
           label: 颜色
@@ -329,7 +391,7 @@ core:
           label: 名称
         slug:
           label: 别名
-          help: 通常用于生成标签的固定链接
+          help: 通常用于生成分类的固定链接
           refresh_message: 根据名称重新生成别名
         template:
           label: 自定义模板
@@ -339,7 +401,7 @@ core:
           help: 需要主题适配以支持
         description:
           label: 描述
-          help: 需要主题适配以支持
+          help: 描述会自动添加到页面用于 SEO 的描述标签中，其他显示用途需要主题适配
         prevent_parent_post_cascade_query:
           label: 阻止文章级联查询
           help: 阻止父级分类在级联文章查询中包含此分类及其子分类
@@ -391,6 +453,7 @@ core:
       fields:
         visits: 访问量 {visits}
         comments: 评论 {comments}
+        comments-with-pending: （{count} 条待审核）
     settings:
       title: 页面设置
       groups:
@@ -467,10 +530,16 @@ core:
         title: 确定要审核通过该评论的所有回复吗？
       delete_reply:
         title: 删除回复
-      approve_reply:
-        button: 审核通过
+      review:
+        button: 审核
       reply:
         button: 回复
+      approve:
+        button: 通过
+      reply_and_approve:
+        button: 回复并通过
+      cancel_approve:
+        button: 取消通过
     filters:
       status:
         items:
@@ -492,6 +561,7 @@ core:
         reply_count: "{count} 条回复"
         has_new_replies: 有新的回复
         pending_review: 待审核
+        private: 私密
     subject_refs:
       post: 文章
       page: 页面
@@ -504,11 +574,31 @@ core:
       operations:
         submit:
           toast_success: 回复成功
+    text:
+      commented_on: 评论在
+      replied_below: 回复：
+    detail_modal:
+      fields:
+        owner: 评论者
+        creation_time: 评论时间
+        commented_on: 评论在
+        new_reply: 新回复
+        user_agent: 用户代理（UA）
+    comment_detail_modal:
+      title: 评论详情
+      fields:
+        content: 评论内容
+    reply_detail_modal:
+      title: 回复详情
+      fields:
+        original_comment: 原评论
+        content: 回复内容
   attachment:
     title: 附件库
     common:
       text:
         ungrouped: 未分组
+        original: 原始
     actions:
       storage_policies: 存储策略
     empty:
@@ -558,14 +648,15 @@ core:
         preview: 预览
         storage_policy: 存储策略
         group: 所在分组
-        display_name: 文件名称
+        display_name: 附件名称
         media_type: 文件类型
         size: 文件大小
         owner: 上传者
         creation_time: 上传时间
         permalink: 链接
+      display_name_form:
+        help: 自定义附件名称，仅用于管理界面显示，不会影响文件本身名称以及访问链接
       preview:
-        click_to_exit: 点击退出预览
         video_not_support: 当前浏览器不支持该视频播放
         audio_not_support: 当前浏览器不支持该音频播放
         not_support: 此文件不支持预览
@@ -613,6 +704,14 @@ core:
       fields:
         display_name:
           label: 名称
+        config:
+          label: 策略配置
+        hidden:
+          label: 在上传界面隐藏
+          help: 开启后，会在上传界面隐藏该存储策略
+        priority:
+          help: 设置在上传界面的显示优先级，数字越大，排序越靠前
+          label: 上传界面显示优先级
       toast:
         policy_name_exists: 存储策略名称已存在
     upload_modal:
@@ -626,6 +725,15 @@ core:
             title: 没有存储策略
             description: 在上传之前，需要新建一个存储策略
           not_select: 请先选择存储策略
+      upload_options:
+        local_upload: 本地上传
+        download: 通过链接下载
+      download_form:
+        fields:
+          url:
+            label: 链接地址
+        toast:
+          success: 下载成功
     select_modal:
       title: 选择附件
       providers:
@@ -634,6 +742,9 @@ core:
       operations:
         select:
           result: （已选择 {count} 项）
+    permalink_list:
+      relative: 相对路径
+      absolute: 完整路径
   uc_attachment:
     empty:
       title: 当前没有附件
@@ -904,6 +1015,7 @@ core:
         repo: 源码仓库
         load_location: 存储位置
         issues: 问题反馈
+        creation_time: 安装时间
       operations:
         view_conditions:
           button: 查看最近状态
@@ -930,8 +1042,14 @@ core:
       extension-definition:
         empty:
           title: 当前没有扩展点实现
+        operation:
+          use:
+            button: 使用
     actions:
       extension-point-settings: 扩展配置
+    list:
+      fields:
+        system_reserved: 系统保留
   user:
     title: 用户
     actions:
@@ -952,11 +1070,17 @@ core:
       grant_permission:
         title: 分配角色
       enable:
-        title: 取消禁用
-        description: 确定取消禁用该用户吗？
+        title: 启用
+        description: 确定要启用该用户吗？启用之后该用户将可以重新登录系统
+      enable_in_batch:
+        title: 启用
+        description: 确定要启用所选用户吗？启用后这些用户将可以重新登录系统
       disable:
         title: 禁用
-        description: 确定禁用该用户吗？禁用之后该用户将无法登录系统
+        description: 确定要禁用该用户吗？禁用后该用户将无法登录系统
+      disable_in_batch:
+        title: 禁用
+        description: 确定要禁用所选用户吗？禁用后这些用户将无法登录系统
     filters:
       role:
         label: 角色
@@ -1022,7 +1146,6 @@ core:
         roles: 角色
         bio: 描述
         creation_time: 注册时间
-        identity_authentication: 登录方式
         email_verified:
           tooltip: 已验证
         email_not_verified:
@@ -1107,8 +1230,8 @@ core:
       detail: 详情
       notification-preferences: 通知配置
       pat: 个人令牌
-      2fa: 两步验证
       devices: 登录设备
+      authentication: 身份认证
     actions:
       update_profile:
         title: 修改资料
@@ -1122,13 +1245,6 @@ core:
         roles: 角色
         bio: 描述
         creation_time: 注册时间
-        identity_authentication: 登录方式
-      operations:
-        bind:
-          button: 绑定
-        unbind:
-          button: 解绑
-          title: 取消绑定 {display_name} 登录方式
       email_not_set:
         title: 设置电子邮箱
         description: 电子邮箱地址还未设置，点击下方按钮进行设置
@@ -1137,6 +1253,14 @@ core:
         description: 电子邮箱地址还未验证，点击下方按钮进行验证
       email_verified:
         tooltip: 已验证
+    auth_providers:
+      title: 登录方式
+      operations:
+        bind:
+          button: 绑定
+        unbind:
+          button: 解绑
+          title: 取消绑定 {display_name} 登录方式
     2fa:
       operations:
         enable:
@@ -1152,7 +1276,7 @@ core:
             label: 验证密码
             help: 当前账号的登录密码
       methods:
-        title: 验证方式
+        title: 两步验证
         totp:
           title: TOTP
           description: 使用 TOTP 应用程序配置两步验证
@@ -1330,8 +1454,8 @@ core:
     fields:
       external_url: 外部访问地址
       start_time: 启动时间
-      timezone: 系统时区
-      locale: 系统语言
+      timezone: 操作系统时区
+      locale: 操作系统语言
       version: 版本
       build_time: 构建时间
       database: 数据库
@@ -1351,6 +1475,13 @@ core:
       os: 操作系统：{os}
     alert:
       external_url_invalid: 检测到外部访问地址与当前访问地址不一致，可能会导致部分链接无法正常跳转，请检查外部访问地址设置。
+    external_url_form:
+      operations:
+        save:
+          title: 修改外部访问地址
+          description: 修改外部访问地址需要重启 Halo 服务，修改完成之后会自动进行重启，是否继续？
+      tips:
+        restarting: 修改完成，等待重启...
   backup:
     title: 备份与恢复
     tabs:
@@ -1519,22 +1650,18 @@ core:
         placeholder:
           options:
             placeholder: 输入 / 以选择输入类型
-        upload:
-          error: 上传失败
-          click_retry: 点击重试
-          loading: 等待中
-          attachment:
-            title: 附件库
-          permalink:
-            title: 输入链接
-            placeholder: 输入链接，按回车确定
-          operations:
-            replace:
-              button: 替换
       toolbox:
         attachment: 选择附件
         show_hide_sidebar: 显示 / 隐藏侧边栏
       title_placeholder: 请输入标题
+      cover:
+        options:
+          add: 添加封面图
+          change: 更换
+          upload: 上传
+          attachment: 从附件库选择
+        toast:
+          upload_failed: "上传封面失败: {message}"
     global_search:
       placeholder: 输入关键词以搜索
       no_results: 没有搜索结果
@@ -1630,6 +1757,24 @@ core:
       fullscreen:
         exit: 退出全屏
         enter: 全屏编辑
+    iconify:
+      placeholder: 选择图标
+      tabs:
+        collections: 图标集
+        search: 全局搜索
+      collection_search_placeholder: 搜索图标集合
+      search_placeholder: 搜索图标
+      no_results: 没有找到结果，请尝试其他关键词
+      option_size: 大小
+      option_color: 颜色
+      copyright: 图标数据来自 {url}
+    array:
+      empty_text: 没有条目
+      image_tooltip: 查看图片：{value}
+      item_modal:
+        title: 编辑条目
+    color:
+      placeholder: 选择颜色
   common:
     buttons:
       save: 保存
@@ -1674,6 +1819,7 @@ core:
       disable: 禁用
       enable: 启用
       continue: 继续
+      retry: 重试
     radio:
       "yes": 是
       "no": 否
@@ -1707,7 +1853,7 @@ core:
       server_internal_error: 服务器内部错误
       unknown_error: 未知错误
       disable_success: 禁用成功
-      enable_success: 啟用成功
+      enable_success: 启用成功
     dialog:
       titles:
         tip: 提示
@@ -1742,12 +1888,17 @@ core:
       tip: 提示
       warning: 警告
       system_protection: 系统保留
+      all: 全部
+      detail: 详情
     tooltips:
       unpublished_content_tip: 当前有内容已保存，但还未发布。
       publishing: 发布中
       recovering: 恢复中
     fields:
       post_count: "{count} 篇文章"
+    form:
+      validation:
+        slug_unique: 当前别名已存在
   tool:
     title: 工具
     empty:

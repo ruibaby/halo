@@ -1,17 +1,9 @@
 import BasicLayout from "@console/layouts/BasicLayout.vue";
 import { IconPages } from "@halo-dev/components";
-import { definePlugin } from "@halo-dev/console-shared";
+import { definePlugin } from "@halo-dev/ui-shared";
 import { markRaw } from "vue";
-import DeletedSinglePageList from "./DeletedSinglePageList.vue";
-import SinglePageEditor from "./SinglePageEditor.vue";
-import SinglePageList from "./SinglePageList.vue";
-import SinglePageSnapshots from "./SinglePageSnapshots.vue";
-import SinglePageStatsWidget from "./widgets/SinglePageStatsWidget.vue";
 
 export default definePlugin({
-  components: {
-    SinglePageStatsWidget,
-  },
   routes: [
     {
       path: "/single-pages",
@@ -32,12 +24,12 @@ export default definePlugin({
         {
           path: "",
           name: "SinglePages",
-          component: SinglePageList,
+          component: () => import("./SinglePageList.vue"),
         },
         {
           path: "deleted",
           name: "DeletedSinglePages",
-          component: DeletedSinglePageList,
+          component: () => import("./DeletedSinglePageList.vue"),
           meta: {
             title: "core.deleted_page.title",
             searchable: true,
@@ -47,7 +39,7 @@ export default definePlugin({
         {
           path: "editor",
           name: "SinglePageEditor",
-          component: SinglePageEditor,
+          component: () => import("./SinglePageEditor.vue"),
           meta: {
             title: "core.page_editor.title",
             searchable: true,
@@ -58,7 +50,7 @@ export default definePlugin({
         {
           path: "snapshots",
           name: "SinglePageSnapshots",
-          component: SinglePageSnapshots,
+          component: () => import("./SinglePageSnapshots.vue"),
           meta: {
             title: "core.page_snapshots.title",
             searchable: false,
